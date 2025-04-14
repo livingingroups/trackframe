@@ -47,3 +47,10 @@ select_id <- function(tf, id) {
 #   ctf <- tf[, c(attr(tf, "index"), attr(tf, "lon_col"), attr(tf, "lat_col"))]
 #   return(ctf)
 # }
+
+#' @export
+tf_to_sf <- function(tf, crs = 4326, ...) {
+  assert_class(tf , "track_frame")
+  coords <- c(attr(tf, "lon_col"), attr(tf, "lat_col"))
+  st_as_sf(x = tf, crs = 4326, coords = coords, ...)
+}
