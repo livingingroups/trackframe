@@ -1,0 +1,6 @@
+
+travelpaths_*.tar.gz
+Taskfile.yml
+^devel$
+^.*\.Rproj$
+^\.Rproj\.user$
