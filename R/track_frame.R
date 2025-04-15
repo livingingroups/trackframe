@@ -1,27 +1,29 @@
 
-#' Create a new Track Frame
-#' 
-#' @param data A data.frame or tibble or data.table.
-#' @param index Column name of the index column
-#' @param lon_col Column name of the longitude column
-#' @param lat_col Column name of the latitude column
-#' @param alt_col Column name of the altitude column
-#' @param id_col Column name of the id column
-#' @return A track_frame object
-#' @export
-track_frame <- function(index,
-                        lon,
-                        lat,
-                        id,
-                        ...) {
-
-    stop("TODO")
-    cols <- c("id", "index", "lon", "lat", "alt")
-    cols <- c(intersect(cols, colnames(data)), setdiff(colnames(data), cols))
-    data <- data[, cols]
-    
-    data
-}
+# #' Create a new Track Frame
+# #'
+# #' @param data A data.frame or tibble or data.table.
+# #' @param index Column name of the index column
+# #' @param lon Column name of the longitude column
+# #' @param lat Column name of the latitude column
+# #' @param alt Column name of the altitude column
+# #' @param id Column name of the id column
+# #' @return A track_frame object
+# #' @export
+# track_frame <- function(data,
+#                         index,
+#                         lon,
+#                         lat,
+#                         alt,
+#                         id,
+#                         ...) {
+# 
+#     stop("TODO")
+#     cols <- c("id", "index", "lon", "lat", "alt")
+#     cols <- c(intersect(cols, colnames(data)), setdiff(colnames(data), cols))
+#     data <- data[, cols]
+# 
+#     data
+# }
 
 
 #' Convert an object to a Track Frame
@@ -35,6 +37,27 @@ as.track_frame <- function(data, ...) {
 }
 
 
+#' Convert a Data Frame to a Track Frame Object
+#'
+#' This function converts a `data.frame` into a `track_frame` object,
+#' ensuring required columns exist and have valid data types.
+#'
+#' @param data A `data.frame` containing the tracking data.
+#' @param index A character string specifying the timestamp column name.
+#' @param lon_col A character string specifying the longitude column name.
+#' @param lat_col A character string specifying the latitude column name.
+#' @param id_cols Optional character vector specifying identifier column names.
+#' @param ... Additional arguments (unused).
+#'
+#' @return A `track_frame` object with appropriate attributes set.
+#' @examples
+#' df <- data.frame(
+#'   time = as.POSIXct(Sys.time() + 1:5),
+#'   lon = runif(5, -180, 180),
+#'   lat = runif(5, -90, 90),
+#'   id = 1:5
+#' )
+#' track <- as.track_frame(df, index = "time", lon_col = "lon", lat_col = "lat", id_cols = "id")
 #' @export
 as.track_frame.data.frame <- function(data,
                                       index,
