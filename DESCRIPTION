@@ -1,12 +1,12 @@
 Package: trackframe
 Type: Package
-Title: What the Package Does (Short Line)
+Title: trackframe
 Version: 1.0.0
 Authors@R: c(
     person("Rainer", "Hirk", email = "Rainer.Hirk@quintik.at", role = c("aut", "cre")),
     person("Florian", "Schwendinger", email = "Florian.Schwendinger@quintik.at", role = "aut"),
     person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = "aut"))
-Description: More about what it does (maybe more than one line).
+Description: Lightweight dataframes of point-based animal location data for performant processing within R.
 License: GPL (>= 2)
 Imports: checkmate, sf
 Depends: R (>= 4.0.0), zoo

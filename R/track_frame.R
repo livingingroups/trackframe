@@ -89,7 +89,7 @@ as.track_frame.data.frame <- function(data,
 as.track_frame.move2 <- function(data, ...) {
     data_attr <- attributes(data)
     lon_lat <- st_coordinates(data[[attr(data, "sf_column")]])
-    index <- attr(data, "indexumn")
+    index <- attr(data, "time_column")
     id_cols <- attr(data, "track_id_column")
     cols <- setdiff(colnames(data), attr(data, "sf_column"))
     class(data) <- "list"
