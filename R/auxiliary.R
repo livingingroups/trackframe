@@ -23,7 +23,7 @@
 #' print(index_values)
 #' @export
 index.track_frame <- function(x, ...){
-  x[, attr(x, "index")]
+  x[[attr(x, "index")]]
 }
 
 #longitude
@@ -45,7 +45,7 @@ index.track_frame <- function(x, ...){
 #' @export
 longitude <- function(tf){
   assert_class(tf, "track_frame")
-  tf[, attr(tf, "lon_col")]
+  tf[[attr(tf, "lon_col")]]
 }
 
 #' Extract Latitude from a Track Frame
@@ -65,7 +65,7 @@ longitude <- function(tf){
 #' @export
 latitude <- function(tf){
   assert_class(tf, "track_frame")
-  tf[, attr(tf, "lat_col")]
+  tf[[attr(tf, "lat_col")]]
 }
 
 
