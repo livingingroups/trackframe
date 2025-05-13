@@ -68,9 +68,23 @@ latitude <- function(tf){
   tf[[attr(tf, "lat_col")]]
 }
 
+#' @export
+unique_ids <- function(tf) {
+  assert_class(tf, "track_frame")
+  ids <- unique(tf[, attr(tf, "id_cols")])
+  if (is.null(dim(ids))) {
+    ids <- data.frame(
+      ids
+    )
+    names(ids) <- attr(tf, "id_cols")
+  }
+  ids
+}
+
 
 #select id of trackframe
 # id can also be a dataframe
+#' @export 
 select_id <- function(tf, id) {
   assert_class(tf, "track_frame")
   # tf <- FFT_tf
