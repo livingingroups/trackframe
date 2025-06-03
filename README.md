@@ -35,7 +35,7 @@ df <- data.frame(
    lat = as.vector(y),
    id = rep(1:nrow(x), each = ncol(x))
 )
-coco_tf <- as.track_frame(df, index = "time", lon_col = "lon", lat_col = "lat", id_cols = "id")
+coco_tf <- as.track_frame(df, index = "time", easting_col = "lon", northing_col = "lat", id_cols = "id")
 ```
 
 TODO: converting back to cocomo style
@@ -53,7 +53,7 @@ albatross_tf <- move2::mt_read(move2::mt_example()) |>
 track_frame -> sf
 
 ```{r}
-recovered_sf <- tf_to_sf(albatross_tf[!is.na(latitude(albatross_tf)),])
+recovered_sf <- tf_to_sf(albatross_tf[!is.na(northing(albatross_tf)),])
 ```
 
 ## TODOs

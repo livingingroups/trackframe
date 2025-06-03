@@ -8,7 +8,7 @@ tf_to_sf(tf, crs = 4326, ...)
 }
 \arguments{
 \item{tf}{A `track_frame` object containing the tracking data. Must have
-attributes specifying the longitude and latitude columns (`lon_col` and `lat_col`).}
+attributes specifying the easting and northing columns (`easting_col` and `northing_col`).}
 
 \item{crs}{The coordinate reference system (CRS) to be used for the sf object.
 Defaults to EPSG code 4326 (WGS84).}
@@ -20,11 +20,10 @@ An sf object representing the spatial data contained in the `track_frame`.
 }
 \description{
 This function converts a `track_frame` object into a Simple Features (sf) object,
-enabling spatial analysis and visualization. The longitude and latitude columns
+enabling spatial analysis and visualization. The easting and northing columns
 are used as coordinates for the sf object.
 }
 \examples{
-# Assuming `tf` is a valid track_frame with longitude and latitude attributes:
 tf <- sim_travel_path(100, format = "track_frame")
 sf_object <- tf_to_sf(tf, crs = 4326)
 plot(sf_object)

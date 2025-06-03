@@ -21,7 +21,7 @@ sim_travel_path(
 
 \item{time_increment}{A numeric giving the time between consecutive points in seconds. Default is 60 (1 minute).}
 
-\item{start_location}{A numeric vector giving the starting location as c(latitude, longitude). Default is Vienna (48.2083537, 16.3725042).}
+\item{start_location}{A numeric vector giving the starting location as c(northing, easting). Default is Vienna (48.2083537, 16.3725042).}
 
 \item{start_time}{A POSIXct giving the starting time for the path. Default is current time.}
 
@@ -30,15 +30,11 @@ sim_travel_path(
 \item{format}{A character string, either "data.frame" or "matrix". Default is "data.frame".}
 }
 \value{
-A track frame, data frame or matrix with columns:
-  \itemize{
-    \item lat - Latitude values
-    \item lon - Longitude values
-    \item datetime - (POSIXct datetime values for track frame and data.frame
-  }
+Depending on the format argument either a \code{"track\_frame"} or
+ \code{"data.frame"} or \code{"matrix"}.
 }
 \description{
-This function generates a random travel path with longitude, latitude, and datetime values.
+This function generates a random travel path with easting, northing, and datetime values.
 The path can include stationary periods and movements with configurable parameters.
 }
 \examples{

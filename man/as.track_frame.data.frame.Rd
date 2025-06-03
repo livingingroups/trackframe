@@ -14,17 +14,17 @@
 )
 }
 \arguments{
-\item{data}{A `data.frame` containing the tracking data.}
+\item{data}{a `data.frame` containing the tracking data.}
+
+\item{time_index_col}{a character string specifying the column name of the time column.}
+
+\item{easting_col}{A character string specifying the column name of the easting column.}
+
+\item{northing_col}{A character string specifying the column name of the northing column.}
+
+\item{track_id_col}{Optional character vector specifying identifier column names.}
 
 \item{...}{Additional arguments (unused).}
-
-\item{index}{A character string specifying the timestamp column name.}
-
-\item{lon_col}{A character string specifying the longitude column name.}
-
-\item{lat_col}{A character string specifying the latitude column name.}
-
-\item{id_cols}{Optional character vector specifying identifier column names.}
 }
 \value{
 A `track_frame` object with appropriate attributes set.
@@ -35,10 +35,11 @@ ensuring required columns exist and have valid data types.
 }
 \examples{
 df <- data.frame(
-  time = as.POSIXct(Sys.time() + 1:5),
-  lon = runif(5, -180, 180),
-  lat = runif(5, -90, 90),
+  time_index_col = as.POSIXct(Sys.time() + 1:5),
+  easting_col = runif(5, 0, 10),
+  northing_col = runif(5, 0, 10),
   id = 1:5
 )
-track <- as.track_frame(df, index = "time", lon_col = "lon", lat_col = "lat", id_cols = "id")
+track <- as.track_frame(df, time_index_col = "time_index_col", easting_col = "easting_col",
+                        northing_col = "northing_col", id_cols = "id")
 }
