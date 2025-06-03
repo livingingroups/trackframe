@@ -60,31 +60,33 @@ as.track_frame <- function(data, ...) {
 #' track <- as.track_frame(df, index = "time", lon_col = "lon", lat_col = "lat", id_cols = "id")
 #' @export
 as.track_frame.data.frame <- function(data,
-                                      index,
-                                      lon_col,
-                                      lat_col,
-                                      id_cols = NULL,
+                                      time_index_col,
+                                      easting_col,
+                                      northing_col,
+                                      track_id_col = NULL,
+                                      # id_cols = NULL,
                                       ...) {
-    assert_choice(index, colnames(data))
-    assert_choice(lon_col, colnames(data))
-    assert_choice(lat_col, colnames(data))
-    assert_character(id_cols, null.ok = TRUE)
-    for (id_col in id_cols) {
-        assert_choice(id_col, colnames(data), null.ok = TRUE)
-    }
+    assert_choice(time_index_col, colnames(data))
+    assert_choice(easting_col, colnames(data))
+    assert_choice(northing_col, colnames(data))
+    # assert_character(track_id, null.ok = TRUE)
+    # for (id_col in id_cols) {
+    #     assert_choice(id_col, colnames(data), null.ok = TRUE)
+    # }
     # check_multi_class(data[[index]], )
-    assert_numeric(data[[lon_col]])
-    assert_numeric(data[[lat_col]])
-    assert_posixct(data[[index]])
-    attr(data, "index") <- index
-    attr(data, "lon_col") <- lon_col
-    attr(data, "lat_col") <- lat_col
-    attr(data, "id_cols") <- id_cols
+    assert_numeric(data[[easting_col]])
+    assert_numeric(data[[northing_col]])
+    assert_posixct(data[[time_index_col]])
+    attr(data, "time_index") <- time_index_col
+    attr(data, "easting_col") <- easting_col
+    attr(data, "northing_col") <- northing_col
+    attr(data, "track_id") <- track_id_col
     class(data) <- union("track_frame", class(data))
     return(data)
 }
 
 
+#FIXME with time_index_col, time_index_col, ...
 #' @export
 as.track_frame.move2 <- function(data, ...) {
     data_attr <- attributes(data)

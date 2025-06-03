@@ -22,8 +22,14 @@
 #' index_values <- index(tf)
 #' print(index_values)
 #' @export
-index.track_frame <- function(x, ...){
-  x[[attr(x, "index")]]
+time_index <- function(tf){
+  x[[attr(tf, "time_index_col")]]
+}
+
+#' @export
+track_id <- function(tf){
+  assert_class(tf, "track_frame")
+  tf[[attr(tf, "track_id_col")]]
 }
 
 #longitude
@@ -43,9 +49,9 @@ index.track_frame <- function(x, ...){
 #' longitude_values <- longitude(tf)
 #' print(longitude_values)
 #' @export
-longitude <- function(tf){
+easting <- function(tf){
   assert_class(tf, "track_frame")
-  tf[[attr(tf, "lon_col")]]
+  tf[[attr(tf, "easting_col")]]
 }
 
 #' Extract Latitude from a Track Frame
@@ -63,20 +69,20 @@ longitude <- function(tf){
 #' latitude_values <- latitude(tf)
 #' print(latitude_values)
 #' @export
-latitude <- function(tf){
+northing <- function(tf){
   assert_class(tf, "track_frame")
-  tf[[attr(tf, "lat_col")]]
+  tf[[attr(tf, "northing_col")]]
 }
 
 #' @export
 unique_ids <- function(tf) {
   assert_class(tf, "track_frame")
-  ids <- unique(tf[, attr(tf, "id_cols")])
+  ids <- unique(tf[, attr(tf, "track_id")])
   if (is.null(dim(ids))) {
     ids <- data.frame(
       ids
     )
-    names(ids) <- attr(tf, "id_cols")
+    names(ids) <- attr(tf, "track_id")
   }
   ids
 }
@@ -92,19 +98,26 @@ select_id <- function(tf, id) {
   # id <- c("Abby", "4652")
   
   if(length(id) > 1) {
-    tf <- tf[do.call(paste0, tf[, attr(tf, "id_cols")]) %in% paste0(id, collapse = ""), ]
+    tf <- tf[do.call(paste0, tf[, attr(tf, "track_id")]) %in% paste0(id, collapse = ""), ]
   } else { #TODO we need more sophisticated check here
-  tf <- tf[tf[, attr(tf, "id_cols")] == id, ]
+  tf <- tf[tf[, attr(tf, "track_id")] == id, ]
   }
   return(tf)
 }
 
 
-# coredata.track.frame <- function(tf){
-#   #TODO check what we want to do in coredata
-#   ctf <- tf[, c(attr(tf, "index"), attr(tf, "lon_col"), attr(tf, "lat_col"))]
-#   return(ctf)
-# }
+
+#' @export 
+tf_to_xyt <- function(x){ #coredata.track_frame
+  #TODO check what we want to do in coredata
+  if(!is.null(attr(x, "track_id"))){
+    ctf <- x[, c(attr(x, "easting_col"), attr(x, "northing_col"), attr(x, "time_index"), attr(x, "track_id"))]
+  } else {
+    ctf <- x[, c(attr(x, "easting_col"), attr(x, "northing_col"), attr(x, "time_index"))]
+  }
+  class(ctf) <- "data.frame"
+  return(ctf)
+}
 
 #' Convert a Track Frame to Simple Features (sf) Object
 #'
@@ -126,6 +139,6 @@ select_id <- function(tf, id) {
 #' @export
 tf_to_sf <- function(tf, crs = 4326, ...) {
   assert_class(tf , "track_frame")
-  coords <- c(attr(tf, "lon_col"), attr(tf, "lat_col"))
+  coords <- c(attr(tf, "easting_col"), attr(tf, "northing_col"))
   st_as_sf(x = tf, crs = 4326, coords = coords, ...)
 }

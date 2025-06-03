@@ -4,10 +4,19 @@
 \alias{as.track_frame.data.frame}
 \title{Convert a Data Frame to a Track Frame Object}
 \usage{
-\method{as.track_frame}{data.frame}(data, index, lon_col, lat_col, id_cols = NULL, ...)
+\method{as.track_frame}{data.frame}(
+  data,
+  time_index_col,
+  easting_col,
+  northing_col,
+  track_id_col = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A `data.frame` containing the tracking data.}
+
+\item{...}{Additional arguments (unused).}
 
 \item{index}{A character string specifying the timestamp column name.}
 
@@ -16,8 +25,6 @@
 \item{lat_col}{A character string specifying the latitude column name.}
 
 \item{id_cols}{Optional character vector specifying identifier column names.}
-
-\item{...}{Additional arguments (unused).}
 }
 \value{
 A `track_frame` object with appropriate attributes set.
