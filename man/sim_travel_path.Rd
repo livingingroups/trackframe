@@ -34,7 +34,7 @@ Depending on the format argument either a \code{"track\_frame"} or
  \code{"data.frame"} or \code{"matrix"}.
 }
 \description{
-This function generates a random travel path with easting, northing, and datetime values.
+This function generates a random travel path with easting, northing, and time values.
 The path can include stationary periods and movements with configurable parameters.
 }
 \examples{

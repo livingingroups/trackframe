@@ -8,7 +8,7 @@ unique_ids(tf)
 }
 \arguments{
 \item{tf}{A `track_frame` object containing the tracking data.
-Must have an attribute indicating the track ID column (`track_id`).}
+Must have an attribute indicating the track ID column (`id`).}
 }
 \value{
 A vector of unique track IDs extracted from the `track_frame`.

@@ -8,7 +8,7 @@ tf_to_sf(tf, crs = 4326, ...)
 }
 \arguments{
 \item{tf}{A `track_frame` object containing the tracking data. Must have
-attributes specifying the easting and northing columns (`easting_col` and `northing_col`).}
+attributes specifying the easting and northing columns (`easting` and `northing`).}
 
 \item{crs}{The coordinate reference system (CRS) to be used for the sf object.
 Defaults to EPSG code 4326 (WGS84).}

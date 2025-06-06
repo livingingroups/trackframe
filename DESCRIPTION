@@ -10,6 +10,7 @@ Description: Lightweight dataframes of point-based animal location data for perf
 License: GPL (>= 2)
 Imports: checkmate, sf
 Depends: R (>= 4.0.0), zoo
-Suggests: tinytest
+Suggests: tinytest, knitr, move2, microbenchmark, markdown, units
 Encoding: UTF-8
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr 

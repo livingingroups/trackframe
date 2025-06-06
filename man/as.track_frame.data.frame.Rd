@@ -4,25 +4,18 @@
 \alias{as.track_frame.data.frame}
 \title{Convert a Data Frame to a Track Frame Object}
 \usage{
-\method{as.track_frame}{data.frame}(
-  data,
-  time_index_col,
-  easting_col,
-  northing_col,
-  track_id_col = NULL,
-  ...
-)
+\method{as.track_frame}{data.frame}(data, time_col, easting_col, northing_col, id_col = NULL, ...)
 }
 \arguments{
 \item{data}{a `data.frame` containing the tracking data.}
 
-\item{time_index_col}{a character string specifying the column name of the time column.}
+\item{time_col}{a character string specifying the column name of the time column.}
 
 \item{easting_col}{A character string specifying the column name of the easting column.}
 
 \item{northing_col}{A character string specifying the column name of the northing column.}
 
-\item{track_id_col}{Optional character vector specifying identifier column names.}
+\item{id_col}{Optional character vector specifying identifier column names.}
 
 \item{...}{Additional arguments (unused).}
 }
@@ -35,11 +28,12 @@ ensuring required columns exist and have valid data types.
 }
 \examples{
 df <- data.frame(
-  time_index_col = as.POSIXct(Sys.time() + 1:5),
+  time_col = as.POSIXct(Sys.time() + 1:5),
   easting_col = runif(5, 0, 10),
   northing_col = runif(5, 0, 10),
   id = 1:5
 )
-track <- as.track_frame(df, time_index_col = "time_index_col", easting_col = "easting_col",
-                        northing_col = "northing_col", id_cols = "id")
+tf <- as.track_frame(df, time_col = "time_col", easting_col = "easting_col",
+                        northing_col = "northing_col", id_col = "id")
+attributes(tf)
 }

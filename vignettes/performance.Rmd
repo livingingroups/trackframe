@@ -1,17 +1,31 @@
+---
+author: "TODO"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Example of Trackframe vs move2 performance}
+---
+
 # Example of Trackframe vs move2 performance
+
+```{r}
+library(trackframe)
+```
 
 
 Distance function for trackframe.
 
 ```{r}
+library(units)
 tf_distance <- function(tf) {
-  x <- units::set_units(
-    c(sqrt(diff(longitude(tf)[[1]]) ^ 2 + diff(latitude(tf)[[1]])^2), NA),
+  x <- set_units(
+    c(sqrt(diff(easting(tf)[[1]]) ^ 2 + diff(northing(tf)[[1]])^2), NA),
     'm'
   )
   x[which(
-    tf[1:(nrow(tf) - 1) ,attr(tf, 'id_cols')][[1]] !=
-      tf[2:nrow(tf), attr(tf, 'id_cols')][[1]]
+    tf[1:(nrow(tf) - 1) ,attr(tf, 'id')][[1]] !=
+      tf[2:nrow(tf), attr(tf, 'id')][[1]]
   )] <- NA
   x
 }
@@ -21,8 +35,9 @@ filter_nonempty <- function(x) x[!sf::st_is_empty(x),]
 Load data
 
 ```{r, results="hide"}
+library(move2)
 suppressPackageStartupMessages(library(move2, quietly = TRUE))
-albatross_move2 <- mt_read(move2::mt_example()) |>
+albatross_move2 <- mt_read(mt_example()) |>
   sf::st_transform(3857) |>
   filter_nonempty()
 
@@ -38,7 +53,8 @@ all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attribu
 Compare performance
 
 ```{r}
-m <- microbenchmark::microbenchmark(
+library(microbenchmark)
+m <- microbenchmark(
   mt_distance(albatross_move2),
   tf_distance(albatross_tf),
   times = 15

@@ -8,14 +8,14 @@ easting(tf)
 }
 \arguments{
 \item{tf}{A `track_frame` object containing the tracking data.
-Must have an attribute indicating the easting column (`easting_col`).}
+Must have an attribute indicating the easting column (`easting`).}
 }
 \value{
 A vector of easting values extracted from the `track_frame`.
 }
 \description{
 This function retrieves the easting values from a `track_frame` object.
-The `track_frame` should be a data frame-like structure with an attribute
+The `track_frame` has a data frame-like structure with an attribute
 specifying the column containing easting values.
 }
 \examples{

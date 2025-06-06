@@ -1,48 +1,42 @@
 #accessor for cols
 
-# #' @export
-"index<-track_frame" <- function(x, value)
-{
-  stop("TODO")
-}
-
 
 #' Extract Index from a Track Frame
 #'
-#' This function retrieves the index values from a `track_frame` object.
-#' The `track_frame` should be a data frame-like structure with an attribute
-#' specifying the column containing index values.
+#' This function retrieves the time index values from a `track_frame` object.
+#' The `track_frame` has a data frame-like structure with an attribute
+#' specifying the column containing time index values.
 #'
 #' @param tf A `track_frame` object containing the tracking data.
-#'           Must have an attribute indicating the index column (`index`).
-#' @return A vector of index values extracted from the `track_frame`.
+#'           Must have an attribute indicating the time column (`time`).
+#' @return A vector of time index values extracted from the `track_frame`.
 #' @examples
 #' tf <- sim_travel_path(100, format = "track_frame")
-#' index_values <- index(tf)
+#' index_values <- time(tf)
 #' print(index_values)
 #' @export
-time_index <- function(tf){
-  tf[[attr(tf, "time_index")]]
+time <- function(tf){
+  tf[[attr(tf, "time")]]
 }
 
 
 #' Extract Track ID from a Track Frame
 #'
 #' This function retrieves the track ID values from a `track_frame` object.
-#' The `track_frame` should be a data frame-like structure with an attribute
+#' The `track_frame` has a data frame-like structure with an attribute
 #' specifying the column containing track ID values.
 #'
 #' @param tf A `track_frame` object containing the tracking data.
-#'           Must have an attribute indicating the track ID column (`track_id`).
+#'           Must have an attribute indicating the track ID column (`id`).
 #' @return A vector of track ID values extracted from the `track_frame`.
 #' @examples
 #' tf <- sim_travel_paths(3, c(2, 4, 5))
-#' track_id_values <- track_id(tf)
-#' print(track_id_values)
+#' id_values <- id(tf)
+#' print(id_values)
 #' @export
-track_id <- function(tf){
+id <- function(tf){
   assert_class(tf, "track_frame")
-  tf[[attr(tf, "track_id")]]
+  tf[[attr(tf, "id")]]
 }
 
 
@@ -51,11 +45,11 @@ track_id <- function(tf){
 #' Extract Easting from a Track Frame
 #'
 #' This function retrieves the easting values from a `track_frame` object.
-#' The `track_frame` should be a data frame-like structure with an attribute
+#' The `track_frame` has a data frame-like structure with an attribute
 #' specifying the column containing easting values.
 #'
 #' @param tf A `track_frame` object containing the tracking data.
-#'           Must have an attribute indicating the easting column (`easting_col`).
+#'           Must have an attribute indicating the easting column (`easting`).
 #' @return A vector of easting values extracted from the `track_frame`.
 #' @examples
 #' tf <- sim_travel_path(100, format = "track_frame")
@@ -70,11 +64,11 @@ easting <- function(tf){
 #' Extract Northing from a Track Frame
 #'
 #' This function retrieves the northing values from a `track_frame` object.
-#' The `track_frame` should be a data frame-like structure with an attribute
+#' The `track_frame` has a data frame-like structure with an attribute
 #' specifying the column containing northing values.
 #'
 #' @param tf A `track_frame` object containing the tracking data.
-#'           Must have an attribute indicating the northing column (`northing_col`).
+#'           Must have an attribute indicating the northing column (`northing`).
 #' @return A vector of northing values extracted from the `track_frame`.
 #' @examples
 #' tf <- sim_travel_path(100, format = "track_frame")
@@ -94,7 +88,7 @@ northing <- function(tf){
 #' specifying the column containing track IDs.
 #'
 #' @param tf A `track_frame` object containing the tracking data.
-#'           Must have an attribute indicating the track ID column (`track_id`).
+#'           Must have an attribute indicating the track ID column (`id`).
 #' @return A vector of unique track IDs extracted from the `track_frame`.
 #' @examples
 #' tf <- sim_travel_path(100, format = "track_frame")
@@ -103,12 +97,12 @@ northing <- function(tf){
 #' @export
 unique_ids <- function(tf) {
   assert_class(tf, "track_frame")
-  ids <- unique(tf[, attr(tf, "track_id")])
+  ids <- unique(tf[, attr(tf, "id")])
   if (is.null(dim(ids))) {
     ids <- data.frame(
       ids
     )
-    names(ids) <- attr(tf, "track_id")
+    names(ids) <- attr(tf, "id")
   }
   ids
 }
@@ -130,21 +124,14 @@ unique_ids <- function(tf) {
 #' @return A filtered `track_frame` containing only the specified track(s).
 #'
 #' @examples
-#' tf <- sim_travel_path(100, format = "track_frame")
-#' single_track <- select_id(tf, "track1")
-#' multiple_tracks <- select_id(tf, c("track1", "track2"))
+#' tf <- sim_travel_paths(3, 100)
+#' single_track <- select_id(tf, "track_1")
+#' multiple_tracks <- select_id(tf, c("track_2", "track_3"))
 #' @export 
 select_id <- function(tf, id) {
   assert_class(tf, "track_frame")
-  # tf <- FFT_tf
-  # id <- "Abby"
-  # id <- c("Abby", "4652")
-  
-  if(length(id) > 1) {
-    tf <- tf[do.call(paste0, tf[, attr(tf, "track_id")]) %in% paste0(id, collapse = ""), ]
-  } else { #TODO we need more sophisticated check here
-  tf <- tf[tf[, attr(tf, "track_id")] == id, ]
-  }
+  if(is.null(attr(tf, "id"))) stop("no track id specified in track_frame")
+  tf <- tf[tf[, attr(tf, "id")] %in% id, ]
   return(tf)
 }
 
@@ -153,18 +140,18 @@ select_id <- function(tf, id) {
 #' Convert a Track Frame to XYT Format
 #'
 #' This function extracts the core spatial-temporal data from a track_frame object,
-#' returning a simplified data frame with just the easting (X), northing (Y), 
-#' timestamp (T), and optionally the track ID columns.
+#' returning a simplified data frame with just the easting (x), northing (y), 
+#' time (t), and optionally the track ID columns.
 #'
 #' @param x A `track_frame` object containing the tracking data.
 #' @return A data frame with the easting, northing, time index, and optionally track ID columns.
 #' @export 
 tf_to_xyt <- function(x){ #coredata.track_frame
   #TODO check what we want to do in coredata
-  if(!is.null(attr(x, "track_id"))){
-    ctf <- x[, c(attr(x, "easting"), attr(x, "northing"), attr(x, "time_index"), attr(x, "track_id"))]
+  if(!is.null(attr(x, "id"))){
+    ctf <- x[, c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"), attr(x, "id"))]
   } else {
-    ctf <- x[, c(attr(x, "easting"), attr(x, "northing"), attr(x, "time_index"))]
+    ctf <- x[, c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))]
   }
   class(ctf) <- "data.frame"
   return(ctf)
@@ -177,7 +164,7 @@ tf_to_xyt <- function(x){ #coredata.track_frame
 #' are used as coordinates for the sf object.
 #'
 #' @param tf A `track_frame` object containing the tracking data. Must have
-#'           attributes specifying the easting and northing columns (`easting_col` and `northing_col`).
+#'           attributes specifying the easting and northing columns (`easting` and `northing`).
 #' @param crs The coordinate reference system (CRS) to be used for the sf object.
 #'            Defaults to EPSG code 4326 (WGS84).
 #' @param ... Additional arguments to be passed to `st_as_sf`.

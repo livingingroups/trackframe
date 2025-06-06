@@ -1,6 +1,6 @@
 #' Generate Random Travel Path
 #'
-#' This function generates a random travel path with easting, northing, and datetime values.
+#' This function generates a random travel path with easting, northing, and time values.
 #' The path can include stationary periods and movements with configurable parameters.
 #'
 #' @param size An integer giving the number of points to generate in the path.
@@ -20,7 +20,7 @@
 sim_travel_path <- function(size,
                          max_step = 0.001,
                          time_increment = 60, # in seconds
-                         start_location = c(48.2083537, 16.3725042),  # FIXME: northing, easting
+                         start_location = c(48.2083537, 16.3725042),
                          start_time = Sys.time(),
                          stay_prob = 0.2,
                          format = c("track_frame", "data.frame", "matrix")) {
@@ -34,18 +34,18 @@ sim_travel_path <- function(size,
   path <- data.frame(
     northing = numeric(size),
     easting = numeric(size),
-    datetime = as.POSIXct(rep(NA, size))
+    time = as.POSIXct(rep(NA, size))
   )
   
   path$northing[1] <- start_location[1]
   path$easting[1] <- start_location[2]
-  path$datetime[1] <- start_time
+  path$time[1] <- start_time
   
   for (i in 2:size) {
     if (runif(1) < stay_prob) {
       path$northing[i] <- path$northing[i-1]
       path$easting[i] <- path$easting[i-1]
-      path$datetime[i] <- path$datetime[i-1] + round(runif(1, 1, 30)) *  time_increment
+      path$time[i] <- path$time[i-1] + round(runif(1, 1, 30)) *  time_increment
     } else {
       dnorthing <- runif(1, -max_step, max_step)
       deasting <- runif(1, -max_step, max_step)
@@ -55,16 +55,16 @@ sim_travel_path <- function(size,
       
       path$northing[i] <- new_northing
       path$easting[i] <- new_easting
-      path$datetime[i] <- path$datetime[i-1] + time_increment
+      path$time[i] <- path$time[i-1] + time_increment
     }    
   }
   
   if (format == "matrix") {
-    path$datetime <- as.integer(path$datetime)
+    path$time <- as.integer(path$time)
     return(as.matrix(path))
   } else if(format == "track_frame") {
     return(as.track_frame(data = path,
-                          time_index_col = "datetime",
+                          time_col = "time",
                           easting_col = "easting",
                           northing_col = "northing"))
     } else {
@@ -127,10 +127,10 @@ sim_travel_paths <- function(ntracks,
   
   total_size <- sum(sizes)
   tf <- data.frame(
-    track_id = character(total_size),
+    id = character(total_size),
     easting = numeric(total_size),
     northing = numeric(total_size),
-    datetime = as.POSIXct(rep(NA, total_size))
+    time = as.POSIXct(rep(NA, total_size))
   )
 
   start <- 1L
@@ -143,13 +143,13 @@ sim_travel_paths <- function(ntracks,
     for (col in colnames(x)) {
       tf[idx, col] <- x[[col]]
     }
-    tf[idx, "track_id"] <- sprintf("%s_%i", track_prefix, i)
+    tf[idx, "id"] <- sprintf("%s_%i", track_prefix, i)
     start <- end + 1L
   }
 
   return(as.track_frame(tf,
-                        track_id_col = "track_id",
-                        time_index_col = "datetime",
+                        id_col = "id",
+                        time_col = "time",
                         easting_col = "easting",
                         northing_col = "northing"))
 }
