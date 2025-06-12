@@ -153,7 +153,7 @@ tf_to_xyt <- function(x){ #coredata.track_frame
   } else {
     ctf <- x[, c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))]
   }
-  class(ctf) <- "data.frame"
+  # class(ctf) <- "data.frame"
   return(ctf)
 }
 

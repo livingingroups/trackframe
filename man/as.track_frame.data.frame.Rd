@@ -4,7 +4,14 @@
 \alias{as.track_frame.data.frame}
 \title{Convert a Data Frame to a Track Frame Object}
 \usage{
-\method{as.track_frame}{data.frame}(data, time_col, easting_col, northing_col, id_col = NULL, ...)
+\method{as.track_frame}{data.frame}(
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a `data.frame` containing the tracking data.}
