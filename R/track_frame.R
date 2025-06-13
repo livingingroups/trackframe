@@ -69,7 +69,7 @@ as.track_frame.data.frame <- function(data,
                                       ...) {
     assert_choice(time_col, colnames(data), null.ok = TRUE)
     if(is.null(time_col)) {
-      time_col_guesses <- c("t", "timestamp", "time", "time_index", "tindex")
+      time_col_guesses <- c("t", "timestamp", "time", "time_index", "tindex") #FIXME: avoid duplication and move to function in auxiliary
       ind <- time_col_guesses %in% colnames(data)
       stopifnot("time_col needs to be specified. Guessing not succesful." = sum(ind) >= 1)
       time_col <- time_col_guesses[time_col_guesses %in% colnames(data)][1]
