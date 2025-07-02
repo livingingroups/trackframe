@@ -8,8 +8,8 @@ Authors@R: c(
     person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = "aut"))
 Description: Lightweight dataframes of point-based animal location data for performant processing within R.
 License: GPL (>= 2)
-Imports: checkmate, sf
-Depends: R (>= 4.0.0), zoo
+Imports: checkmate, sf, methods
+Depends: R (>= 4.0.0)
 Suggests: tinytest, knitr, move2, microbenchmark, markdown, units
 Encoding: UTF-8
 RoxygenNote: 7.3.2

@@ -19,7 +19,7 @@ The `track_frame` has a data frame-like structure with an attribute
 specifying the column containing easting values.
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
-easting_values <- easting(tf)
-print(easting_values)
+tf <- sim_travel_path(10, format = "track_frame")
+easting(tf)
+
 }

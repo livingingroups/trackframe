@@ -20,6 +20,6 @@ specifying the column containing track ID values.
 }
 \examples{
 tf <- sim_travel_paths(3, c(2, 4, 5))
-id_values <- id(tf)
-print(id_values)
+id(tf)
+
 }

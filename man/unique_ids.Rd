@@ -19,7 +19,7 @@ The `track_frame` should be a data frame-like structure with an attribute
 specifying the column containing track IDs.
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
-unique_ids <- unique_ids(tf)
-print(unique_ids)
+tf <- sim_travel_paths(4, 2:5)
+unique_ids(tf)
+
 }

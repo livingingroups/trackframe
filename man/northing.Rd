@@ -19,7 +19,7 @@ The `track_frame` has a data frame-like structure with an attribute
 specifying the column containing northing values.
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
-northing_values <- northing(tf)
-print(northing_values)
+tf <- sim_travel_path(10, format = "track_frame")
+northing(tf)
+
 }

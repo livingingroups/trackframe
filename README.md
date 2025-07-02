@@ -53,7 +53,7 @@ albatross_tf <- move2::mt_read(move2::mt_example()) |>
 track_frame -> sf
 
 ```{r}
-recovered_sf <- tf_to_sf(albatross_tf[!is.na(northing(albatross_tf)),])
+recovered_sf <- tf_as_sf(albatross_tf[!is.na(northing(albatross_tf)),])
 ```
 
 ## TODOs

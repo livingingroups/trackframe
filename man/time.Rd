@@ -20,6 +20,6 @@ specifying the column containing time index values.
 }
 \examples{
 tf <- sim_travel_path(100, format = "track_frame")
-index_values <- time(tf)
-print(index_values)
+time(tf)
+
 }
