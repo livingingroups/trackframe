@@ -25,21 +25,9 @@ track_frame <- function(...,
 # }
 
 
-#' Convert an object to a Track Frame
-#' 
-#' @param data the object to be converted.
-#' @param ... additional arguments passed to the method.
-#' @return A track_frame object
-#' @export
-#' @rdname as_track_frame
-as.track_frame <- function(data, ...) {
-  UseMethod("as.track_frame")
-}
-
-
-#' Convert a Data Frame to a Track Frame Object
+#' Convert an object to a \code{track\_frame}
 #'
-#' This function converts a `data.frame` into a `track_frame` object,
+#' This function converts an object into a `track_frame` object,
 #' ensuring required columns exist and have valid data types.
 #'
 #' @param data a `data.frame` containing the tracking data.
@@ -62,6 +50,18 @@ as.track_frame <- function(data, ...) {
 #' attributes(tf)
 #' @export
 #' @rdname as_track_frame
+as.track_frame <- function(data,
+                           time_col = NULL,
+                           easting_col = NULL,
+                           northing_col = NULL,
+                           id_col = NULL,
+                           ...) {
+  UseMethod("as.track_frame")
+}
+
+
+#' @noRd
+#' @export
 as.track_frame.data.frame <- function(data,
                                       time_col = NULL,
                                       easting_col = NULL,
@@ -93,7 +93,7 @@ as.track_frame.data.frame <- function(data,
     assert_character(id_col, len = 1, null.ok = TRUE)
     assert_numeric(data[[easting_col]])
     assert_numeric(data[[northing_col]])
-    assert_posixct(data[[time_col]])
+    assert_numeric(data[[time_col]])
     attr(data, "time") <- time_col
     attr(data, "easting") <- easting_col
     attr(data, "northing") <- northing_col

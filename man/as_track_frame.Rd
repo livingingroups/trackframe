@@ -2,12 +2,9 @@
 % Please edit documentation in R/track_frame.R
 \name{as.track_frame}
 \alias{as.track_frame}
-\alias{as.track_frame.data.frame}
-\title{Convert an object to a Track Frame}
+\title{Convert an object to a \code{track\_frame}}
 \usage{
-as.track_frame(data, ...)
-
-\method{as.track_frame}{data.frame}(
+as.track_frame(
   data,
   time_col = NULL,
   easting_col = NULL,
@@ -19,8 +16,6 @@ as.track_frame(data, ...)
 \arguments{
 \item{data}{a `data.frame` containing the tracking data.}
 
-\item{...}{Additional arguments (unused).}
-
 \item{time_col}{a character string specifying the column name of the time column.}
 
 \item{easting_col}{A character string specifying the column name of the easting column.}
@@ -28,14 +23,14 @@ as.track_frame(data, ...)
 \item{northing_col}{A character string specifying the column name of the northing column.}
 
 \item{id_col}{Optional character vector specifying identifier column names.}
+
+\item{...}{Additional arguments (unused).}
 }
 \value{
-A track_frame object
-
 A `track_frame` object with appropriate attributes set.
 }
 \description{
-This function converts a `data.frame` into a `track_frame` object,
+This function converts an object into a `track_frame` object,
 ensuring required columns exist and have valid data types.
 }
 \examples{
