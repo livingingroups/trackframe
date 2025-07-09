@@ -32,14 +32,15 @@ sim_travel_path <- function(size,
   format <- match.arg(format)
   
   path <- data.frame(
-    northing = numeric(size),
+    time = as.POSIXct(rep(NA, size)),
     easting = numeric(size),
-    time = as.POSIXct(rep(NA, size))
+    northing = numeric(size)
   )
   
-  path$northing[1] <- start_location[1]
-  path$easting[1] <- start_location[2]
   path$time[1] <- start_time
+  path$easting[1] <- start_location[2]
+  path$northing[1] <- start_location[1]
+
   
   for (i in 2:size) {
     if (runif(1) < stay_prob) {
@@ -127,10 +128,10 @@ sim_travel_paths <- function(ntracks,
   
   total_size <- sum(sizes)
   tf <- data.frame(
-    id = character(total_size),
+    time = as.POSIXct(rep(NA, total_size)),
     easting = numeric(total_size),
     northing = numeric(total_size),
-    time = as.POSIXct(rep(NA, total_size))
+    id = character(total_size)
   )
 
   start <- 1L

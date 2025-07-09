@@ -22,6 +22,10 @@ id_col <- function(tf) {
   attr(tf, "id")
 }
 
+utm_epsg <- function(tf) {
+  attr(tf, "utm_epsg")
+}
+
 
 #' Extract Index from a Track Frame
 #'
@@ -37,18 +41,25 @@ id_col <- function(tf) {
 #' tf <- sim_travel_path(100, format = "track_frame")
 #' time(tf)
 #' 
+#' 
 #' @export
 time <- function(tf) {
+  UseMethod("time")
+}
+
+#' @noRd
+#' @export
+time.track_frame <- function(tf) {
   tf[[attr(tf, "time")]]
 }
 
 
-# TODO: Do we need this?
-"time<-" <- function(tf, value) {
-  assert_class(tf, "track_frame")
-  tf[[attr(tf, "time")]] <- value
-  tf
-}
+# # TODO: Do we need this?
+# "time<-.track_frame" <- function(tf, value) {
+#   assert_class(tf, "track_frame")
+#   tf[[attr(tf, "time")]] <- value
+#   tf
+# }
 
 
 #' Extract Track ID from a Track Frame
@@ -182,7 +193,7 @@ select_id <- function(tf, id) {
   if (is.null(attr(tf, "id"))) {
     stop("track_frame does not store an id column")
   }
-  idx <- tf[, attr(tf, "id")] %in% id
+  idx <- tf[[attr(tf, "id")]] %in% id
   return(tf[idx, , drop = FALSE, with = FALSE])
 }
 
@@ -220,19 +231,71 @@ tf_as_xyt <- function(tf) { #coredata.track_frame
 #'
 #' @param tf A `track_frame` object containing the tracking data. Must have
 #'           attributes specifying the easting and northing columns (`easting` and `northing`).
-#' @param crs The coordinate reference system (CRS) to be used for the sf object.
-#'            Defaults to EPSG code 4326 (WGS84).
+#' @param tf_crs The coordinate reference system (CRS) used in the `track_frame`.
+#' @param crs_new The coordinate reference system (CRS) to be used for the sf object.
 #' @param ... Additional arguments to be passed to `st_as_sf`.
 #' @return An sf object representing the spatial data contained in the `track_frame`.
 #' 
 #' @examples
 #' tf <- sim_travel_paths(4, 2:5)
-#' sf_object <- tf_as_sf(tf, crs = 4326)
+#' sf_object <- tf_as_sf(tf, tf_crs = 32610, crs_new = 4326)
 #' plot(sf_object)
 #' @export
-tf_as_sf <- function(tf, crs = 4326, ...) {
+#' @rdname tf_as
+tf_as_sf <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   # NOTE: tf_as_sf to be consistent with the sf package.
   assert_class(tf, "track_frame")
+  if(is.null(tf_crs)) {
+    tf_crs <- utm_epsg(tf)
+    if(is.null(tf_crs)) stop("no utm_epsg provided in track_frame. Please provide argument tf_crs")
+  }
   coords <- c(attr(tf, "easting"), attr(tf, "northing"))
-  sf::st_as_sf(x = tf, crs = 4326, coords = coords, ...)
+  new_sf <- sf::st_as_sf(x = tf, crs = tf_crs, coords = coords, ...)
+  if(!is.null(crs_new)) {
+    new_sf <- sf::st_transform(new_sf, crs_new)
 }
+  return(new_sf)
+}
+
+
+#' @export
+#' @rdname tf_as
+tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
+  # tf_crs <- 32610
+  assert_class(tf, "track_frame")
+  as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
+  if (inherits(as_sftrack, "try-error")) {
+    stop("package 'sftrack' is required for this function. Please install it.")
+  }
+  # TODO: Should we drop NA?
+  tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)),]
+  sf_df <- tf_as_sf(tf = tf, tf_crs = tf_crs, crs_new = crs_new)
+  # sf_df["sft_group"] <- lapply(id(tf), function(text) eval(parse(text = text)))
+  # FIXME: Split does not work if not multiple groups are present.
+  sft_group <- as.list(do.call(rbind.data.frame, lapply(id(tf), function(text) eval(parse(text = text)))))
+  # FIXME: We want to create an sftrack object without importing it.
+  new_sftrack <- as_sftrack(sf_df, group = sft_group, time = attr(tf, "time"), overwrite_names = TRUE)
+  # new_sftrack[[attr(new_sftrack, "group_col")]]
+  return(new_sftrack)
+}
+
+
+#' @export
+#' @rdname tf_as
+tf_as_move2 <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
+  # tf_crs <- 32610
+  assert_class(tf, "track_frame")
+  mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
+  if (inherits(mt_as_move2, "try-error")) {
+    stop("package 'move2' is required for this function. Please install it.")
+  }
+  # TODO: Should we drop NA?
+  tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)),]
+  sf_df <- tf_as_sf(tf = tf, tf_crs = tf_crs, crs_new = crs_new)
+  # FIXME: We want to create an move2 object without importing it.
+  mt_as_move2(sf_df,
+              time_column = attr(tf, "time"),
+              track_id_column = attr(tf, "id"))
+}
+
+

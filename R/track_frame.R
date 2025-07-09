@@ -1,28 +1,35 @@
-
-# #' @param index Column name of the index column
-# #' @param easting Column name of the easting column
-# #' @param northing Column name of the northing column
-# #' @param alt Column name of the altitude column
-# #' @param id Column name of the id column
-# #' @return A track_frame object
-# #' @export
+#' Creates an object to a \code{track\_frame}
+#'
+#' This function creates an object of class `track_frame`.
+#' 
+#' @param ... an object coercible to `data.frame`
+#' @param time_col (optional) Column name of the time index column
+#' @param easting_col (optional) Column name of the easting column
+#' @param northing_col (optional) Column name of the northing column
+#' @param id_col (optional) Column name of the id column
+#' @param utm_epsg crs value for utm zone
+#' @return A track_frame object
+#' @export
+#' @examples
+#' df <- data.frame(
+#'   time_col = as.POSIXct(Sys.time() + 1:5),
+#'   easting_col = runif(5, 0, 10),
+#'   northing_col = runif(5, 0, 10),
+#'   id = 1:5
+#' )
+#' tf <- track_frame(df, time_col = "time_col", easting_col = "easting_col",
+#'                         northing_col = "northing_col", id_col = "id")
+#' attributes(tf)
 track_frame <- function(...,
                         time_col = NULL,
                         easting_col = NULL,
                         northing_col = NULL,
-                        id_col = NULL) {
+                        id_col = NULL,
+                        utm_epsg = NULL) {
   df <- data.frame(...)
   as.track_frame(df, time_col = time_col, easting_col = easting_col, 
-                 northing_col = northing_col, id_col = id_col)
+                 northing_col = northing_col, id_col = id_col, utm_epsg = utm_epsg)
 }
-# 
-#     stop("TODO")
-#     cols <- c("id", "index", "lon", "lat", "alt")
-#     cols <- c(intersect(cols, colnames(data)), setdiff(colnames(data), cols))
-#     data <- data[, cols]
-# 
-#     data
-# }
 
 
 #' Convert an object to a \code{track\_frame}
@@ -35,6 +42,7 @@ track_frame <- function(...,
 #' @param easting_col A character string specifying the column name of the easting column.
 #' @param northing_col A character string specifying the column name of the northing column.
 #' @param id_col Optional character vector specifying identifier column names.
+#' @param utm_epsg crs value for utm zone
 #' @param ... Additional arguments (unused).
 #'
 #' @return A `track_frame` object with appropriate attributes set.
@@ -48,6 +56,7 @@ track_frame <- function(...,
 #' tf <- as.track_frame(df, time_col = "time_col", easting_col = "easting_col",
 #'                         northing_col = "northing_col", id_col = "id")
 #' attributes(tf)
+#' 
 #' @export
 #' @rdname as_track_frame
 as.track_frame <- function(data,
@@ -55,6 +64,7 @@ as.track_frame <- function(data,
                            easting_col = NULL,
                            northing_col = NULL,
                            id_col = NULL,
+                           utm_epsg = NULL,
                            ...) {
   UseMethod("as.track_frame")
 }
@@ -67,6 +77,7 @@ as.track_frame.data.frame <- function(data,
                                       easting_col = NULL,
                                       northing_col = NULL,
                                       id_col = NULL,
+                                      utm_epsg = NULL,
                                       ...) {
     assert_choice(time_col, colnames(data), null.ok = TRUE)
     if(is.null(time_col)) {
@@ -94,10 +105,12 @@ as.track_frame.data.frame <- function(data,
     assert_numeric(data[[easting_col]])
     assert_numeric(data[[northing_col]])
     assert_numeric(data[[time_col]])
+    assert_numeric(utm_epsg, lower = 32600, upper = 32760, null.ok = TRUE)
     attr(data, "time") <- time_col
     attr(data, "easting") <- easting_col
     attr(data, "northing") <- northing_col
     attr(data, "id") <- id_col
+    attr(data, "utm_epsg") <- utm_epsg
     class(data) <- union("track_frame", class(data))
     return(data)
 }
@@ -109,15 +122,31 @@ as.track_frame.matrix <- function(data,
                                   easting_col = NULL,
                                   northing_col = NULL,
                                   id_col = NULL,
+                                  utm_epsg = NULL,
                                   ...) {
   as.track_frame(as.data.frame(data), time_col = time_col,
                  easting_col = easting_col, northing_col = northing_col,
-                 id_col = id_col, ...)
+                 id_col = id_col, utm_epsg = utm_epsg,  ...)
 }
 
 
+#' @examples
+#' # example for move2 objects
+#' library(move2)
+#' library(trackframe)
+#' albatross_move2 <- mt_read(mt_example()) |>
+#'   sf::st_transform(3857)
+#'  albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
+#'  albatross_tf <- as.track_frame(albatross_move2)
+#' class(albatross_tf)
+#' 
 #' @export
+#' @rdname as_track_frame
 as.track_frame.move2 <- function(data, ...) {
+    # transformation to cartesian coordinates
+    utm_epsg <- sf_to_utm_epsg(data)
+    # attr(data, "utm_epsg") <- utm_epsg
+    data <- st_transform(data, utm_epsg)
     data_attr <- attributes(data)
     x_y <- st_coordinates(data[[attr(data, "sf_column")]])  #FIXME transformation to cartesian coordinates
     time_index <- attr(data, "time_column")
@@ -131,12 +160,40 @@ as.track_frame.move2 <- function(data, ...) {
     class(data) <- c("data.frame")
     attr(data, "row.names") <- data_attr[["row.names"]]
     as.track_frame(data, time_col = time_index, easting_col = "easting",
-                   northing_col = "northing", id_col = id_col)
+                   northing_col = "northing", id_col = id_col, utm_epsg = utm_epsg)
 }
 
 
+#' @examples
+#' # example for sftrack objects
+#' library(sftrack)
+#' library(trackframe)
+#' data("raccoon", package = "sftrack")
+#' raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
+#' raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+#' coords <- c("longitude","latitude")
+#' group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+#' time <- "time"
+#' error <- "fix"
+#' crs <- 4326
+#' # create a sftrack object
+#' my_sftrack <- as_sftrack(data = raccoon,
+#'                          coords = coords,
+#'                          group = group,
+#'                          time = time,
+#'                          error = error,
+#'                          crs = crs)
+#' 
+#' sftrack_tf <- as.track_frame(my_sftrack)
+#' class(sftrack_tf)
+#' 
 #' @export
+#' @rdname as_track_frame
 as.track_frame.sftrack <- function(data, ...) {
+  # transformation to cartesian coordinates
+  utm_epsg <- sf_to_utm_epsg(data)
+  # attr(data, "utm_epsg") <- utm_epsg
+  data <- st_transform(data, utm_epsg)
   data_attr <- attributes(data)
   x_y <- st_coordinates(data[[attr(data, "sf_column")]]) #FIXME transformation to cartesian coordinates
   time_index <- attr(data, "time_col")
@@ -150,7 +207,7 @@ as.track_frame.sftrack <- function(data, ...) {
   class(data) <- c("data.frame")
   attr(data, "row.names") <- data_attr[["row.names"]]
   as.track_frame(data, time_col = time_index, easting_col = "easting",
-                 northing_col = "northing", id_col = "id")
+                 northing_col = "northing", id_col = "id", utm_epsg = utm_epsg)
 }
 
 
@@ -191,14 +248,15 @@ as.track_frame.track_frame <- function(data,
 #' @param y matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t
 #' @param t vector of timestamps in posixct corresponding to the columns of x and y matrices. Timestamps must be uniformly sampled, though it is possible to have gaps (e.g. between different days of recording)
 #' @param ids  data frame giving information about the tracked individuals, with rows correpsonding to the rows of the x and y matrices. There must be one column called id_code which contains a unique individual identifier for each animal (e.g. for meerkats: 'VCVM001', for hyenas: 'WRTH', for coatis: 'Luna') The other columns contained are flexible, and can include information on age, sex, dominance, etc
+#' @param utm_epsg crs value for utm zone
 #'
 #' @return an object of class track_frame
 #' @export
 #'
 #' @examples
-#' x <- tf_as_cocomo(sim_travel_paths(3, 3))
-#' cocomo_as_tf(x$x, x$y, x$t, x$ids)
-cocomo_as_tf <- function(x, y, t, ids) {
+#' cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
+#' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
+cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
   assert_matrix(x)
   assert_matrix(y)
   assert_true(NCOL(x) == NCOL(y))
@@ -220,8 +278,12 @@ cocomo_as_tf <- function(x, y, t, ids) {
       }
     }
   }
+  if (isTRUE(na_omit)) {
+    data <- data[!is.na(data[["easting"]]) & !is.na(data[["northing"]]), ]
+    rownames(data) <- NULL
+  }
   as.track_frame(data, time_col = "time", easting_col = "easting",
-                 northing_col = "northing", id_col = "id")
+                 northing_col = "northing", id_col = "id", utm_epsg = utm_epsg)
 }
 
 

@@ -2,6 +2,8 @@
 % Please edit documentation in R/track_frame.R
 \name{as.track_frame}
 \alias{as.track_frame}
+\alias{as.track_frame.move2}
+\alias{as.track_frame.sftrack}
 \title{Convert an object to a \code{track\_frame}}
 \usage{
 as.track_frame(
@@ -10,8 +12,13 @@ as.track_frame(
   easting_col = NULL,
   northing_col = NULL,
   id_col = NULL,
+  utm_epsg = NULL,
   ...
 )
+
+\method{as.track_frame}{move2}(data, ...)
+
+\method{as.track_frame}{sftrack}(data, ...)
 }
 \arguments{
 \item{data}{a `data.frame` containing the tracking data.}
@@ -23,6 +30,8 @@ as.track_frame(
 \item{northing_col}{A character string specifying the column name of the northing column.}
 
 \item{id_col}{Optional character vector specifying identifier column names.}
+
+\item{utm_epsg}{crs value for utm zone}
 
 \item{...}{Additional arguments (unused).}
 }
@@ -43,4 +52,37 @@ df <- data.frame(
 tf <- as.track_frame(df, time_col = "time_col", easting_col = "easting_col",
                         northing_col = "northing_col", id_col = "id")
 attributes(tf)
+
+# example for move2 objects
+if (require("move2", quietly = TRUE)) {
+library(trackframe)
+albatross_move2 <- mt_read(mt_example()) |>
+  sf::st_transform(3857)
+ albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
+ albatross_tf <- as.track_frame(albatross_move2)
+class(albatross_tf)
+}
+
+# example for sftrack objects
+library("sftrack")
+library(trackframe)
+data("raccoon", package = "sftrack")
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+coords <- c("longitude","latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+time <- "time"
+error <- "fix"
+crs <- 4326
+# create a sftrack object
+my_sftrack <- as_sftrack(data = raccoon,
+                         coords = coords,
+                         group = group,
+                         time = time,
+                         error = error,
+                         crs = crs)
+
+sftrack_tf <- as.track_frame(my_sftrack)
+class(sftrack_tf)
+
 }

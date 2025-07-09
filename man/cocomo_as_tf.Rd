@@ -4,7 +4,7 @@
 \alias{cocomo_as_tf}
 \title{Converts a cocomo object to a track_frame}
 \usage{
-cocomo_as_tf(x, y, t, ids)
+cocomo_as_tf(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE)
 }
 \arguments{
 \item{x}{matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t}
@@ -14,6 +14,10 @@ cocomo_as_tf(x, y, t, ids)
 \item{t}{vector of timestamps in posixct corresponding to the columns of x and y matrices. Timestamps must be uniformly sampled, though it is possible to have gaps (e.g. between different days of recording)}
 
 \item{ids}{data frame giving information about the tracked individuals, with rows correpsonding to the rows of the x and y matrices. There must be one column called id_code which contains a unique individual identifier for each animal (e.g. for meerkats: 'VCVM001', for hyenas: 'WRTH', for coatis: 'Luna') The other columns contained are flexible, and can include information on age, sex, dominance, etc}
+
+\item{utm_epsg}{crs value for utm zone}
+
+\item{na_omit}{a logical, giving whether to omit rows with \code{NA} values in the easting or northing columns. Defaults to \code{TRUE}.}
 }
 \value{
 an object of class track_frame
@@ -22,6 +26,6 @@ an object of class track_frame
 Converts a cocomo object to a track_frame
 }
 \examples{
-x <- tf_as_cocomo(sim_travel_paths(3, 3))
-cocomo_as_tf(x$x, x$y, x$t, x$ids)
+cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
+cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
 }

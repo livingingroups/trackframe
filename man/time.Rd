@@ -22,4 +22,5 @@ specifying the column containing time index values.
 tf <- sim_travel_path(100, format = "track_frame")
 time(tf)
 
+
 }
