@@ -1,0 +1,183 @@
+---
+author: "TODO"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples of Trackframe}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
+---
+
+# Load Package
+
+```{r}
+library(trackframe)
+```
+
+# Create a `track_frame`
+
+## General
+
+In an object of class `track_frame` we always assume to have UTM easting/northing as coordinates.
+`as.track_frame` automatically transform coordinates to UTM easting/northing.
+
+## from a `data.frame`
+
+```{r}
+df <- data.frame(
+  time_col = as.POSIXct(Sys.time() + 1:5),
+  easting_col = runif(5, 0, 10),
+  northing_col = runif(5, 0, 10),
+  id = 1:5
+)
+tf <- as.track_frame(df, time_col = "time_col", easting_col = "easting_col",
+                        northing_col = "northing_col", id_col = "id")
+head(tf)
+attributes(tf)
+```
+
+## from a `move2` object
+
+```{r}
+library(move2)
+albatross_move2 <- mt_read(mt_example()) |>
+  sf::st_transform(3857)
+albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
+albatross_tf <- as.track_frame(albatross_move2)
+class(albatross_tf)
+```
+
+Backtransform `track_frame` to `move2` object
+
+```{r}
+recovered_move2 <- tf_as_move2(albatross_tf[!is.na(northing(albatross_tf)),])
+str(recovered_move2)
+```
+
+## from an `sftrack` object
+
+```{r}
+library(sftrack)
+library(trackframe)
+data("raccoon", package = "sftrack")
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+coords <- c("longitude","latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+time <- "time"
+error <- "fix"
+crs <- 4326
+# create a sftrack object
+my_sftrack <- as_sftrack(data = raccoon,
+                         coords = coords,
+                         group = group,
+                         time = time,
+                         error = error,
+                         crs = crs)
+
+sftrack_tf <- as.track_frame(my_sftrack)
+class(sftrack_tf)
+attributes(sftrack_tf)
+```
+
+Backtransform `track_frame` to `sf` object
+
+```{r}
+recovered_sf <- tf_as_sftrack(sftrack_tf[!is.na(northing(sftrack_tf)),])
+str(recovered_sf)
+```
+
+
+## from `cocomo` style data
+
+```{r}
+set.seed(2025)
+cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
+str(cocomo)
+cocomo$x
+cocomo$y
+cocomo$t
+cocomo$ids
+
+cocomo_tf <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
+cocomo_tf
+class(cocomo_tf)
+
+
+```
+
+Retransform `track_frame` to cocomo style data
+
+```{r}
+cocomo2 <- tf_as_cocomo(cocomo_tf)
+str(cocomo2)
+```
+
+
+
+# Extract information
+
+```{r}
+tf <- sim_travel_paths(3, 5)
+```
+
+
+```{r}
+easting(tf)
+```
+
+```{r}
+northing(tf)
+```
+
+```{r}
+time(tf)
+```
+
+```{r}
+id(tf)
+```
+
+
+
+# Simulate paths
+
+Generate a single track in `matrix` format
+
+```{r}
+data_matrix <- sim_travel_path(100, format = "matrix")
+```
+
+Generate a single track in a `data.frame` format
+
+```{r}
+data_df <- sim_travel_path(100, format = "data.frame")
+```
+
+Generate a single track in a `track_frame` format
+
+```{r}
+tf <- sim_travel_path(100, format = "track_frame")
+```
+
+Generate 3 tracks with different sizes
+
+```{r}
+ntracks <- 3
+sizes <- c(2, 4, 5)
+multi_track <- sim_travel_paths(ntracks, sizes)
+```
+
+Generate 5 tracks all with the same size
+
+```{r}
+uniform_tracks <- sim_travel_paths(5, 10)
+```
+
+Extract a specific track
+
+```{r}
+track2 <- select_id(multi_track, "track_2")
+```
+
