@@ -11,7 +11,7 @@ sim_travel_path(
   start_location = c(48.2083537, 16.3725042),
   start_time = Sys.time(),
   stay_prob = 0.2,
-  format = c("track_frame", "data.frame", "matrix")
+  format = c("track_frame", "data.frame", "matrix", "sftrack", "move2")
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ sim_travel_path(
 
 \item{stay_prob}{A numeric giving the probability of staying at the same location (0-1). Default is 0.2.}
 
-\item{format}{A character string, either "data.frame" or "matrix". Default is "data.frame".}
+\item{format}{A character string, either "track_frame", "data.frame", "matrix", "sftrack" or "move2".}
 }
 \value{
 Depending on the format argument either a \code{"track\_frame"} or

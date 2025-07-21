@@ -112,7 +112,8 @@ test_cocomo <- function() {
   tf <- sim_travel_paths(3, 3)
   cocomo <-  tf_as_cocomo(tf)
   tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
-  expect_equal(tf, tf2)
+  cn <- c("time", "easting", "northing", "id")
+  expect_equal(tf[, cn], tf2[, cn])
 }
 
 

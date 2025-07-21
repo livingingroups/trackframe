@@ -239,7 +239,7 @@ tf_as_xyt <- function(tf) { #coredata.track_frame
 #' @examples
 #' tf <- sim_travel_paths(4, 2:5)
 #' sf_object <- tf_as_sf(tf, tf_crs = 32610, crs_new = 4326)
-#' plot(sf_object)
+#' print(sf_object)
 #' @export
 #' @rdname tf_as
 tf_as_sf <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {

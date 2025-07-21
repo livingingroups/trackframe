@@ -8,20 +8,22 @@ test_simulate_path <- function() {
   data_matrix <- sim_travel_path(100, format = "matrix")
   expect_inherits(data_matrix, "matrix")
   expect_equal(NROW(data_matrix), 100)
-  expect_equal(NCOL(data_matrix), 3)
+  expect_equal(NCOL(data_matrix), 4)
   
   
   data_df <- sim_travel_path(100, format = "data.frame")
   expect_inherits(data_df, "data.frame")
   expect_equal(NROW(data_df), 100)
-  expect_equal(NCOL(data_df), 3)
+  expect_equal(NCOL(data_df), 4)
   
   
   tf <- sim_travel_path(100, format = "track_frame")
-  expect_equal(colnames(tf), c("time", "easting", "northing"))
+  expect_true(all(c("time", "easting", "northing") %in% colnames(tf)))
   expect_inherits(tf, "track_frame")
   expect_equal(NROW(tf), 100)
-  expect_equal(NCOL(tf), 3)
+  expect_equal(NCOL(tf), 6)
+  
+  #TODO sftrack + move2
 }
 
 

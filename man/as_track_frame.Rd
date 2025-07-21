@@ -54,17 +54,16 @@ tf <- as.track_frame(df, time_col = "time_col", easting_col = "easting_col",
 attributes(tf)
 
 # example for move2 objects
-if (require("move2", quietly = TRUE)) {
+library(move2)
 library(trackframe)
 albatross_move2 <- mt_read(mt_example()) |>
   sf::st_transform(3857)
  albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
  albatross_tf <- as.track_frame(albatross_move2)
 class(albatross_tf)
-}
 
 # example for sftrack objects
-library("sftrack")
+library(sftrack)
 library(trackframe)
 data("raccoon", package = "sftrack")
 raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1

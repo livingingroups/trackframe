@@ -17,7 +17,7 @@ cocomo_as_tf(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE)
 
 \item{utm_epsg}{crs value for utm zone}
 
-\item{na_omit}{a logical, giving whether to omit rows with \code{NA} values in the easting or northing columns. Defaults to \code{TRUE}.}
+\item{na_omit}{logical indicator if NAs should be omitted}
 }
 \value{
 an object of class track_frame

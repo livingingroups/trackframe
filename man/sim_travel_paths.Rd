@@ -12,7 +12,8 @@ sim_travel_paths(
   start_location = c(48.2083537, 16.3725042),
   start_time = Sys.time(),
   stay_prob = 0.2,
-  track_prefix = "track"
+  track_prefix = "track",
+  format = c("track_frame", "data.frame", "matrix", "sftrack", "move2")
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ Default is 0.2.}
 
 \item{track_prefix}{A character string used as a prefix for track IDs. Default is "track".
 Track IDs will be formatted as \code{prefix\_number}.}
+
+\item{format}{A character string, either "track_frame", "data.frame", "matrix", "sftrack" or "move2".}
 }
 \value{
 A \code{track\_frame} object.
