@@ -88,17 +88,17 @@ as.track_frame.data.frame <- function(data,
     }
     assert_choice(easting_col, colnames(data),  null.ok = TRUE)
     if(is.null(easting_col)) {
-      easting_col_guesses <- c("easting", "east", "lon", "long", "longitude", "x", "utm.easting")
-      ind <- easting_col_guesses %in% colnames(data)
-      stopifnot("easting_col needs to be specified. Guessing not succesful." = sum(ind) >= 1)
-      easting_col <- easting_col_guesses[easting_col_guesses %in% colnames(data)][1]
+      easting_col_guesses <- c("easting", "east", "utm.easting", "lon", "long", "longitude", "x")
+      ind_east <- easting_col_guesses %in% colnames(data)
+      stopifnot("easting_col needs to be specified. Guessing not succesful." = sum(ind_east) >= 1)
+      easting_col <- easting_col_guesses[ind_east][1]
     }
     assert_choice(northing_col, colnames(data),  null.ok = TRUE)
     if(is.null(northing_col)) {
-      northing_col_guesses <- c("northing", "north", "lat", "latitude", "y", "utm.northing")
-      ind <- northing_col_guesses %in% colnames(data)
-      stopifnot("northing_col needs to be specified. Guessing not succesful." = sum(ind) >= 1)
-      northing_col <- northing_col_guesses[northing_col_guesses %in% colnames(data)][1]
+      northing_col_guesses <- c("northing", "north", "utm.northing", "lat", "latitude", "y")
+      ind_north <- northing_col_guesses %in% colnames(data)
+      stopifnot("northing_col needs to be specified. Guessing not succesful." = sum(ind_north) >= 1)
+      northing_col <- northing_col_guesses[ind_north][1]
     }
     assert_choice(id_col, colnames(data),  null.ok = TRUE)
     assert_character(id_col, len = 1, null.ok = TRUE)
