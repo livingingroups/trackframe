@@ -19,7 +19,7 @@ The `track_frame` has a data frame-like structure with an attribute
 specifying the column containing time index values.
 }
 \examples{
-tf <- sim_travel_path(100, format = "track_frame")
+tf <- travelpaths::sim_travel_path(100, format = "track_frame")
 time(tf)
 
 

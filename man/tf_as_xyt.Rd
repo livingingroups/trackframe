@@ -11,7 +11,7 @@ tf_as_xyt(tf)
 }
 \value{
 A data frame with the easting, northing, time index, and optionally track ID columns.
-tf <- sim_travel_paths(3, c(2, 4, 5))
+tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
 tf_as_xyt(tf)
 }
 \description{

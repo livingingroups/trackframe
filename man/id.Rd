@@ -19,7 +19,7 @@ The `track_frame` has a data frame-like structure with an attribute
 specifying the column containing track ID values.
 }
 \examples{
-tf <- sim_travel_paths(3, c(2, 4, 5))
+tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
 id(tf)
 
 }

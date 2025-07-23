@@ -21,7 +21,7 @@ A list with three components:
 This function converts a \code{track\_frame} object into the cocomo format.
 }
 \examples{
-tf <- sim_travel_paths(3, 3)
+tf <- travelpaths::sim_travel_paths(3, 3)
 tf_as_cocomo(tf)
 
 }

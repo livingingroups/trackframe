@@ -92,6 +92,7 @@ str(recovered_sf)
 ## from `cocomo` style data
 
 ```{r}
+library(travelpaths)
 set.seed(2025)
 cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
 str(cocomo)

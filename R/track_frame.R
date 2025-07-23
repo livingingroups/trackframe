@@ -86,7 +86,7 @@ as.track_frame.data.frame <- function(data,
       stopifnot("time_col needs to be specified. Guessing not succesful." = sum(ind_time) >= 1)
       time_col <- time_col_guesses[ind_time][1]
       if(sum(ind_time) >= 1) {
-        warning(sprintf("multiple possible columns found. %s chosen as time_col"))
+        warning(sprintf("multiple possible columns found. %s chosen as time_col", time_col))
       }
     }
     assert_choice(easting_col, colnames(data),  null.ok = TRUE)
@@ -96,7 +96,7 @@ as.track_frame.data.frame <- function(data,
       stopifnot("easting_col needs to be specified. Guessing not succesful." = sum(ind_east) >= 1)
       easting_col <- easting_col_guesses[ind_east][1]
       if(sum(ind_east) >= 1) {
-        warning(sprintf("multiple possible columns found. %s chosen as easting_col"))
+        warning(sprintf("multiple possible columns found. %s chosen as easting_col", ind_east))
       }
     }
     assert_choice(northing_col, colnames(data),  null.ok = TRUE)
@@ -106,7 +106,7 @@ as.track_frame.data.frame <- function(data,
       stopifnot("northing_col needs to be specified. Guessing not succesful." = sum(ind_north) >= 1)
       northing_col <- northing_col_guesses[ind_north][1]
       if(sum(ind_north) >= 1) {
-        warning(sprintf("multiple possible columns found. %s chosen as northing_col"))
+        warning(sprintf("multiple possible columns found. %s chosen as northing_col", ind_north))
       }
     }
     assert_choice(id_col, colnames(data),  null.ok = TRUE)
@@ -264,7 +264,7 @@ as.track_frame.track_frame <- function(data,
 #' @export
 #'
 #' @examples
-#' cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
+#' cocomo <- tf_as_cocomo(travelpaths::sim_travel_paths(3, 3))
 #' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
 cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
   assert_matrix(x)
@@ -311,7 +311,7 @@ cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
 #'   \item{t}{A vector of time values, sorted in ascending order.}
 #'
 #' @examples
-#' tf <- sim_travel_paths(3, 3)
+#' tf <- travelpaths::sim_travel_paths(3, 3)
 #' tf_as_cocomo(tf)
 #'
 #' @export

@@ -38,7 +38,7 @@ utm_epsg <- function(tf) {
 #' @return A vector of time index values extracted from the `track_frame`.
 #' 
 #' @examples
-#' tf <- sim_travel_path(100, format = "track_frame")
+#' tf <- travelpaths::sim_travel_path(100, format = "track_frame")
 #' time(tf)
 #' 
 #' 
@@ -73,7 +73,7 @@ time.track_frame <- function(tf) {
 #' @return A vector of track ID values extracted from the `track_frame`.
 #' 
 #' @examples
-#' tf <- sim_travel_paths(3, c(2, 4, 5))
+#' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
 #' id(tf)
 #' 
 #' @export
@@ -111,7 +111,7 @@ id <- function(tf) {
 #' @return A vector of easting values extracted from the `track_frame`.
 #' 
 #' @examples
-#' tf <- sim_travel_path(10, format = "track_frame")
+#' tf <- travelpaths::sim_travel_path(10, format = "track_frame")
 #' easting(tf)
 #' 
 #' @export
@@ -140,7 +140,7 @@ easting <- function(tf){
 #' @return A vector of northing values extracted from the `track_frame`.
 #'
 #' @examples
-#' tf <- sim_travel_path(10, format = "track_frame")
+#' tf <- travelpaths::sim_travel_path(10, format = "track_frame")
 #' northing(tf)
 #' 
 #' @export
@@ -161,7 +161,7 @@ northing <- function(tf){
 #' @return A vector of unique track IDs extracted from the `track_frame`.
 #'
 #' @examples
-#' tf <- sim_travel_paths(4, 2:5)
+#' tf <- travelpaths::sim_travel_paths(4, 2:5)
 #' unique_ids(tf)
 #' 
 #' @export
@@ -182,7 +182,7 @@ unique_ids <- function(tf) {
 #' @return A filtered `track_frame` containing only the specified track(s).
 #'
 #' @examples
-#' tf <- sim_travel_paths(3, 2:4)
+#' tf <- travelpaths::sim_travel_paths(3, 2:4)
 #' single_track <- select_id(tf, "track_1")
 #' single_track
 #' multiple_tracks <- select_id(tf, c("track_2", "track_3"))
@@ -206,7 +206,7 @@ select_id <- function(tf, id) {
 #'
 #' @param tf A `track_frame` object containing the tracking data.
 #' @return A data frame with the easting, northing, time index, and optionally track ID columns.
-#' tf <- sim_travel_paths(3, c(2, 4, 5))
+#' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
 #' tf_as_xyt(tf)
 #' @export 
 tf_as_xyt <- function(tf) { #coredata.track_frame
@@ -237,7 +237,7 @@ tf_as_xyt <- function(tf) { #coredata.track_frame
 #' @return An sf object representing the spatial data contained in the `track_frame`.
 #' 
 #' @examples
-#' tf <- sim_travel_paths(4, 2:5)
+#' tf <- travelpaths::sim_travel_paths(4, 2:5)
 #' sf_object <- tf_as_sf(tf, tf_crs = 32610, crs_new = 4326)
 #' print(sf_object)
 #' @export

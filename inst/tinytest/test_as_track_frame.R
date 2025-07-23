@@ -1,7 +1,7 @@
 # library(tinytest)
 # Test Suite for change_point_test Function
 library(trackframe)
-
+library(travelpaths)
 # cpttestdata
 
 test_as_track_frame <- function() {
