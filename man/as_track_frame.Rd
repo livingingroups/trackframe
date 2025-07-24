@@ -2,8 +2,11 @@
 % Please edit documentation in R/track_frame.R
 \name{as.track_frame}
 \alias{as.track_frame}
+\alias{as.track_frame.data.frame}
+\alias{as.track_frame.matrix}
 \alias{as.track_frame.move2}
 \alias{as.track_frame.sftrack}
+\alias{as.track_frame.track_frame}
 \title{Convert an object to a \code{track\_frame}}
 \usage{
 as.track_frame(
@@ -16,20 +19,49 @@ as.track_frame(
   ...
 )
 
+\method{as.track_frame}{data.frame}(
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  utm_epsg = NULL,
+  ...
+)
+
+\method{as.track_frame}{matrix}(
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  utm_epsg = NULL,
+  ...
+)
+
 \method{as.track_frame}{move2}(data, ...)
 
 \method{as.track_frame}{sftrack}(data, ...)
+
+\method{as.track_frame}{track_frame}(
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  ...
+)
 }
 \arguments{
-\item{data}{a `data.frame` containing the tracking data.}
+\item{data}{a `data.frame`, a `matrix`, an `sftrack` object or a `move2` object containing the tracking data.}
 
 \item{time_col}{a character string specifying the column name of the time column.}
 
-\item{easting_col}{A character string specifying the column name of the easting column.}
+\item{easting_col}{a character string specifying the column name of the easting column.}
 
-\item{northing_col}{A character string specifying the column name of the northing column.}
+\item{northing_col}{a character string specifying the column name of the northing column.}
 
-\item{id_col}{Optional character vector specifying identifier column names.}
+\item{id_col}{optional character vector specifying identifier column names.}
 
 \item{utm_epsg}{crs value for utm zone}
 
@@ -40,7 +72,8 @@ A `track_frame` object with appropriate attributes set.
 }
 \description{
 This function converts an object into a `track_frame` object,
-ensuring required columns exist and have valid data types.
+ensuring required columns exist and have valid data types. Coordinates must be provided in easting/northing.
+Coordinates for  `sftrack` and `move2` objects are transformed to easting/northing if possible.
 }
 \examples{
 df <- data.frame(

@@ -35,13 +35,14 @@ track_frame <- function(...,
 #' Convert an object to a \code{track\_frame}
 #'
 #' This function converts an object into a `track_frame` object,
-#' ensuring required columns exist and have valid data types.
+#' ensuring required columns exist and have valid data types. Coordinates must be provided in easting/northing.
+#' Coordinates for  `sftrack` and `move2` objects are transformed to easting/northing if possible.
 #'
-#' @param data a `data.frame` containing the tracking data.
+#' @param data a `data.frame`, a `matrix`, an `sftrack` object or a `move2` object containing the tracking data.
 #' @param time_col a character string specifying the column name of the time column.
-#' @param easting_col A character string specifying the column name of the easting column.
-#' @param northing_col A character string specifying the column name of the northing column.
-#' @param id_col Optional character vector specifying identifier column names.
+#' @param easting_col a character string specifying the column name of the easting column.
+#' @param northing_col a character string specifying the column name of the northing column.
+#' @param id_col optional character vector specifying identifier column names.
 #' @param utm_epsg crs value for utm zone
 #' @param ... Additional arguments (unused).
 #'
@@ -70,8 +71,9 @@ as.track_frame <- function(data,
 }
 
 
-#' @noRd
+
 #' @export
+#' @rdname as_track_frame
 as.track_frame.data.frame <- function(data,
                                       time_col = NULL,
                                       easting_col = NULL,
@@ -126,6 +128,7 @@ as.track_frame.data.frame <- function(data,
 
 
 #' @export
+#' @rdname as_track_frame
 as.track_frame.matrix <- function(data,
                                   time_col = NULL,
                                   easting_col = NULL,
@@ -221,6 +224,7 @@ as.track_frame.sftrack <- function(data, ...) {
 
 
 #' @export
+#' @rdname as_track_frame
 as.track_frame.track_frame <- function(data,
                                        time_col = NULL,
                                        easting_col = NULL,
