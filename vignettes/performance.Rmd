@@ -45,6 +45,16 @@ suppressPackageStartupMessages(library(trackframe, quietly = TRUE))
 albatross_tf <- as.track_frame(albatross_move2)
 ```
 
+```{r}
+brock_mt_distance <- function(m2) {
+  coords <- sf::st_coordinates(m2)
+  x <- sqrt(diff(coords[,1])^2 + diff(coords[,2])^2)
+  x[diff(as.numeric(mt_track_id(albatross_move2))) != 0] <- NA
+  set_units(c(x, NA), 'm')
+}
+all.equal(brock_mt_distance(albatross_move2), mt_distance(albatross_move2), check.attributes = FALSE)
+```
+
 Check that the distance functions output the same result:
 ```{r}
 all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
@@ -55,8 +65,8 @@ Compare performance
 ```{r}
 library(microbenchmark)
 m <- microbenchmark(
+  brock_mt_distance(albatross_move2),
   mt_distance(albatross_move2),
-  tf_distance(albatross_tf),
   times = 15
 )
 m
