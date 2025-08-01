@@ -146,6 +146,33 @@ tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
                         northing_col = "northing_col", id_col = "id")
 attributes(tf)
 
+set.seed(2025)
+sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
+as.trackframe(sim_df, crs_input = 4326)
+
+set.seed(2025)
+df <- data.frame(
+  x = rnorm(10),
+    y = rnorm(10),
+      t = 1:10,
+        animal_id = c(rep('a', 5), rep('b', 5))
+        )
+ as.trackframe(df,
+               time_col = "t",
+               easting_col = "x",
+               northing_col = "y",
+               id_col = "animal_id")
+ # with col guessing
+ as.trackframe(df, coerce_to = "base")
+ 
+ tf_df <- as.trackframe(df, coerce_to = "base")
+ tf_dt <- as.trackframe(df, coerce_to = "data.table")
+ tf_tib <- as.trackframe(df, coerce_to = "tibble")
+ 
+ tf_backtransform(tf_df)
+ tf_backtransform(tf_dt)
+ tf_backtransform(tf_tib)
+
 # example for move2 objects
 library(move2)
 library(trackframe)

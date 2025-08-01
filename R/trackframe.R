@@ -82,6 +82,34 @@ as.trackframe <- function(data,
 
 #' @param crs_input crs code for input of coordinates
 #' @param utm_epsg crs value for utm zone of the `trackframe` output
+#' @examples
+#' set.seed(2025)
+#' sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
+#' as.trackframe(sim_df, crs_input = 4326)
+#' 
+#' set.seed(2025)
+#' df <- data.frame(
+#'   x = rnorm(10),
+#'     y = rnorm(10),
+#'       t = 1:10,
+#'         animal_id = c(rep('a', 5), rep('b', 5))
+#'         )
+#'  as.trackframe(df,
+#'                time_col = "t",
+#'                easting_col = "x",
+#'                northing_col = "y",
+#'                id_col = "animal_id")
+#'  # with col guessing
+#'  as.trackframe(df, coerce_to = "base")
+#'  
+#'  tf_df <- as.trackframe(df, coerce_to = "base")
+#'  tf_dt <- as.trackframe(df, coerce_to = "data.table")
+#'  tf_tib <- as.trackframe(df, coerce_to = "tibble")
+#'  
+#'  tf_backtransform(tf_df)
+#'  tf_backtransform(tf_dt)
+#'  tf_backtransform(tf_tib)
+#' 
 #' @export
 #' @rdname as_trackframe
 as.trackframe.data.frame <- function(data,
@@ -98,8 +126,9 @@ as.trackframe.data.frame <- function(data,
     attributes_input <- attributes(data)
 
     # coerce_to
-    assert_choice(coerce_to, choices = c("base", "data.table", "tibble"))
-    if(coerce_to == "base") {
+    assert_choice(coerce_to, choices = c("base", "data.table", "tibble"), null.ok = TRUE)
+    if(is.null(coerce_to)) {
+    } else if(coerce_to == "base") {
       data <- as.data.frame(data)
     } else if(coerce_to == "data.table") {
       data <- as.data.table(data)
@@ -463,6 +492,14 @@ as.trackframe.trackframe <- function(data,
   }
   
   #coerce_to
+  if(is.null(coerce_to)) {
+  } else if(coerce_to == "base") {
+    data <- as.data.frame(data)
+  } else if(coerce_to == "data.table") {
+    data <- as.data.table(data)
+  } else if(coerce_to == "tibble") {
+    data <- as_tibble(data)
+  }
   
   if(isTRUE(sort)) {
     if(is.null(attr(data, "id"))) {
