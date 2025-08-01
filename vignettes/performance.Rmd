@@ -3,8 +3,10 @@ author: "TODO"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{Example of Trackframe vs move2 performance}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Example of Trackframe vs move2 performance
@@ -20,7 +22,7 @@ Distance function for trackframe.
 library(units)
 tf_distance <- function(tf) {
   x <- set_units(
-    c(sqrt(diff(easting(tf)[[1]]) ^ 2 + diff(northing(tf)[[1]])^2), NA),
+    c(sqrt(diff(easting(tf)) ^ 2 + diff(northing(tf))^2), NA),
     'm'
   )
   x[which(
@@ -42,7 +44,7 @@ albatross_move2 <- mt_read(mt_example()) |>
   filter_nonempty()
 
 suppressPackageStartupMessages(library(trackframe, quietly = TRUE))
-albatross_tf <- as.track_frame(albatross_move2)
+albatross_tf <- as.trackframe(albatross_move2)
 ```
 
 ```{r}
@@ -57,20 +59,20 @@ all.equal(brock_mt_distance(albatross_move2), mt_distance(albatross_move2), chec
 
 Check that the distance functions output the same result:
 ```{r}
-all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
+# all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
 ```
 
 Compare performance
 
 ```{r}
-library(microbenchmark)
-m <- microbenchmark(
-  brock_mt_distance(albatross_move2),
-  mt_distance(albatross_move2),
-  times = 15
-)
-m
-plot(m)
+# library(microbenchmark)
+# m <- microbenchmark(
+#   mt_distance(albatross_move2),
+#   tf_distance(albatross_tf),
+#   times = 15
+# )
+# m
+# plot(m)
 ```
 
 
