@@ -88,17 +88,7 @@ as.trackframe(
   ...
 )
 
-\method{as.trackframe}{trackframe}(
-  data,
-  time_col = NULL,
-  easting_col = NULL,
-  northing_col = NULL,
-  id_col = NULL,
-  sort = TRUE,
-  coerce_to = "base",
-  verbose = TRUE,
-  ...
-)
+\method{as.trackframe}{trackframe}(data, ...)
 }
 \arguments{
 \item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object containing the tracking data.}

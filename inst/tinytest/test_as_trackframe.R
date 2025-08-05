@@ -25,6 +25,8 @@ test_as_trackframe <- function() {
   expect_equal(dim(df), dim(tf))
   expect_error(trackframe(df, time_col = "time_col2", easting_col = "easting_col",
                            northing_col = "northing_col", id_col = "id"))
+  expect_equal(easting(tf), df$easting_col)
+  expect_equal(northing(tf), df$northing_col)
   # expect_equal(units(easting(tf))$numerator, "m")
   # expect_equal(units::drop_units(easting(tf)), df$easting_col)
   # expect_equal(units(northing(tf))$numerator, "m")
@@ -45,6 +47,8 @@ test_as_trackframe <- function() {
                     northing_col = "northing_col", id_col = "id")
   expect_inherits(tf, "trackframe")
   expect_equal(dim(df), dim(tf))
+  expect_equal(easting(tf), matrix_input[, "easting_col"])
+  expect_equal(northing(tf), matrix_input[, "northing_col"])
   # expect_equal(units(easting(tf))$numerator, "m")
   # expect_equal(units::drop_units(easting(tf)), matrix_input[, "easting_col"])
   # expect_equal(units(northing(tf))$numerator, "m")
@@ -67,6 +71,8 @@ test_as_trackframe <- function() {
   epsg_code <- trackframe:::sf_to_utm_epsg(albatross_move2)
   albatross_move2_utm <- sf::st_transform(albatross_move2, epsg_code)
   x_y <- sf::st_coordinates(albatross_move2_utm[[attr(albatross_move2_utm, "sf_column")]])
+  expect_equal(easting(albatross_tf), x_y[,1])
+  expect_equal(northing(albatross_tf), x_y[,2])
   # expect_equal(units(easting(albatross_tf))$numerator, "m")
   # expect_equal(units::drop_units(easting(albatross_tf)), x_y[,1])
   # expect_equal(units(northing(albatross_tf))$numerator, "m")
@@ -108,6 +114,8 @@ test_as_trackframe <- function() {
   my_sftrack_utm <- my_sftrack_utm[order(my_sftrack_utm$animal_id, my_sftrack_utm$timestamp) ,]
   x_y <- sf::st_coordinates(my_sftrack_utm[[attr(my_sftrack_utm, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
+  expect_equal(easting(sftrack_tf), x_y[,1])
+  expect_equal(northing(sftrack_tf), x_y[,2])
   # expect_equal(units(easting(sftrack_tf))$numerator, "m")
   # expect_equal(units::drop_units(easting(sftrack_tf)), x_y[,1]) #FIXME: by improved ordering based on JSON
   # expect_equal(units(northing(sftrack_tf))$numerator, "m")
@@ -147,13 +155,13 @@ test_sort <- function() {
   df2_ordered <- df2[order(df2$id, df2$time),]
   expect_equal(as.data.frame(tf_df[ , c("id", "time")]), df2_ordered[, c("id", "time")])
   
-  set.seed(2025)
-  tf <- sim_travel_paths(2,3, format = "trackframe")
-  set.seed(2025)
-  tf2 <- tf[sample(6),]
-  tf2_ordered <- tf2[order(tf2$id, tf2$time),]
-  tf3 <- as.trackframe(tf2)
-  expect_equal(tf3[ , c("id", "time")], tf2_ordered[, c("id", "time")])
+  # set.seed(2025)
+  # tf <- sim_travel_paths(2,3, format = "trackframe")
+  # set.seed(2025)
+  # tf2 <- tf[sample(6),]
+  # tf2_ordered <- tf2[order(tf2$id, tf2$time),]
+  # tf3 <- as.trackframe(tf2)
+  # expect_equal(tf3[ , c("id", "time")], tf2_ordered[, c("id", "time")])
 }
 
 test_errors <- function() {

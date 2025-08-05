@@ -481,53 +481,55 @@ as.trackframe.sftrack <- function(data,
 #' @export
 #' @rdname as_trackframe
 as.trackframe.trackframe <- function(data,
-                                     time_col = NULL,
-                                     easting_col = NULL,
-                                     northing_col = NULL,
-                                     id_col = NULL,
-                                     sort = TRUE,
-                                     coerce_to = "base",
-                                     verbose = TRUE,
+                                     # time_col = NULL,
+                                     # easting_col = NULL,
+                                     # northing_col = NULL,
+                                     # id_col = NULL,
+                                     # sort = TRUE,
+                                     # coerce_to = "base",
+                                     # verbose = TRUE,
                                      ...) {
-  #FIXME: transformation_info
-  if (!is.null(time_col)) {
-    checkmate::assert_string(time_col)
-    checkmate::assert_choice(time_col, colnames(data))
-    attr(data, "time") <- time_col
-  }
-  if (!is.null(easting_col)) {
-    checkmate::assert_choice(easting_col, colnames(data))
-    checkmate::assert_string(easting_col)
-    attr(data, "easting") <- easting_col
-  }
-  if (!is.null(northing_col)) {
-    checkmate::assert_choice(northing_col, colnames(data))
-    checkmate::assert_string(northing_col)
-    attr(data, "northing") <- northing_col
-  }
-  if (!is.null(id_col)) {
-    checkmate::assert_choice(id_col, colnames(data))
-    checkmate::assert_string(id_col)
-    attr(data, "id_col") <- id_col
-  }
-  
-  # #coerce_to
-  # if(is.null(coerce_to)) {
-  # } else if(coerce_to == "base") {
-  #   data <- as.data.frame(data)
-  # } else if(coerce_to == "data.table") {
-  #   data <- as.data.table(data)
-  # } else if(coerce_to == "tibble") {
-  #   data <- as_tibble(data)
+  argg <- list(...)
+  if(length(argg) > 0) warning("... arguments are ignored in as.trackframe.trackframe()")
+  # #FIXME: transformation_info
+  # if (!is.null(time_col)) {
+  #   checkmate::assert_string(time_col)
+  #   checkmate::assert_choice(time_col, colnames(data))
+  #   attr(data, "time") <- time_col
   # }
-  
-  if(isTRUE(sort)) {
-    if(is.null(attr(data, "id"))) {
-      data <- data[order(time(data)), ] 
-    } else {
-      data <- data[order(id(data), time(data)), ] 
-    }
-  }
+  # if (!is.null(easting_col)) {
+  #   checkmate::assert_choice(easting_col, colnames(data))
+  #   checkmate::assert_string(easting_col)
+  #   attr(data, "easting") <- easting_col
+  # }
+  # if (!is.null(northing_col)) {
+  #   checkmate::assert_choice(northing_col, colnames(data))
+  #   checkmate::assert_string(northing_col)
+  #   attr(data, "northing") <- northing_col
+  # }
+  # if (!is.null(id_col)) {
+  #   checkmate::assert_choice(id_col, colnames(data))
+  #   checkmate::assert_string(id_col)
+  #   attr(data, "id_col") <- id_col
+  # }
+  # 
+  # # #coerce_to
+  # # if(is.null(coerce_to)) {
+  # # } else if(coerce_to == "base") {
+  # #   data <- as.data.frame(data)
+  # # } else if(coerce_to == "data.table") {
+  # #   data <- as.data.table(data)
+  # # } else if(coerce_to == "tibble") {
+  # #   data <- as_tibble(data)
+  # # }
+  # 
+  # if(isTRUE(sort)) {
+  #   if(is.null(attr(data, "id"))) {
+  #     data <- data[order(time(data)), ] 
+  #   } else {
+  #     data <- data[order(id(data), time(data)), ] 
+  #   }
+  # }
   data
 }
 
