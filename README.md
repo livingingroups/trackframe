@@ -2,7 +2,7 @@
 
 The `trackframe` package simplifies the process of supporting multiple common formats of animal movement data as inputs analysis algorithms.
 
-This is achieved by providing the `trackframe` object, a non-sf dataframe object along with methods to convert to and from move2, sftrack, vanilla dataframe, and matrix formats.
+This is achieved by providing the `trackframe` object, a non-sf dataframe object along with methods to convert to and from move2, sftrack, vanilla dataframe, and matrix formats. Coordinates are stored in UTM easting/northing format with a given epsg time zone. Informations about the columns in which `time`, `id`, `easting`, `northing` are stored, are set with attributes. These columns can be easily accessed by accessor functions.
 
 ## Example Use
 

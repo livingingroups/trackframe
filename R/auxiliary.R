@@ -29,19 +29,18 @@ utm_epsg <- function(tf) {
 
 #' Extract Index from a Track Frame
 #'
-#' This function retrieves the time index values from a `trackframe` object.
-#' The `trackframe` has a data frame-like structure with an attribute
+#' This function retrieves the time index values from a \code{trackframe} object.
+#' The \code{trackframe} has a data frame-like structure with an attribute
 #' specifying the column containing time index values.
 #'
-#' @param x A `trackframe` object containing the tracking data.
+#' @param x A \code{trackframe} object containing the tracking data.
 #'           Must have an attribute indicating the time column (`time`).
 #' @param ... ...
-#' @return A vector of time index values extracted from the `trackframe`.
+#' @return A vector of time index values extracted from the \code{trackframe}.
 #' 
 #' @examples
 #' tf <- travelpaths::sim_travel_path(100, format = "trackframe")
 #' time(tf)
-#' 
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -60,13 +59,13 @@ time.trackframe <- function(x, ...) {
 
 #' Extract Track ID from a Track Frame
 #'
-#' This function retrieves the track ID values from a `trackframe` object.
-#' The `trackframe` has a data frame-like structure with an attribute
+#' This function retrieves the track ID values from a \code{trackframe} object.
+#' The \code{trackframe} has a data frame-like structure with an attribute
 #' specifying the column containing track ID values.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'           Must have an attribute indicating the track ID column (`id`).
-#' @return A vector of track ID values extracted from the `trackframe`.
+#' @return A vector of track ID values extracted from the \code{trackframe}.
 #' 
 #' @examples
 #' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
@@ -99,13 +98,13 @@ id <- function(tf) {
 
 #' Extract Easting from a Track Frame
 #'
-#' This function retrieves the easting values from a `trackframe` object.
-#' The `trackframe` has a data frame-like structure with an attribute
+#' This function retrieves the easting values from a \code{trackframe} object.
+#' The \code{trackframe} has a data frame-like structure with an attribute
 #' specifying the column containing easting values.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'           Must have an attribute indicating the easting column (`easting`).
-#' @return A vector of easting values extracted from the `trackframe`.
+#' @return A vector of easting values extracted from the \code{trackframe}.
 #' 
 #' @examples
 #' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
@@ -129,13 +128,13 @@ easting <- function(tf){
 
 #' Extract Northing from a Track Frame
 #'
-#' This function retrieves the northing values from a `trackframe` object.
-#' The `trackframe` has a data frame-like structure with an attribute
+#' This function retrieves the northing values from a \code{trackframe} object.
+#' The \code{trackframe} has a data frame-like structure with an attribute
 #' specifying the column containing northing values.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'           Must have an attribute indicating the northing column (`northing`).
-#' @return A vector of northing values extracted from the `trackframe`.
+#' @return A vector of northing values extracted from the \code{trackframe}.
 #'
 #' @examples
 #' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
@@ -151,13 +150,13 @@ northing <- function(tf){
 
 #' Extract Unique IDs from a Track Frame
 #'
-#' This function retrieves the unique track IDs from a `trackframe` object.
-#' The `trackframe` should be a data frame-like structure with an attribute
+#' This function retrieves the unique track IDs from a \code{trackframe} object.
+#' The \code{trackframe} should be a data frame-like structure with an attribute
 #' specifying the column containing track IDs.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'           Must have an attribute indicating the track ID column (`id`).
-#' @return A vector of unique track IDs extracted from the `trackframe`.
+#' @return A vector of unique track IDs extracted from the \code{trackframe}.
 #'
 #' @examples
 #' tf <- travelpaths::sim_travel_paths(4, 2:5)
@@ -174,11 +173,11 @@ unique_ids <- function(tf) {
 #' This function filters a trackframe object to include only tracks with the specified ID(s).
 #' It supports selecting a single ID or multiple IDs simultaneously.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'   Must have an attribute indicating the track ID column.
 #' @param id A character or vector of characters representing the track ID(s) to select.
 #'
-#' @return A filtered `trackframe` containing only the specified track(s).
+#' @return A filtered \code{trackframe} containing only the specified track(s).
 #'
 #' @examples
 #' tf <- travelpaths::sim_travel_paths(3, 2:4)
@@ -200,10 +199,10 @@ select_id <- function(tf, id) {
 #'
 #' This function splits a trackframe into a list of trackframes by the id.
 #'
-#' @param tf A `trackframe` object containing the tracking data.
+#' @param tf A \code{trackframe} object containing the tracking data.
 #'   Must have an attribute indicating the track ID column.
 #'
-#' @return an object of class `list_of_trackframes` containing a `trackframe` in each list element.
+#' @return an object of class `list_of_trackframes` containing a \code{trackframe} in each list element.
 #'
 #' @examples
 #' tf <- travelpaths::sim_travel_paths(3, 3)

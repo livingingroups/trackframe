@@ -7,15 +7,15 @@
 unique_ids(tf)
 }
 \arguments{
-\item{tf}{A `trackframe` object containing the tracking data.
+\item{tf}{A \code{trackframe} object containing the tracking data.
 Must have an attribute indicating the track ID column (`id`).}
 }
 \value{
-A vector of unique track IDs extracted from the `trackframe`.
+A vector of unique track IDs extracted from the \code{trackframe}.
 }
 \description{
-This function retrieves the unique track IDs from a `trackframe` object.
-The `trackframe` should be a data frame-like structure with an attribute
+This function retrieves the unique track IDs from a \code{trackframe} object.
+The \code{trackframe} should be a data frame-like structure with an attribute
 specifying the column containing track IDs.
 }
 \examples{

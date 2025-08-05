@@ -7,13 +7,13 @@
 select_id(tf, id)
 }
 \arguments{
-\item{tf}{A `trackframe` object containing the tracking data.
+\item{tf}{A \code{trackframe} object containing the tracking data.
 Must have an attribute indicating the track ID column.}
 
 \item{id}{A character or vector of characters representing the track ID(s) to select.}
 }
 \value{
-A filtered `trackframe` containing only the specified track(s).
+A filtered \code{trackframe} containing only the specified track(s).
 }
 \description{
 This function filters a trackframe object to include only tracks with the specified ID(s).

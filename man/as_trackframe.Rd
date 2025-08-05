@@ -8,7 +8,7 @@
 \alias{as.trackframe.move2}
 \alias{as.trackframe.sftrack}
 \alias{as.trackframe.trackframe}
-\title{Convert an object to a \code{track\_frame}}
+\title{Convert an object to a \code{trackframe}}
 \usage{
 trackframe(
   data,
@@ -16,10 +16,11 @@ trackframe(
   easting_col = tf_options("easting_col"),
   northing_col = tf_options("northing_col"),
   id_col = tf_options("id_col"),
-  crs_input = NULL,
-  utm_epsg = NULL,
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
+  crs_input = NULL,
+  utm_epsg = NULL,
   ...
 )
 
@@ -31,6 +32,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   ...
 )
 
@@ -42,6 +44,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -55,6 +58,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -68,6 +72,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   ...
 )
 
@@ -79,6 +84,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   ...
 )
 
@@ -90,11 +96,12 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
+  verbose = TRUE,
   ...
 )
 }
 \arguments{
-\item{data}{a `data.frame`, a `matrix`, an `sftrack` object or a `move2` object containing the tracking data.}
+\item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object containing the tracking data.}
 
 \item{time_col}{a character string specifying the column name of the time column. If no column is specified, 
 the `time_col` is tried to be matched by possible names provided in `tf_options("time_col")`. In case of multiple matches, the first match is chosen.}
@@ -108,25 +115,28 @@ the `northing_col` is tried to be matched by possible names provided in `tf_opti
 \item{id_col}{optional character vector specifying identifier column names. If no column is specified, 
 the `id_col` is tried to be matched by possible names provided in `tf_options("id_col")`. In case of multiple matches, the first match is chosen.}
 
-\item{crs_input}{crs code for input of coordinates}
-
-\item{utm_epsg}{crs value for utm zone of the `trackframe` output}
-
 \item{sort}{logical, if data should be sorted according to id_col and time_col}
 
-\item{coerce_to}{format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Deafault is `base` and gives a `data.frame`.}
+\item{coerce_to}{the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.}
+
+\item{verbose}{logical, default value is \code{TRUE}}
+
+\item{crs_input}{crs code for input of coordinates}
+
+\item{utm_epsg}{crs value for utm zone of the \code{trackframe} output}
 
 \item{...}{Additional arguments (unused).}
 }
 \value{
-A `trackframe` object with appropriate attributes set.
+A \code{trackframe} object with appropriate attributes set.
 }
 \description{
-This function converts an object into a `trackframe` object,
+This function converts an object into a \code{trackframe} object,
 ensuring required columns exist and have valid data types. Coordinates must be provided in easting/northing.
-Coordinates for  `sftrack` and `move2` objects are transformed to easting/northing if possible.
+Coordinates for  \code{data.frame}, \code{sftrack} and \code{move2} objects are transformed to easting/northing if possible.
 }
 \examples{
+library(trackframe)
 df <- data.frame(
   time_col = as.POSIXct(Sys.time() + 1:5),
   easting_col = runif(5, 0, 10),
@@ -144,7 +154,12 @@ df <- data.frame(
 )
 tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
                         northing_col = "northing_col", id_col = "id")
+class(tf)
 attributes(tf)
+easting(tf)
+northing(tf)
+time(tf)
+id(tf)
 
 set.seed(2025)
 sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
@@ -176,32 +191,20 @@ df <- data.frame(
 # example for move2 objects
 library(move2)
 library(trackframe)
-albatross_move2 <- mt_read(mt_example()) |>
-  sf::st_transform(3857)
- albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
- albatross_tf <- as.trackframe(albatross_move2)
-class(albatross_tf)
+set.seed(2025)
+move2_dat <- travelpaths::sim_travel_path(5, format = "move2")
+tf <- as.trackframe(data = move2_dat)
+
+move2_dat2 <- tf_backtransform(tf)
+all.equal(move2_dat, move2_dat2)
 
 # example for sftrack objects
 library(sftrack)
-library(trackframe)
-data("raccoon", package = "sftrack")
-raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
-raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
-coords <- c("longitude","latitude")
-group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
-time <- "time"
-error <- "fix"
-crs <- 4326
-# create a sftrack object
-my_sftrack <- as_sftrack(data = raccoon,
-                         coords = coords,
-                         group = group,
-                         time = time,
-                         error = error,
-                         crs = crs)
-
-sftrack_tf <- as.trackframe(my_sftrack)
-class(sftrack_tf)
+set.seed(2025)
+sftrack_dat <- travelpaths::sim_travel_path(5, format = "sftrack")
+tf <- as.trackframe(data = sftrack_dat)
+sftrack_dat2 <- tf_backtransform(tf)
+sftrack_dat2$id <- unlist(sftrack_dat2$sft_group)
+all.equal(sftrack_dat2, sftrack_dat)
 
 }

@@ -16,44 +16,43 @@ easting(tf)
 northing(tf)
 }
 \arguments{
-\item{x}{A `trackframe` object containing the tracking data.
+\item{x}{A \code{trackframe} object containing the tracking data.
 Must have an attribute indicating the time column (`time`).}
 
 \item{...}{...}
 
-\item{tf}{A `trackframe` object containing the tracking data.
+\item{tf}{A \code{trackframe} object containing the tracking data.
 Must have an attribute indicating the northing column (`northing`).}
 }
 \value{
-A vector of time index values extracted from the `trackframe`.
+A vector of time index values extracted from the \code{trackframe}.
 
-A vector of track ID values extracted from the `trackframe`.
+A vector of track ID values extracted from the \code{trackframe}.
 
-A vector of easting values extracted from the `trackframe`.
+A vector of easting values extracted from the \code{trackframe}.
 
-A vector of northing values extracted from the `trackframe`.
+A vector of northing values extracted from the \code{trackframe}.
 }
 \description{
-This function retrieves the time index values from a `trackframe` object.
-The `trackframe` has a data frame-like structure with an attribute
+This function retrieves the time index values from a \code{trackframe} object.
+The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing time index values.
 
-This function retrieves the track ID values from a `trackframe` object.
-The `trackframe` has a data frame-like structure with an attribute
+This function retrieves the track ID values from a \code{trackframe} object.
+The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing track ID values.
 
-This function retrieves the easting values from a `trackframe` object.
-The `trackframe` has a data frame-like structure with an attribute
+This function retrieves the easting values from a \code{trackframe} object.
+The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing easting values.
 
-This function retrieves the northing values from a `trackframe` object.
-The `trackframe` has a data frame-like structure with an attribute
+This function retrieves the northing values from a \code{trackframe} object.
+The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing northing values.
 }
 \examples{
 tf <- travelpaths::sim_travel_path(100, format = "trackframe")
 time(tf)
-
 
 tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
 id(tf)

@@ -1,4 +1,5 @@
 #' @examples
+#' library(trackframe)
 #' df <- data.frame(
 #'   time_col = as.POSIXct(Sys.time() + 1:5),
 #'   easting_col = runif(5, 0, 10),
@@ -15,10 +16,11 @@ trackframe <- function(data,
                        easting_col = tf_options("easting_col"),
                        northing_col = tf_options("northing_col"),
                        id_col = tf_options("id_col"),
-                       crs_input = NULL,
-                       utm_epsg = NULL,
                        sort = TRUE,
                        coerce_to = "base",
+                       verbose = TRUE,
+                       crs_input = NULL,
+                       utm_epsg = NULL,
                        ...) {
   df <- data.frame(data)
   as.trackframe(df, time_col = time_col, easting_col = easting_col, 
@@ -28,13 +30,13 @@ trackframe <- function(data,
 }
 
 
-#' Convert an object to a \code{track\_frame}
+#' Convert an object to a \code{trackframe}
 #'
-#' This function converts an object into a `trackframe` object,
+#' This function converts an object into a \code{trackframe} object,
 #' ensuring required columns exist and have valid data types. Coordinates must be provided in easting/northing.
-#' Coordinates for  `sftrack` and `move2` objects are transformed to easting/northing if possible.
+#' Coordinates for  \code{data.frame}, \code{sftrack} and \code{move2} objects are transformed to easting/northing if possible.
 #'
-#' @param data a `data.frame`, a `matrix`, an `sftrack` object or a `move2` object containing the tracking data.
+#' @param data a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object containing the tracking data.
 #' @param time_col a character string specifying the column name of the time column. If no column is specified, 
 #' the `time_col` is tried to be matched by possible names provided in `tf_options("time_col")`. In case of multiple matches, the first match is chosen.
 #' @param easting_col a character string specifying the column name of the easting column. If no column is specified, 
@@ -44,10 +46,11 @@ trackframe <- function(data,
 #' @param id_col optional character vector specifying identifier column names. If no column is specified, 
 #' the `id_col` is tried to be matched by possible names provided in `tf_options("id_col")`. In case of multiple matches, the first match is chosen.
 #' @param sort logical, if data should be sorted according to id_col and time_col
-#' @param coerce_to format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Deafault is `base` and gives a `data.frame`.
+#' @param coerce_to the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.
+#' @param verbose logical, default value is \code{TRUE}
 #' @param ... Additional arguments (unused).
 #'
-#' @return A `trackframe` object with appropriate attributes set.
+#' @return A \code{trackframe} object with appropriate attributes set.
 #' @examples
 #' df <- data.frame(
 #'   time_col = as.POSIXct(Sys.time() + 1:5),
@@ -57,7 +60,12 @@ trackframe <- function(data,
 #' )
 #' tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
 #'                         northing_col = "northing_col", id_col = "id")
+#' class(tf)
 #' attributes(tf)
+#' easting(tf)
+#' northing(tf)
+#' time(tf)
+#' id(tf)
 #' 
 #' @export
 #' @rdname as_trackframe
@@ -68,6 +76,7 @@ as.trackframe <- function(data,
                           id_col = tf_options("id_col"),
                           sort = TRUE,
                           coerce_to = "base",
+                          verbose = TRUE,
                            ...) {
   UseMethod("as.trackframe")
 }
@@ -81,7 +90,7 @@ as.trackframe <- function(data,
 
 
 #' @param crs_input crs code for input of coordinates
-#' @param utm_epsg crs value for utm zone of the `trackframe` output
+#' @param utm_epsg crs value for utm zone of the \code{trackframe} output
 #' @examples
 #' set.seed(2025)
 #' sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
@@ -119,9 +128,11 @@ as.trackframe.data.frame <- function(data,
                                      id_col = tf_options("id_col"),
                                      sort = TRUE,
                                      coerce_to = "base", #FIXME: "data.frame"
+                                     verbose = TRUE,
                                      crs_input = NULL,
                                      utm_epsg = NULL,
                                      ...) {
+    assert_logical(verbose, len = 1L)
     cn_input <- colnames(data)
     attributes_input <- attributes(data)
 
@@ -129,11 +140,21 @@ as.trackframe.data.frame <- function(data,
     assert_choice(coerce_to, choices = c("base", "data.table", "tibble"), null.ok = TRUE)
     if(is.null(coerce_to)) {
     } else if(coerce_to == "base") {
-      data <- as.data.frame(data)
+      if(inherits(data, "data.table") | inherits(data, "tbl") | inherits(data, "tbl_df")){
+        if(verbose) writeLines("- data coerced by as.data.frame(data)")
+        data <- as.data.frame(data)
+      }
+
     } else if(coerce_to == "data.table") {
-      data <- as.data.table(data)
+      if(!inherits(data, "data.table")) {
+        if(verbose) writeLines("- data coerced by as.data.table(data)")
+        data <- as.data.table(data)
+      }
     } else if(coerce_to == "tibble") {
-      data <- as_tibble(data)
+      if(!inherits(data, "tbl") | !inherits(data, "tbl_df")) {
+        if(verbose) writeLines("- data coerced by as_tibble(data)")
+        data <- as_tibble(data)
+      }
     }
     
     # guess time_col
@@ -216,7 +237,7 @@ as.trackframe.data.frame <- function(data,
     assert_choice(id_col, colnames(data),  null.ok = TRUE)
     assert_character(id_col, len = 1, null.ok = TRUE)
     
-
+    
     assert_numeric(data[[easting_col]])
     assert_numeric(data[[northing_col]])
     assert_numeric(data[[time_col]])
@@ -257,6 +278,13 @@ as.trackframe.data.frame <- function(data,
     }
     
     attr(data, "utm_epsg") <- utm_epsg
+    if(verbose) {
+      writeLines(sprintf("- %s set as time_col", attr(data, "time")))
+      writeLines(sprintf("- %s set as easting_col", attr(data, "easting")))
+      writeLines(sprintf("- %s set as northing_col", attr(data, "northing")))
+      writeLines(sprintf("- %s set as id_col", attr(data, "id")))
+      writeLines(sprintf("- %i set as utm_epsg", attr(data, "utm_epsg")))
+    }
     
     if(is.null(attr(data, "transformation_info"))) {
       transformation_info <- list()
@@ -292,6 +320,7 @@ as.trackframe.matrix <- function(data,
                                  id_col = tf_options("id_col"),
                                  sort = TRUE,
                                  coerce_to = "base",
+                                 verbose = TRUE,
                                  crs_input = NULL,
                                  utm_epsg = NULL,
                                  ...) {
@@ -299,7 +328,7 @@ as.trackframe.matrix <- function(data,
                 easting_col = easting_col, northing_col = northing_col,
                 id_col = id_col, crs_input = crs_input,
                 utm_epsg = utm_epsg, sort = sort,
-                coerce_to = coerce_to, ...)
+                coerce_to = coerce_to, verbose = verbose, ...)
 }
 
 
@@ -307,11 +336,12 @@ as.trackframe.matrix <- function(data,
 #' # example for move2 objects
 #' library(move2)
 #' library(trackframe)
-#' albatross_move2 <- mt_read(mt_example()) |>
-#'   sf::st_transform(3857)
-#'  albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
-#'  albatross_tf <- as.trackframe(albatross_move2)
-#' class(albatross_tf)
+#' set.seed(2025)
+#' move2_dat <- travelpaths::sim_travel_path(5, format = "move2")
+#' tf <- as.trackframe(data = move2_dat)
+#' 
+#' move2_dat2 <- tf_backtransform(tf)
+#' all.equal(move2_dat, move2_dat2)
 #' 
 #' @export
 #' @rdname as_trackframe
@@ -321,6 +351,7 @@ as.trackframe.move2 <- function(data, time_col = NULL,
                                 id_col = NULL,
                                 sort = TRUE,
                                 coerce_to = "base",
+                                verbose = TRUE,
                                 ...) {
     transformation_info <- attributes(data)
     transformation_info$crs_code <- sf::st_crs(data)$input
@@ -374,32 +405,19 @@ as.trackframe.move2 <- function(data, time_col = NULL,
     attr(data, "transformation_info") <- transformation_info
     as.trackframe(data, time_col = time_index, easting_col = easting_col,
                   northing_col = northing_col, id_col = id_col, utm_epsg = utm_epsg,
-                  sort = sort, coerce_to = coerce_to, ...)
+                  sort = sort, coerce_to = coerce_to, verbose = verbose, ...)
 }
 
 
 #' @examples
 #' # example for sftrack objects
 #' library(sftrack)
-#' library(trackframe)
-#' data("raccoon", package = "sftrack")
-#' raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
-#' raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
-#' coords <- c("longitude","latitude")
-#' group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
-#' time <- "time"
-#' error <- "fix"
-#' crs <- 4326
-#' # create a sftrack object
-#' my_sftrack <- as_sftrack(data = raccoon,
-#'                          coords = coords,
-#'                          group = group,
-#'                          time = time,
-#'                          error = error,
-#'                          crs = crs)
-#' 
-#' sftrack_tf <- as.trackframe(my_sftrack)
-#' class(sftrack_tf)
+#' set.seed(2025)
+#' sftrack_dat <- travelpaths::sim_travel_path(5, format = "sftrack")
+#' tf <- as.trackframe(data = sftrack_dat)
+#' sftrack_dat2 <- tf_backtransform(tf)
+#' sftrack_dat2$id <- unlist(sftrack_dat2$sft_group)
+#' all.equal(sftrack_dat2, sftrack_dat)
 #' 
 #' @export
 #' @rdname as_trackframe
@@ -410,6 +428,7 @@ as.trackframe.sftrack <- function(data,
                                   id_col = NULL,
                                   sort = TRUE,
                                   coerce_to = "base",
+                                  verbose = TRUE,
                                   ...) {
   transformation_info <- attributes(data)
   transformation_info$crs_code <- sf::st_crs(data)$input
@@ -455,7 +474,7 @@ as.trackframe.sftrack <- function(data,
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(data, time_col = time_index, easting_col = easting_col,
                 northing_col = northing_col, id_col = id_col, utm_epsg = utm_epsg,
-                sort = sort, coerce_to = coerce_to, ...)
+                sort = sort, coerce_to = coerce_to, verbose = verbose, ...)
 }
 
 
@@ -468,6 +487,7 @@ as.trackframe.trackframe <- function(data,
                                      id_col = NULL,
                                      sort = TRUE,
                                      coerce_to = "base",
+                                     verbose = TRUE,
                                      ...) {
   #FIXME: transformation_info
   if (!is.null(time_col)) {
@@ -491,15 +511,15 @@ as.trackframe.trackframe <- function(data,
     attr(data, "id_col") <- id_col
   }
   
-  #coerce_to
-  if(is.null(coerce_to)) {
-  } else if(coerce_to == "base") {
-    data <- as.data.frame(data)
-  } else if(coerce_to == "data.table") {
-    data <- as.data.table(data)
-  } else if(coerce_to == "tibble") {
-    data <- as_tibble(data)
-  }
+  # #coerce_to
+  # if(is.null(coerce_to)) {
+  # } else if(coerce_to == "base") {
+  #   data <- as.data.frame(data)
+  # } else if(coerce_to == "data.table") {
+  #   data <- as.data.table(data)
+  # } else if(coerce_to == "tibble") {
+  #   data <- as_tibble(data)
+  # }
   
   if(isTRUE(sort)) {
     if(is.null(attr(data, "id"))) {
