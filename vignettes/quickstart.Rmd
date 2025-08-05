@@ -7,15 +7,17 @@ vignette: >
   %\VignetteIndexEntry{Basic Functionality}
 ---
 
+# Qucikstart Vignette
+
 This vignette demonstrates how to use `trackframe` to make your functions compatible with multiple animal movement data formats.
 
 
 Below is example algorithm that takes x, y, t from a single track as inputs. We want to write code that applies this function to multiple tracks provided in a single object.
 ```{r}
-average_speed_over_time <- function(x, y, t)  weighted.mean(
-  sqrt(diff(x)^2 + diff(y)^2) / as.numeric(diff(t)),
-  as.numeric(diff(t), na.rm=TRUE)
-)
+average_speed_over_time <- function(x, y, t)  {
+  weighted.mean(sqrt(diff(x)^2 + diff(y)^2) / as.numeric(diff(t)),
+    as.numeric(diff(t)), na.rm=TRUE)
+}
 ```
 
 
@@ -26,7 +28,11 @@ average_speed_group_no_tf <- function(data) {
   if ('sf' %in% class(data)) {
     # sf objects have a consistent way of providing coordinates
     # we need to project them into euclidean space
-    coords <- sf::st_coordinates(sf::st_transform(data, 3857))
+
+    # coords <- sf::st_coordinates(sf::st_transform(data, 3857))
+    utm_epsg <- trackframe:::sf_to_utm_epsg(data)
+    coords <- sf::st_coordinates(sf::st_transform(data, utm_epsg))
+    coords[is.nan(coords)] <- NA
     # sftrack and move2 have different ways of encoding
     # the track_id/animal_id so we need to account for both
     if ('sftrack' %in% class(data)) {
@@ -36,14 +42,14 @@ average_speed_group_no_tf <- function(data) {
       track_id <- move2::mt_track_id(data)
       timestamp <- move2::mt_time(data)
     }
-  # This part is for the vanilla dataframe
+    # This part is for the vanilla dataframe
   } else {
     coords <- as.matrix(data[,c('x', 'y')])
     track_id <- data$animal_id
     timestamp <- data$t
   }
   #  At this point, we have standardized coords, timestamp, and track_id objects
-
+  
   # Now we can finally use sapply to run our `average_speed_over_time`
   # function for each track.
   utid <- sort(unique(track_id))
@@ -63,9 +69,9 @@ Here is how to accomplish the same thing with `trackframe`. No custom logic is n
 ```{r}
 library(trackframe)
 
-average_speed_group_tf <- function(data){
+average_speed_group_tf <- function(data, ...){
   # Automatically convert whatever input type is provided.
-  tf <- as.track_frame(data, id_col = 'animal_id')
+  tf <- as.trackframe(data, ...)
   # id_col='animal_id' is only used for the vanilla dataframe conversion.
   # track_id/animal_id is automatically detected from move2 and sftrack objects
   
@@ -111,9 +117,7 @@ move2_albatross <- move2::mt_read(move2::mt_example()) |>
   sf::st_transform(3857)
 
 stopifnot(all.equal(
-  average_speed_group_tf(move2_albatross),
+  average_speed_group_tf(move2_albatross, id_col = "individual-local-identifier"),
   average_speed_group_no_tf(move2_albatross)
 ))
-
-
 ```
