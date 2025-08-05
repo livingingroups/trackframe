@@ -9,10 +9,32 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Example of Trackframe vs move2 performance
+
+
+## Why `trackframe`?
+TODO
+
+- The R package `trackframe` is designed to be complementary to more full featured geospatial libraries such as `sf`.
+- `trackframe` offers a flexible object for tracking analysis with an underlying `data.frame`, `data.table`, or `tibble` object where the information about coordinates, time, id , etc. are stored as columns.
+- multiple input objects can be easily coerced to a `trackframe`
+- information like `time`, `id`, `easting` and `northing` are stored as attributes an can be easily accessed by `time()`, `id()`, `easting()`, `northing`.
+- coordinates are always stored in UTM easting/northings
+- a `trackframe` can be easily be backtransformed to the original data by `tf_backtransform()`
+- easy transformation allow to use methods from multiple packages which require different input formats. Several methods are implemented in package `travelpaths`.
+- can easily deal with multiple individuals
+- performance
+- allow the user to perform vectorized R operations on directly on the coordinates
+
+
+
+## Performance
+TODO
+
+### Example of Trackframe vs move2 performance
 
 ```{r}
 library(trackframe)
+library(sf)
 ```
 
 
@@ -21,17 +43,18 @@ Distance function for trackframe.
 ```{r}
 library(units)
 tf_distance <- function(tf) {
-  x <- set_units(
-    c(sqrt(diff(easting(tf)) ^ 2 + diff(northing(tf))^2), NA),
-    'm'
-  )
-  x[which(
-    tf[1:(nrow(tf) - 1) ,attr(tf, 'id')][[1]] !=
-      tf[2:nrow(tf), attr(tf, 'id')][[1]]
-  )] <- NA
-  x
+  x <- c(sqrt(diff(easting(tf))^ 2 + diff(northing(tf))^2), NA)
+  x[diff(as.numeric(id(tf))) != 0] <- NA
+  set_units(x,'m')
 }
 filter_nonempty <- function(x) x[!sf::st_is_empty(x),]
+
+brock_mt_distance <- function(m2) {
+  coords <- sf::st_coordinates(m2)
+  x <- sqrt(diff(coords[,1])^2 + diff(coords[,2])^2)
+  x[diff(as.numeric(mt_track_id(albatross_move2))) != 0] <- NA
+  set_units(c(x, NA), 'm')
+}
 ```
 
 Load data
@@ -40,39 +63,39 @@ Load data
 library(move2)
 suppressPackageStartupMessages(library(move2, quietly = TRUE))
 albatross_move2 <- mt_read(mt_example()) |>
-  sf::st_transform(3857) |>
+  sf::st_transform(32618) |>
   filter_nonempty()
+
+# utm_epsg <- trackframe:::sf_to_utm_epsg(albatross_move2)
+# albatross_move2 <- sf::st_transform(albatross_move2, utm_epsg)
 
 suppressPackageStartupMessages(library(trackframe, quietly = TRUE))
 albatross_tf <- as.trackframe(albatross_move2)
+
+all.equal(st_coordinates(albatross_move2)[,1], easting(albatross_tf))
 ```
 
 ```{r}
-brock_mt_distance <- function(m2) {
-  coords <- sf::st_coordinates(m2)
-  x <- sqrt(diff(coords[,1])^2 + diff(coords[,2])^2)
-  x[diff(as.numeric(mt_track_id(albatross_move2))) != 0] <- NA
-  set_units(c(x, NA), 'm')
-}
 all.equal(brock_mt_distance(albatross_move2), mt_distance(albatross_move2), check.attributes = FALSE)
 ```
 
 Check that the distance functions output the same result:
 ```{r}
-# all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
+all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
 ```
 
 Compare performance
 
 ```{r}
-# library(microbenchmark)
-# m <- microbenchmark(
-#   mt_distance(albatross_move2),
-#   tf_distance(albatross_tf),
-#   times = 15
-# )
-# m
-# plot(m)
+library(microbenchmark)
+m <- microbenchmark(
+  mt_distance(albatross_move2),
+  brock_mt_distance(albatross_move2),
+  tf_distance(albatross_tf),
+  times = 15
+)
+m
+plot(m)
 ```
 
 
