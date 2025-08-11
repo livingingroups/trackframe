@@ -367,6 +367,14 @@ as.trackframe.move2 <- function(data, time_col = NULL,
                                 coerce_to = "base",
                                 verbose = TRUE,
                                 ...) {
+    if(is.null(time_col)) {
+      time_index <- attr(data, "time_column")
+    } else {
+      time_index <- time_col
+    }
+  if(is.null(id_col)) {
+    id_col <- attr(data, "track_id_column") #move2: The `track_id_column` attribute should be a <character> of length 1
+  }
     transformation_info <- attributes(data)
     transformation_info$crs_code <- sf::st_crs(data)$input
     # transformation to cartesian coordinates
@@ -387,11 +395,7 @@ as.trackframe.move2 <- function(data, time_col = NULL,
     # data[["easting"]] <- x_y[, 1]
     # data[["northing"]] <- x_y[, 2]
     # # class(data) <- c("tbl_df", "tbl", "data.frame") #FIXME classes?
-    if(is.null(time_col)) {
-      time_index <- attr(data, "time_column")
-    } else {
-      time_index <- time_col
-    }
+
     
     x_y <- st_coordinates(data[[attr(data, "sf_column")]])
     x_y[is.nan(x_y)] <- NA
@@ -408,10 +412,6 @@ as.trackframe.move2 <- function(data, time_col = NULL,
       data[["northing"]] <- x_y[, 2]
     } else {
       data[[northing_col]] <- x_y[, 2]
-    }
-    
-    if(is.null(id_col)) {
-      id_col <- attr(data, "track_id_column") #move2: The `track_id_column` attribute should be a <character> of length 1
     }
 
     class(data) <- c("data.frame")
@@ -444,6 +444,16 @@ as.trackframe.sftrack <- function(data,
                                   coerce_to = "base",
                                   verbose = TRUE,
                                   ...) {
+  
+  if(is.null(time_col)) {
+    time_index <- attr(data, "time_col")
+  } else {
+    time_index <- time_col
+  }
+  if(is.null(id_col)) {
+    id_col = "id"
+    data[["id"]] <- sapply(data[[attr(data, "group_col")]], deparse)
+  }
   transformation_info <- attributes(data)
   transformation_info$crs_code <- sf::st_crs(data)$input
   # transformation to cartesian coordinates
@@ -454,11 +464,7 @@ as.trackframe.sftrack <- function(data,
   cols <- setdiff(colnames(data), attr(data, "sf_column"))
   data <- data[,cols]
   
-  if(is.null(time_col)) {
-    time_index <- attr(data, "time_col")
-  } else {
-    time_index <- time_col
-  }
+
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
@@ -477,10 +483,7 @@ as.trackframe.sftrack <- function(data,
     data[[northing_col]] <- x_y[, 2]
   }
   
-  if(is.null(id_col)) {
-    id_col = "id"
-    data[["id"]] <- sapply(data[[attr(data, "group_col")]], deparse)
-  }
+
 
   # FIXME: as.data.frame?
   class(data) <- c("data.frame")

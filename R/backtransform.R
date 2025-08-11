@@ -42,7 +42,8 @@ tf_backtransform <- function(tf) {
     #FIXME: data.frame vs. tibble vs.data.table
     #FIXME: drop columns?
     #FIXME: order?
-  } else if (class_old ==  "sftrack") {
+  # } else if (class_old ==  "sftrack") {
+  } else if ("sftrack" %in% transformation_info$class) {
     return(tf_as_sftrack(tf, tf_crs = attr(tf, "utm_epsg"), crs_new = transformation_info$crs_code))
   } else if (class_old %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
     if(attr(tf, "easting") != transformation_info$coord_names[1]){

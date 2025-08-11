@@ -250,9 +250,9 @@ col_guessing <- function(col_names,
 
 guessing <- function(col_names, candidates, id) {
   ind <- candidates %in% col_names
-  if(sum(ind) < 1) stop(
-    sprintf("%s needs to be specified. Guessing not successful.", id)
-  )
+  if(sum(ind) < 1) {
+    stop(sprintf("%s needs to be specified. Guessing not successful.", id))
+  }
   # chosen_guess <- candidates[ind][1]
   # if (sum(ind) > 1) {
   #   warning(sprintf("multiple possible %s columns found, %s chosen", id, chosen_guess))
