@@ -152,6 +152,15 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   sft_group <- as.list(do.call(rbind.data.frame, lapply(id(tf), function(text) eval(parse(text = text)))))
   # FIXME: We want to create an sftrack object without importing it.
   new_sftrack <- as_sftrack(sf_df, group = sft_group, time = attr(tf, "time"), overwrite_names = TRUE, error = transformation_info$error_col)
+
+  if(length(new_sftrack$sft_group[[1]]) == 1) {
+    attr_agr <- attr(new_sftrack, "agr")
+    new_sftrack[[attr(tf, "id")]] <- unlist(new_sftrack[["sft_group"]])
+    attr(new_sftrack, "agr") <- attr_agr
+  } #else {
+  #   new_sftrack[[attr(tf, "id")]] <- NULL #FIXME: make it also work for mor than 1 col
+  # }
+
   # new_sftrack[[attr(new_sftrack, "group_col")]]
   return(new_sftrack)
 }

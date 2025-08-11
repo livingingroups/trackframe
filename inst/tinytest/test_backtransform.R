@@ -17,7 +17,7 @@ set.seed(2025)
 sftrack <- sim_travel_path(5, format = "sftrack")
 tf <- as.trackframe(data = sftrack)
 sftrack_b <- tf_backtransform(tf)
-sftrack_b$id <- unlist(sftrack_b$sft_group)
+# sftrack_b$id <- unlist(sftrack_b$sft_group)
 expect_equal(sftrack_b, sftrack)
 
 ###
@@ -49,6 +49,11 @@ expect_equal(NROW(sftrack_tf_b), NROW(my_sftrack))
 sftrack_tf_b$id <- NULL
 expect_equal(colnames(sftrack_tf_b), colnames(my_sftrack))
 expect_equal(sftrack_tf_b, my_sftrack)
+attr(sftrack_tf_b, "agr")
+attr(my_sftrack, "agr")
+
+attributes(my_sftrack)
+attributes(sftrack_tf_b)
 
 ###
 
@@ -66,3 +71,4 @@ tib <- tibble::as_tibble(sim_travel_path(5, format = "data.frame"))
 as.trackframe(data = tib, crs_input = 4326)
 tf <- as.trackframe(data = tib, crs_input = 4326, coerce_to = "tibble")
 expect_equal(tf_backtransform(tf), tib)
+

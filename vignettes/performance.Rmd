@@ -60,7 +60,6 @@ class(travel_paths_sftrack)
 tf <- as.trackframe(travel_paths_sftrack)
 class(tf)
 sftrack2 <- tf_backtransform(tf)
-sftrack2$id <- unlist(sftrack2$sft_group) #FIXME
 all.equal(travel_paths_sftrack, sftrack2)
 ```
 
