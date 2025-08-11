@@ -25,6 +25,88 @@ TODO
 - performance
 - allow the user to perform vectorized R operations on directly on the coordinates
 
+## Accessor
+```{r}
+library(trackframe)
+library(travelpaths)
+data("travel_paths_trackframe")
+tf <- travel_paths_trackframe
+class(tf)
+```
+
+```{r}
+head(time(tf))
+```
+
+```{r}
+head(easting(tf))
+```
+
+```{r}
+head(northing(tf))
+```
+
+```{r}
+head(id(tf))
+```
+
+## Transformations
+
+## sftrack
+```{r}
+library(travelpaths)
+data("travel_paths_sftrack")
+class(travel_paths_sftrack)
+tf <- as.trackframe(travel_paths_sftrack)
+class(tf)
+sftrack2 <- tf_backtransform(tf)
+sftrack2$id <- unlist(sftrack2$sft_group) #FIXME
+all.equal(travel_paths_sftrack, sftrack2)
+```
+
+## move2
+```{r}
+data("travel_paths_move2")
+class(travel_paths_move2)
+tf <- as.trackframe(travel_paths_move2)
+class(tf)
+move2_2 <- tf_backtransform(tf)
+all.equal(travel_paths_move2, move2_2)
+```
+
+# Specify underlying data class with coerce_to
+```{r}
+library(tibble)
+library(data.table)
+data("travel_paths_data_frame")
+df <- travel_paths_data_frame
+dt <- as.data.table(df) 
+tib <- as_tibble(df) 
+
+#data.frame
+tf_df <- as.trackframe(df, coerce_to = "base")
+class(tf_df)
+
+#data.table
+tf_dt <- as.trackframe(dt, coerce_to = "data.table")
+class(tf_dt)
+
+#tibble
+tf_tib <- as.trackframe(tib, coerce_to = "tibble")
+class(tf_tib)
+
+# default is "base"
+class(dt)
+tf_dt2 <- as.trackframe(dt, coerce_to = "base")
+class(tf_dt2)
+all.equal(tf_df, tf_dt2, check.attributes = FALSE)
+
+class(tib)
+tf_tib2 <- as.trackframe(tib, coerce_to = "base")
+class(tf_tib2)
+all.equal(tf_df, tf_tib2, check.attributes = FALSE)
+
+```
 
 
 ## Performance
