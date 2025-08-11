@@ -157,83 +157,97 @@ as.trackframe.data.frame <- function(data,
       }
     }
     
-    # guess time_col
-    if(length(time_col) > 1) {
-      col_ind <- time_col %in% colnames(data)
-      if(sum(col_ind) < 1) {
-        stop("time_col needs to be specified. Guessing not successful.")
-      } else {
-        # if(sum(col_ind) >= 1) {
-          time_cols <- time_col
-          time_col <- time_col[col_ind][1]
-          if(sum(col_ind) > 1) {
-             if(!all(duplicated(t(data[, colnames(data) %in% time_cols]))[-1])) {
-                warning(sprintf("multiple possible columns found. %s chosen as time_col", time_col))
-            }
-          }
-        # }
-      }
-    }
+    #columns guessing
+    guesses <- col_guessing(col_names = colnames(data),
+                            time_col_candidates = time_col,
+                            easting_col_candidates = easting_col,
+                            northing_col_candidates = northing_col,
+                            id_col_candidates = id_col)
+    
+    validate_guesses(data, guesses)
+    
+    # # guess time_col
+    # if(length(time_col) > 1) {
+    #   col_ind <- time_col %in% colnames(data)
+    #   if(sum(col_ind) < 1) {
+    #     stop("time_col needs to be specified. Guessing not successful.")
+    #   } else {
+    #     # if(sum(col_ind) >= 1) {
+    #       time_cols <- time_col
+    #       time_col <- time_col[col_ind][1]
+    #       if(sum(col_ind) > 1) {
+    #          if(!all(duplicated(t(data[, colnames(data) %in% time_cols]))[-1])) {
+    #             warning(sprintf("multiple possible columns found. %s chosen as time_col", time_col))
+    #         }
+    #       }
+    #     # }
+    #   }
+    # }
+    time_col <- guesses[["time_col"]][1]
     assert_choice(time_col, colnames(data), null.ok = FALSE)
     assert_character(time_col, len = 1, null.ok = FALSE)
     assert_numeric(data[[time_col]])
     
     # guess easting_col
-    if(length(easting_col) > 1) {
-      col_ind <- easting_col %in% colnames(data)
-      if(sum(col_ind) < 1) {
-        stop("easting_col needs to be specified. Guessing not successful.")
-      } else {
-        easting_cols <- easting_col
-        easting_col <- easting_col[col_ind][1]
-        if(sum(col_ind) >= 1) {
-          if(!all(duplicated(t(data[, colnames(data) %in% easting_cols]))[-1])) {
-            warning(sprintf("multiple possible columns found. %s chosen as easting_col", easting_col))
-          }
-        }
-      }
-    }
+    # if(length(easting_col) > 1) {
+    #   col_ind <- easting_col %in% colnames(data)
+    #   if(sum(col_ind) < 1) {
+    #     stop("easting_col needs to be specified. Guessing not successful.")
+    #   } else {
+    #     easting_cols <- easting_col
+    #     easting_col <- easting_col[col_ind][1]
+    #     if(sum(col_ind) >= 1) {
+    #       if(!all(duplicated(t(data[, colnames(data) %in% easting_cols]))[-1])) {
+    #         warning(sprintf("multiple possible columns found. %s chosen as easting_col", easting_col))
+    #       }
+    #     }
+    #   }
+    # }
+    easting_col <- guesses[["easting_col"]][1]
     assert_choice(easting_col, colnames(data),  null.ok = FALSE)
     assert_character(easting_col, len = 1, null.ok = FALSE)
     
-    # guess northing_col
-    if(length(northing_col) > 1) {
-      col_ind <- northing_col %in% colnames(data)
-      if(sum(col_ind) < 1) {
-        stop("northing_col needs to be specified. Guessing not successful.")
-      } else {
-        northing_cols <- northing_col
-        northing_col <- northing_col[col_ind][1]
-        if(sum(col_ind) >= 1) {
-          if(!all(duplicated(t(data[, colnames(data) %in% northing_cols]))[-1])) {
-            warning(sprintf("multiple possible columns found. %s chosen as northing_col", northing_col))
-          }
-        }
-      }
-    }
+    # # guess northing_col
+    # if(length(northing_col) > 1) {
+    #   col_ind <- northing_col %in% colnames(data)
+    #   if(sum(col_ind) < 1) {
+    #     stop("northing_col needs to be specified. Guessing not successful.")
+    #   } else {
+    #     northing_cols <- northing_col
+    #     northing_col <- northing_col[col_ind][1]
+    #     if(sum(col_ind) >= 1) {
+    #       if(!all(duplicated(t(data[, colnames(data) %in% northing_cols]))[-1])) {
+    #         warning(sprintf("multiple possible columns found. %s chosen as northing_col", northing_col))
+    #       }
+    #     }
+    #   }
+    # }
+    northing_col <- guesses[["northing_col"]][1]
     assert_choice(northing_col, colnames(data),  null.ok = FALSE)
     assert_character(northing_col, len = 1, null.ok = FALSE)
 
-    # guess id_col
-    if(length(id_col) > 1) {
-      col_ind <- id_col %in% colnames(data)
-      if(sum(col_ind) < 1) {
-        # stop("id_col needs to be specified. Guessing not successful.")
-        id_col <- NULL
-      } else {
-        id_cols <- id_col
-        id_col <- id_col[col_ind][1]
-        if(sum(col_ind) >= 1) {
-          if(!all(duplicated(t(data[, colnames(data) %in% id_cols]))[-1])) {
-            warning(sprintf("multiple possible columns found. %s chosen as id_col", id_col))
-          }
-        }
-      }
-    } else {
-      if(length(id_col) == 0) {
-        id_col <- NULL
-      }
-    }
+    # # guess id_col
+    # if(length(id_col) > 1) {
+    #   col_ind <- id_col %in% colnames(data)
+    #   if(sum(col_ind) < 1) {
+    #     # stop("id_col needs to be specified. Guessing not successful.")
+    #     id_col <- NULL
+    #   } else {
+    #     id_cols <- id_col
+    #     id_col <- id_col[col_ind][1]
+    #     if(sum(col_ind) >= 1) {
+    #       if(!all(duplicated(t(data[, colnames(data) %in% id_cols]))[-1])) {
+    #         warning(sprintf("multiple possible columns found. %s chosen as id_col", id_col))
+    #       }
+    #     }
+    #   }
+    # } else {
+    #   if(length(id_col) == 0) {
+    #     id_col <- NULL
+    #   }
+    # }
+    id_col <- guesses[["id_col"]][1]
+    if(is.na(id_col)) id_col <- NULL
     assert_choice(id_col, colnames(data),  null.ok = TRUE)
     assert_character(id_col, len = 1, null.ok = TRUE)
     
