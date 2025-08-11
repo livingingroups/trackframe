@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Basic Functionality}
 ---
 
-# Qucikstart Vignette
+# Quickstart Vignette
 
 This vignette demonstrates how to use `trackframe` to make your functions compatible with multiple animal movement data formats.
 

@@ -18,9 +18,9 @@ library(trackframe)
 # Create a `trackframe`
 
 ## General
-
-In an object of class `trackframe` we always assume to have UTM easting/northing as coordinates.
-`as.trackframe` automatically transform coordinates to UTM easting/northing.
+The R package `trackframe` is designed to be complementary to more full featured geospatial libraries such as `sf`. Objects of class `trackframe` offer a flexible object for tracking analysis with an underlying `data.frame`, `data.table`, or `tibble` object where the information about coordinates, time, id , etc. are stored as columns.
+In a `trackframe` we always assume to have UTM easting/northing as coordinates.
+The S3 method `as.trackframe` (currently available for `data.frame`, `sftrack` and `move2`) automatically transforms coordinates to UTM easting/northing. `time_col`, `easting_col`, `northing_col` and `id_col` are stored as attributes.
 
 ### col guessing
 If no specific colnames are provided columns `time_col`, `easting_col`, `northing_col` and `id_col` are guessed automatically if no a argument is provided. of multiple matches, the first match is chosen. Default arguments are specified by
@@ -142,7 +142,7 @@ str(cocomo2)
 # Extract information
 
 ```{r}
-tf <- sim_travel_paths(3, 5)
+tf <- sim_travel_paths(3, 2)
 ```
 
 
@@ -202,5 +202,16 @@ Extract a specific track
 
 ```{r}
 track2 <- select_id(multi_track, "track_2")
+track2
+```
+
+Split by id
+
+```{r}
+lotf <- split_by_id(multi_track)
+class(lotf)
+names(lotf)
+lotf[[1]]
+lotf[["track_2"]]
 ```
 
