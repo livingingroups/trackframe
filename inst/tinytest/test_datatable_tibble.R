@@ -59,3 +59,41 @@ expect_equal(tf_df[["animal_id"]], tf_dt[["animal_id"]])
 expect_equal(tf_df[["animal_id"]], tf_tib[["animal_id"]])
 
 
+# Check all combinations
+
+input_data <- list(
+  base = df,
+  data.table = dt,
+  tibble = tib
+)
+
+class_ids <- list(
+  base = character(0),
+  data.table = 'data.table',
+  tibble = c('tbl_df', 'tbl')
+)
+
+scenarios <- expand.grid(from = names(input_data), to = c(names(input_data), NA), stringsAsFactors = FALSE)
+
+for (row_idx in nrow(scenarios)) {
+  from <- scenarios[row_idx, 'from']
+  to <- scenarios[row_idx, 'to']
+  tf <- as.trackframe(
+    input_data[[from]],
+    coerce_to = if (is.na(to)) NULL else to
+  )
+  
+  expect_inherits(tf, 'data.frame')
+  expect_inherits(tf, 'trackframe')
+  for (class_to_check in names(class_ids)) {
+    if (class_to_check == if (is.na(to)) from else to)
+      for (class_id in class_ids[[class_to_check]])
+        expect_inherits(tf, class_id)
+    else
+      for (class_id in class_ids[[class_to_check]])
+        expect_false(inherits(tf, class_id))
+  }
+  
+  for(col in c('x', 'y', 't', 'animal_id'))
+    expect_equal(tf[[col]], tf_df[[col]])
+}
