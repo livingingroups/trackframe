@@ -63,12 +63,20 @@ attr(tf, "transformation_info")
 expect_equal(tf_backtransform(tf), df)
 
 dt <- data.table::as.data.table(sim_travel_path(5, format = "data.frame"))
-as.trackframe(data = dt, crs_input = 4326)
-tf <- as.trackframe(data = dt, crs_input = 4326, coerce_to = "data.table")
-expect_equal(tf_backtransform(tf), dt)
+expect_equal(tf_backtransform(as.trackframe(data = dt, crs_input = 4326)), dt)
+expect_equal(tf_backtransform(
+  as.trackframe(data = dt, crs_input = 4326, coerce_to = NULL)
+), dt)
+expect_equal(tf_backtransform(
+  as.trackframe(data = dt, crs_input = 4326, coerce_to = "data.table")
+), dt)
 
 tib <- tibble::as_tibble(sim_travel_path(5, format = "data.frame"))
-as.trackframe(data = tib, crs_input = 4326)
-tf <- as.trackframe(data = tib, crs_input = 4326, coerce_to = "tibble")
-expect_equal(tf_backtransform(tf), tib)
+expect_equal(tf_backtransform(as.trackframe(data = tib, crs_input = 4326)), tib)
+expect_equal(tf_backtransform(
+  as.trackframe(data = tib, crs_input = 4326, coerce_to = "tibble")
+), tib)
+expect_equal(tf_backtransform(
+  as.trackframe(data = tib, crs_input = 4326, coerce_to = NULL)
+), tib)
 
