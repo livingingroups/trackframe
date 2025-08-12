@@ -4,7 +4,7 @@ library(trackframe)
 library(travelpaths)
 # cpttestdata
 
-test_as_trackframe <- function() {
+test_as_trackframe <- function(coerce_to = 'base') {
   #dataframe
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -13,18 +13,18 @@ test_as_trackframe <- function() {
     id = 1:5
   )
   tf <- trackframe(data = df, time_col = "time_col", easting_col = "easting_col",
-                          northing_col = "northing_col", id_col = "id")
-  tf2 <- trackframe(data = df)
+                          northing_col = "northing_col", id_col = "id", coerce_to = coerce_to)
+  tf2 <- trackframe(data = df, coerce_to = coerce_to)
   expect_equal(tf, tf2)
   tf3 <- as.trackframe(data = df, time_col = "time_col", easting_col = "easting_col",
-                   northing_col = "northing_col", id_col = "id")
+                   northing_col = "northing_col", id_col = "id", coerce_to = coerce_to)
   expect_equal(tf, tf3)
   tf4 <- as.trackframe(data = df)
   expect_equal(tf, tf4)
   expect_inherits(tf, "trackframe")
   expect_equal(dim(df), dim(tf))
   expect_error(trackframe(df, time_col = "time_col2", easting_col = "easting_col",
-                           northing_col = "northing_col", id_col = "id"))
+                           northing_col = "northing_col", id_col = "id", coerce_to = coerce_to))
   expect_equal(easting(tf), df$easting_col)
   expect_equal(northing(tf), df$northing_col)
   # expect_equal(units(easting(tf))$numerator, "m")
@@ -44,7 +44,7 @@ test_as_trackframe <- function() {
   ))
   expect_inherits(matrix_input, "matrix")
   tf <- trackframe(matrix_input, time_col = "time_col", easting_col = "easting_col",
-                    northing_col = "northing_col", id_col = "id")
+                    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to)
   expect_inherits(tf, "trackframe")
   expect_equal(dim(df), dim(tf))
   expect_equal(easting(tf), matrix_input[, "easting_col"])
@@ -63,7 +63,7 @@ test_as_trackframe <- function() {
   albatross_move2 <- mt_read(mt_example()) |>
     sf::st_transform(3857)
   albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
-  albatross_tf <- as.trackframe(albatross_move2)
+  albatross_tf <- as.trackframe(albatross_move2, coerce_to = coerce_to)
   
   expect_inherits(albatross_tf, "trackframe")
   expect_equal(NROW(albatross_move2), NROW(albatross_tf))
@@ -105,7 +105,7 @@ test_as_trackframe <- function() {
   # create a sftrack object
   my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
   
-  sftrack_tf <- as.trackframe(my_sftrack)
+  sftrack_tf <- as.trackframe(my_sftrack, coerce_to = coerce_to)
   expect_inherits(sftrack_tf, "trackframe")
   expect_equal(NROW(my_sftrack), NROW(sftrack_tf))
   
@@ -136,21 +136,21 @@ test_as_trackframe <- function() {
 
 
 #cocomo
-test_cocomo <- function() {
+test_cocomo <- function(coerce_to = 'base') {
   tf <- sim_travel_paths(3, 3)
   cocomo <-  tf_as_cocomo(tf)
-  tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
+  tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids, coerce_to = coerce_to)
   cn <- c("time", "easting", "northing", "id")
   expect_equal(tf[, cn], tf2[, cn])
 }
 
 
-test_sort <- function() {
+test_sort <- function(coerce_to) {
   set.seed(2025)
   df <- sim_travel_paths(2,3, format = "data.frame")
   set.seed(2025)
   df2 <- df[sample(6),]
-  tf_df <- as.trackframe(df2)
+  tf_df <- as.trackframe(df2, coerce_to = coerce_to)
   expect_warning(as.trackframe(df2)) # no crs provided
   df2_ordered <- df2[order(df2$id, df2$time),]
   expect_equal(as.data.frame(tf_df[ , c("id", "time")]), df2_ordered[, c("id", "time")])
@@ -164,15 +164,15 @@ test_sort <- function() {
   # expect_equal(tf3[ , c("id", "time")], tf2_ordered[, c("id", "time")])
 }
 
-test_errors <- function() {
+test_errors <- function(coerce_to = coerce_to) {
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
     id = 1:5
   )
   expect_error(trackframe(data = df, time_col = "time_col", easting_col = "easting_col",
-                   northing_col = "northing_col", id_col = "id"))
-  expect_error(trackframe(data = df))
+                   northing_col = "northing_col", id_col = "id", coerce_to = coerce_to))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -186,7 +186,7 @@ test_errors <- function() {
     northing_col = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = factor(1:5),
@@ -194,9 +194,9 @@ test_errors <- function() {
     northing_col = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col2 = as.POSIXct(Sys.time() + 1:5),
@@ -204,7 +204,7 @@ test_errors <- function() {
     northing_col = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -212,7 +212,7 @@ test_errors <- function() {
     northing_col = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -220,7 +220,7 @@ test_errors <- function() {
     northing_col2 = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df))
+  expect_error(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -228,14 +228,14 @@ test_errors <- function() {
     northing_col = runif(5, 0, 10),
     id2 = 1:5
   )
-  expect_silent(trackframe(data = df))
+  expect_silent(trackframe(data = df, coerce_to = coerce_to))
 }
 
-test_warnings <- function() {
+test_warnings <- function(coerce_to = 'base') {
   #no crs
   set.seed(2025)
   df <- sim_travel_paths(2,3, format = "data.frame")
-  expect_warning(as.trackframe(data = df)) # no crs provided
+  expect_warning(as.trackframe(data = df, coerce_to = coerce_to)) # no crs provided
   
   #duplicated guesses
   df <- data.frame(
@@ -244,14 +244,14 @@ test_warnings <- function() {
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10)
   )
-  expect_silent(trackframe(data = df))
+  expect_silent(trackframe(data = df, coerce_to = coerce_to))
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     time = as.POSIXct(Sys.time() + 2:6),
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10)
   )
-  expect_warning(trackframe(data = df))
+  expect_warning(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -259,14 +259,14 @@ test_warnings <- function() {
     easting = 1001:1005,
     northing_col = runif(5, 0, 10)
   )
-  expect_silent(trackframe(data = df))
+  expect_silent(trackframe(data = df, coerce_to = coerce_to))
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
     easting = runif(5, 0, 10),
     northing_col = runif(5, 0, 10)
   )
-  expect_warning(trackframe(data = df))
+  expect_warning(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -274,14 +274,14 @@ test_warnings <- function() {
     northing_col = 1001:1005,
     northing = 1001:1005
   )
-  expect_silent(trackframe(data = df))
+  expect_silent(trackframe(data = df, coerce_to = coerce_to))
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting = runif(5, 0, 10),
     northing_col = runif(5, 0, 10),
     northing = runif(5, 0, 10)
   )
-  expect_warning(trackframe(data = df))
+  expect_warning(trackframe(data = df, coerce_to = coerce_to))
   
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -290,7 +290,7 @@ test_warnings <- function() {
     id = 1:5,
     track_id = 1:5
   )
-  expect_silent(trackframe(data = df))
+  expect_silent(trackframe(data = df, coerce_to = coerce_to))
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -298,7 +298,7 @@ test_warnings <- function() {
     id = 1:5,
     track_id = 2:6
   )
-  expect_warning(trackframe(data = df))
+  expect_warning(trackframe(data = df, coerce_to = coerce_to))
 }
 
 
@@ -449,10 +449,13 @@ test_col_guessing <- function() {
 }
 
 # Run all tests
-test_as_trackframe()
-test_cocomo()
-test_sort()
-test_errors()
-test_warnings()
+lapply(c('base', 'data.table', 'tibble', NA), function(coerce_to) {
+  if (is.na(coerce_to)) coerce_to <- NULL
+  test_as_trackframe(coerce_to)
+  test_cocomo(coerce_to)
+  test_sort(coerce_to)
+  test_errors(coerce_to)
+  test_warnings(coerce_to)
+})
 test_col_guessing()
 
