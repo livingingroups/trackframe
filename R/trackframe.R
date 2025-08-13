@@ -18,11 +18,11 @@ trackframe <- function(data,
                        id_col = tf_options("id_col"),
                        sort = TRUE,
                        coerce_to = "base",
-                       verbose = TRUE,
+                       verbose = FALSE,
                        crs_input = NULL,
                        utm_epsg = NULL,
                        ...) {
-  df <- data.frame(data)
+  df <- data.frame(data) #FIXME: does not work for tibble + data.table
   as.trackframe(df, time_col = time_col, easting_col = easting_col, 
                  northing_col = northing_col, id_col = id_col,
                 crs_input = crs_input, utm_epsg = utm_epsg, sort = sort,
@@ -76,7 +76,7 @@ as.trackframe <- function(data,
                           id_col = tf_options("id_col"),
                           sort = TRUE,
                           coerce_to = "base",
-                          verbose = TRUE,
+                          verbose = FALSE,
                            ...) {
   UseMethod("as.trackframe")
 }
@@ -128,7 +128,7 @@ as.trackframe.data.frame <- function(data,
                                      id_col = tf_options("id_col"),
                                      sort = TRUE,
                                      coerce_to = "base", #FIXME: "data.frame"
-                                     verbose = TRUE,
+                                     verbose = FALSE,
                                      crs_input = NULL,
                                      utm_epsg = NULL,
                                      ...) {
@@ -153,18 +153,19 @@ as.trackframe.data.frame <- function(data,
     } else if(coerce_to == "tibble") {
       if(!inherits(data, "tbl") | !inherits(data, "tbl_df")) {
         if(verbose) writeLines("- data coerced by as_tibble(data)")
+        if(!is.null(data$sft_group)) data$sft_group <- NULL #FIXME: same transformation as for id
         data <- as_tibble(data)
       }
     }
     
     #columns guessing
-    guesses <- col_guessing(col_names = colnames(data),
+    guesses <- guess_all_cols(col_names = colnames(data),
                             time_col_candidates = time_col,
                             easting_col_candidates = easting_col,
                             northing_col_candidates = northing_col,
                             id_col_candidates = id_col)
     
-    validate_guesses(data, guesses)
+    warn_if_guess_ambiguous(data, guesses)
     
     # # guess time_col
     # if(length(time_col) > 1) {
@@ -334,7 +335,7 @@ as.trackframe.matrix <- function(data,
                                  id_col = tf_options("id_col"),
                                  sort = TRUE,
                                  coerce_to = "base",
-                                 verbose = TRUE,
+                                 verbose = FALSE,
                                  crs_input = NULL,
                                  utm_epsg = NULL,
                                  ...) {
@@ -365,7 +366,7 @@ as.trackframe.move2 <- function(data, time_col = NULL,
                                 id_col = NULL,
                                 sort = TRUE,
                                 coerce_to = "base",
-                                verbose = TRUE,
+                                verbose = FALSE,
                                 ...) {
     if(is.null(time_col)) {
       time_index <- attr(data, "time_column")
@@ -442,7 +443,7 @@ as.trackframe.sftrack <- function(data,
                                   id_col = NULL,
                                   sort = TRUE,
                                   coerce_to = "base",
-                                  verbose = TRUE,
+                                  verbose = FALSE,
                                   ...) {
   
   if(is.null(time_col)) {
@@ -472,7 +473,7 @@ as.trackframe.sftrack <- function(data,
   if(is.null(easting_col)) {
     easting_col = "easting"
     data[["easting"]] <- x_y[, 1]
-  } else {
+  } else { #FIXME: check length 1
     data[[easting_col]] <- x_y[, 1] #FIXME: how to check if transformation makes sense?
   }
   
@@ -504,7 +505,7 @@ as.trackframe.trackframe <- function(data,
                                      # id_col = NULL,
                                      # sort = TRUE,
                                      # coerce_to = "base",
-                                     # verbose = TRUE,
+                                     # verbose = FALSE,
                                      ...) {
   argg <- list(...)
   if(length(argg) > 0) warning("... arguments are ignored in as.trackframe.trackframe()")
@@ -559,6 +560,9 @@ as.trackframe.trackframe <- function(data,
 #' @param ids  data frame giving information about the tracked individuals, with rows correpsonding to the rows of the x and y matrices. There must be one column called id_code which contains a unique individual identifier for each animal (e.g. for meerkats: 'VCVM001', for hyenas: 'WRTH', for coatis: 'Luna') The other columns contained are flexible, and can include information on age, sex, dominance, etc
 #' @param na_omit logical indicator if NAs should be omitted
 #' @param utm_epsg crs value for utm zone
+#' @param sort logical, if data should be sorted according to id_col and time_col
+#' @param coerce_to the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.
+#' @param verbose logical, default value is \code{TRUE}
 #'
 #' @return an object of class trackframe
 #' @export
@@ -566,7 +570,8 @@ as.trackframe.trackframe <- function(data,
 #' @examples
 #' cocomo <- tf_as_cocomo(travelpaths::sim_travel_paths(3, 3))
 #' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
-cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
+cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE,
+                         sort = TRUE, coerce_to = "base", verbose = FALSE) {
   assert_matrix(x)
   assert_matrix(y)
   assert_true(NCOL(x) == NCOL(y))
@@ -593,7 +598,8 @@ cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
     rownames(data) <- NULL
   }
   as.trackframe(data, time_col = "time", easting_col = "easting",
-                 northing_col = "northing", id_col = "id", utm_epsg = utm_epsg)
+                 northing_col = "northing", id_col = "id", utm_epsg = utm_epsg,
+                sort = sort, coerce_to = coerce_to, verbose = verbose)
 }
 
 

@@ -4,7 +4,17 @@
 \alias{cocomo_as_tf}
 \title{Converts a cocomo object to a trackframe}
 \usage{
-cocomo_as_tf(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE)
+cocomo_as_tf(
+  x,
+  y,
+  t,
+  ids,
+  utm_epsg = NULL,
+  na_omit = TRUE,
+  sort = TRUE,
+  coerce_to = "base",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t}
@@ -18,6 +28,12 @@ cocomo_as_tf(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE)
 \item{utm_epsg}{crs value for utm zone}
 
 \item{na_omit}{logical indicator if NAs should be omitted}
+
+\item{sort}{logical, if data should be sorted according to id_col and time_col}
+
+\item{coerce_to}{the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.}
+
+\item{verbose}{logical, default value is \code{TRUE}}
 }
 \value{
 an object of class trackframe

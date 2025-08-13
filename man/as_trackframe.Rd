@@ -18,7 +18,7 @@ trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -32,7 +32,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 
@@ -44,7 +44,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -58,7 +58,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -72,7 +72,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 
@@ -84,7 +84,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 

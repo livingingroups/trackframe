@@ -229,14 +229,17 @@ split_by_id <- function(tf) {
 #' @export
 #'
 #' @examples
-col_guessing <- function(col_names,
+#' data("path_trackframe")
+#' path_trackframe$time_col <- path_trackframe$time
+#' guess_all_cols(colnames(path_trackframe))
+guess_all_cols <- function(col_names,
                          time_col_candidates = tf_options("time_col"),
                          easting_col_candidates = tf_options("easting_col"),
                          northing_col_candidates = tf_options("northing_col"),
                          id_col_candidates = tf_options("id_col")) {
-  time_guess <- guessing(col_names, time_col_candidates, id = "time")
-  easting_guess <- guessing(col_names, easting_col_candidates, id = "easting")
-  northing_guess <- guessing(col_names, northing_col_candidates, id = "northing")
+  time_guess <- guess_a_col(col_names, time_col_candidates, id = "time")
+  easting_guess <- guess_a_col(col_names, easting_col_candidates, id = "easting")
+  northing_guess <- guess_a_col(col_names, northing_col_candidates, id = "northing")
   id_guess <- id_col_candidates[id_col_candidates %in% col_names]
   if(length(id_guess) == 0) id_guess <- NA
   
@@ -248,24 +251,20 @@ col_guessing <- function(col_names,
   
 }
 
-guessing <- function(col_names, candidates, id) {
+guess_a_col <- function(col_names, candidates, id) {
   ind <- candidates %in% col_names
   if(sum(ind) < 1) {
     stop(sprintf("%s needs to be specified. Guessing not successful.", id))
   }
-  # chosen_guess <- candidates[ind][1]
-  # if (sum(ind) > 1) {
-  #   warning(sprintf("multiple possible %s columns found, %s chosen", id, chosen_guess))
-  # }
   return(candidates[ind])
 }
 
-validate_guesses <- function(data, guesses){
+warn_if_guess_ambiguous <- function(data, guesses){
   for(guessable_col in names(guesses)) {
     guesses_col <- guesses[[guessable_col]]
     chosen_guess <- guesses_col[1]
     if(length(guesses_col) > 1) {
-      if(!all(duplicated(t(data[, colnames(data) %in% guesses_col]))[-1])) {
+      if(!all(duplicated(t(data[, colnames(data) %in% guesses_col, with = FALSE]))[-1])) {
         warning(sprintf("multiple possible columns found. %s chosen as %s", chosen_guess, guessable_col))
       }
     }
@@ -277,12 +276,12 @@ subset_guesses <- function(data,
                            easting_col = tf_options("easting_col"),
                            northing_col = tf_options("northing_col"),
                            id_col = tf_options("id_col")) {
-  guesses <- col_guessing(col_names = colnames(data),
+  guesses <- guess_all_cols(col_names = colnames(data),
                           time_col_candidates = time_col,
                           easting_col_candidates = easting_col,
                           northing_col_candidates = northing_col,
                           id_col_candidates = id_col)
-  validate_guesses(data, guesses)
+  warn_if_guess_ambiguous(data, guesses)
   if (is.na(guesses[["id_col"]][1])) {
     return(data[, c(guesses[["time_col"]][1],
                     guesses[["easting_col"]][1],
