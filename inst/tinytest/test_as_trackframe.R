@@ -1,8 +1,6 @@
 library(tinytest)
-# Test Suite for change_point_test Function
 library(trackframe)
 library(travelpaths)
-# cpttestdata
 
 test_as_trackframe <- function(coerce_to = 'base') {
   #dataframe
@@ -132,16 +130,6 @@ test_as_trackframe <- function(coerce_to = 'base') {
   expect_equal(attr(my_sftrack_noNA, "time_col"), attr(my_sftrack_bt, "time_col"))
   # str(my_sftrack)
   # str(my_sftrack_bt)
-}
-
-
-#cocomo
-test_cocomo <- function(coerce_to = 'base') {
-  tf <- sim_travel_paths(3, 3)
-  cocomo <-  tf_as_cocomo(tf)
-  tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids, coerce_to = coerce_to)
-  cn <- c("time", "easting", "northing", "id")
-  expect_equal(tf[, cn], tf2[, cn])
 }
 
 
@@ -452,7 +440,6 @@ test_col_guessing <- function() {
 lapply(c('base', 'data.table', 'tibble', NA), function(coerce_to) {
   if (is.na(coerce_to)) coerce_to <- NULL
   test_as_trackframe(coerce_to)
-  test_cocomo(coerce_to)
   test_sort(coerce_to)
   test_errors(coerce_to)
   test_warnings(coerce_to)

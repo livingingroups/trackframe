@@ -553,8 +553,8 @@ as.trackframe.trackframe <- function(data,
 
 #' Converts a cocomo object to a trackframe
 #'
-#' @param x matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t
-#' @param y matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t
+#' @param xs matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t
+#' @param ys matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t
 #' @param t vector of timestamps in posixct corresponding to the columns of x and y matrices. Timestamps must be uniformly sampled, though it is possible to have gaps (e.g. between different days of recording)
 #' @param ids  data frame giving information about the tracked individuals, with rows correpsonding to the rows of the x and y matrices. There must be one column called id_code which contains a unique individual identifier for each animal (e.g. for meerkats: 'VCVM001', for hyenas: 'WRTH', for coatis: 'Luna') The other columns contained are flexible, and can include information on age, sex, dominance, etc
 #' @param na_omit logical indicator if NAs should be omitted
@@ -566,18 +566,18 @@ as.trackframe.trackframe <- function(data,
 #' @examples
 #' cocomo <- tf_as_cocomo(travelpaths::sim_travel_paths(3, 3))
 #' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
-cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE) {
-  assert_matrix(x)
-  assert_matrix(y)
-  assert_true(NCOL(x) == NCOL(y))
-  assert_true(NROW(x) == NROW(y))
-  assert_numeric(t, len = NCOL(x), any.missing = FALSE)
+cocomo_as_tf <- function(xs, ys, t, ids, utm_epsg = NULL, na_omit = TRUE) {
+  assert_matrix(xs)
+  assert_matrix(ys)
+  assert_true(NCOL(xs) == NCOL(ys))
+  assert_true(NROW(xs) == NROW(ys))
+  assert_numeric(t, len = NCOL(xs), any.missing = FALSE)
   assert_data_frame(ids)
   assert_choice("id_code", colnames(ids))
   data <- data.frame("time" = t,
-                     "easting" = as.vector(base::t(x)),
-                     "northing" = as.vector(base::t(y)),
-                     "id" = rep(ids$id_code, each = NCOL(x)))
+                     "easting" = as.vector(base::t(xs)),
+                     "northing" = as.vector(base::t(ys)),
+                     "id" = rep(ids$id_code, each = NCOL(xs)))
   if (NCOL(ids) > 1L) {
     for (col in setdiff(colnames(ids), "id_code")) {
       if (col %in% colnames(data)) {
@@ -634,7 +634,7 @@ tf_as_cocomo <- function(tf) {
     }
     rownames(x) <- rownames(y) <- ids
   }
-  list(x = x, y = y, t = time, ids = data.frame(id_code = ids))
+  list(xs = x, ys = y, t = time, ids = data.frame(id_code = ids))
 }
 
 
