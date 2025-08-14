@@ -198,6 +198,14 @@ as.trackframe.data.frame <- function(data,
     # transform if easting %in% c("lon", "long", "longitude")
     lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
     lat_names <- c("lat","latitude") #FIXME: move to options?
+    if(easting_col %in% lat_names) {
+      warning(sprintf("%s specified as easting_col seems to correspond to latitude. 
+                      easting should correspond to longitude", easting_col))
+    }
+    if(northing_col %in% lon_names) {
+      warning(sprintf("%s specified as northing_col seems to correspond to longitude 
+                      northing should correspond to latitude", northing_col))
+    }
     if(easting_col %in% lon_names | northing_col %in% lat_names) {
       if(!all(c(easting_col %in% lon_names, northing_col %in% lat_names))) {
         stop(sprintf("coordinate system of %s easting_col and northing_col %s do not match.", easting_col, northing_col))
