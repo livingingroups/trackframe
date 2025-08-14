@@ -15,4 +15,5 @@ Depends: R (>= 4.1.0)
 Suggests: tinytest, knitr, microbenchmark, markdown, units, travelpaths, move2, sftrack
 Encoding: UTF-8
 RoxygenNote: 7.3.2
+LazyData: true
 VignetteBuilder: knitr 

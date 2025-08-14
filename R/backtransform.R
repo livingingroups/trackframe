@@ -9,27 +9,22 @@
 #' library(travelpaths)
 #' library(trackframe)
 #' # for move2
-#' set.seed(2025)
-#' move2 <- sim_travel_path(5, format = "move2")
-#' tf <- as.trackframe(data = move2)
+#' tf <- as.trackframe(data = move2_mini)
 #' tfb <- tf_backtransform(tf)
 #' tfb
-#' move2
+#' move2_mini
 #' 
 #' # for sftrack
-#' set.seed(2025)
-#' sftrack <- sim_travel_path(5, format = "sftrack")
-#' tf <- as.trackframe(data = sftrack)
+#' tf <- as.trackframe(data = sftrack_mini)
 #' tfb <- tf_backtransform(tf)
 #' tfb
-#' sftrack
+#' sftrack_mini
 #' 
 #' # for data.frame
-#' df <- sim_travel_path(5, format = "data.frame")
-#' tf <- as.trackframe(data = df)
+#' tf <- as.trackframe(data = df_mini)
 #' tfb <- tf_backtransform(tf)
 #' tfb
-#' df
+#' df_mini
 tf_backtransform <- function(tf) {
   assert_class(tf, "trackframe")
   transformation_info <- attr(tf, "transformation_info")
@@ -76,8 +71,8 @@ tf_backtransform <- function(tf) {
 #' @param x A `trackframe` object containing the tracking data.
 #' @param ... other arguments passed to coredata
 #' @return A data frame with the easting, northing, time index, and optionally track ID columns.
-#' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
-#' tf_as_xyt(tf)
+#' @examples
+#' tf_as_xyt(tf_mini)
 #' @export 
 tf_as_xyt <- function(x, ...) { #coredata.trackframe
   #TODO check what we want to do in coredata
@@ -111,8 +106,7 @@ coredata.trackframe <- tf_as_xyt
 #' @return An sf object representing the spatial data contained in the `trackframe`.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(4, 2:5)
-#' sf_object <- tf_as_sf(tf, tf_crs = 32610, crs_new = 4326)
+#' sf_object <- tf_as_sf(tf_mini, tf_crs = 32610, crs_new = 4326)
 #' print(sf_object)
 #' @export
 #' @rdname tf_as

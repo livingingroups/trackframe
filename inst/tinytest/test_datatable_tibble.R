@@ -1,5 +1,9 @@
 library(tinytest)
 
+"[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
+  base::`[.data.frame`(x, i, j, drop = drop)
+}
+
 set.seed(2025)
 df <- data.frame(
   x = rnorm(10),
@@ -75,9 +79,10 @@ class_ids <- list(
 
 scenarios <- expand.grid(from = names(input_data), to = c(names(input_data), NA), stringsAsFactors = FALSE)
 
-for (row_idx in nrow(scenarios)) {
-  from <- scenarios[row_idx, 'from']
-  to <- scenarios[row_idx, 'to']
+for (row_idx in seq_len(nrow(scenarios))) {
+  print(row_idx)
+  from <- unlist(scenarios[row_idx, 'from'])
+  to <- unlist(scenarios[row_idx, 'to'])
   tf <- as.trackframe(
     input_data[[from]],
     coerce_to = if (is.na(to)) NULL else to

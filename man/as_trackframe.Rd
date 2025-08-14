@@ -18,7 +18,7 @@ trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -32,7 +32,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 
@@ -44,7 +44,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -58,7 +58,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -72,7 +72,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 
@@ -84,7 +84,7 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = TRUE,
+  verbose = FALSE,
   ...
 )
 
@@ -152,8 +152,7 @@ time(tf)
 id(tf)
 
 set.seed(2025)
-sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
-as.trackframe(sim_df, crs_input = 4326)
+as.trackframe(df_mini, crs_input = 4326)
 
 set.seed(2025)
 df <- data.frame(
@@ -181,20 +180,17 @@ df <- data.frame(
 # example for move2 objects
 library(move2)
 library(trackframe)
-set.seed(2025)
-move2_dat <- travelpaths::sim_travel_path(5, format = "move2")
-tf <- as.trackframe(data = move2_dat)
+tf <- as.trackframe(data = move2_mini)
 
 move2_dat2 <- tf_backtransform(tf)
-all.equal(move2_dat, move2_dat2)
+all.equal(move2_dat2, move2_mini)
 
 # example for sftrack objects
 library(sftrack)
 set.seed(2025)
-sftrack_dat <- travelpaths::sim_travel_path(5, format = "sftrack")
-tf <- as.trackframe(data = sftrack_dat)
+tf <- as.trackframe(data = sftrack_mini)
 sftrack_dat2 <- tf_backtransform(tf)
 sftrack_dat2$id <- unlist(sftrack_dat2$sft_group)
-all.equal(sftrack_dat2, sftrack_dat)
+all.equal(sftrack_dat2, sftrack_mini)
 
 }

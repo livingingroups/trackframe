@@ -6,30 +6,30 @@
 }
 
 
-sc <- function(x, cols, ...) {
-    UseMethod("sc")
-}
-
-sc.data.frame <- function(x, cols, drop = TRUE, ...) {
-    if (length(cols) == 1L && isTRUE(drop)) {
-        x[[cols]]    
-    } else {
-        x[, cols, drop = FALSE]
-    }
-}
-
-sc.data.table <- function(x, cols, drop = TRUE, ...) {
-    if (length(cols) == 1L && isTRUE(drop)) {
-        x[[cols]]    
-    } else {
-        x[, cols, with = FALSE]
-    }
-}
-
-sc.tibble <- function(x, cols, drop = TRUE, ...) {
-    if (length(cols) == 1L && isTRUE(drop)) {
-        x[[cols]]    
-    } else {
-        x[, cols]
-    }
-}
+# sc <- function(x, cols, ...) {
+#     UseMethod("sc")
+# }
+# 
+# sc.data.frame <- function(x, cols, drop = TRUE, ...) {
+#     if (length(cols) == 1L && isTRUE(drop)) {
+#         x[[cols]]    
+#     } else {
+#         x[, cols, drop = FALSE]
+#     }
+# }
+# 
+# sc.data.table <- function(x, cols, drop = TRUE, ...) {
+#     if (length(cols) == 1L && isTRUE(drop)) {
+#         x[[cols]]    
+#     } else {
+#         x[, cols, with = FALSE]
+#     }
+# }
+# 
+# sc.tibble <- function(x, cols, drop = TRUE, ...) {
+#     if (length(cols) == 1L && isTRUE(drop)) {
+#         x[[cols]]    
+#     } else {
+#         x[, cols]
+#     }
+# }

@@ -39,8 +39,7 @@ utm_epsg <- function(tf) {
 #' @return A vector of time index values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_path(100, format = "trackframe")
-#' time(tf)
+#' time(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -68,8 +67,7 @@ time.trackframe <- function(x, ...) {
 #' @return A vector of track ID values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
-#' id(tf)
+#' id(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -107,8 +105,7 @@ id <- function(tf) {
 #' @return A vector of easting values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-#' easting(tf)
+#' easting(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -137,8 +134,7 @@ easting <- function(tf){
 #' @return A vector of northing values extracted from the \code{trackframe}.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-#' northing(tf)
+#' northing(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -159,8 +155,7 @@ northing <- function(tf){
 #' @return A vector of unique track IDs extracted from the \code{trackframe}.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(4, 2:5)
-#' unique_ids(tf)
+#' unique_ids(tf_mini)
 #' 
 #' @export
 unique_ids <- function(tf) {
@@ -180,10 +175,9 @@ unique_ids <- function(tf) {
 #' @return A filtered \code{trackframe} containing only the specified track(s).
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, 2:4)
-#' single_track <- select_id(tf, "track_1")
+#' single_track <- select_id(tf_mini, "track_1")
 #' single_track
-#' multiple_tracks <- select_id(tf, c("track_2", "track_3"))
+#' multiple_tracks <- select_id(tf_mini, c("track_2", "track_3"))
 #' multiple_tracks
 #' @export 
 select_id <- function(tf, id) {
@@ -205,8 +199,7 @@ select_id <- function(tf, id) {
 #' @return an object of class `list_of_trackframes` containing a \code{trackframe} in each list element.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, 3)
-#' tf_split <- split_by_id(tf)
+#' tf_split <- split_by_id(tf_mini)
 #' class(tf_split)
 #' @export 
 split_by_id <- function(tf) {
@@ -229,14 +222,17 @@ split_by_id <- function(tf) {
 #' @export
 #'
 #' @examples
-col_guessing <- function(col_names,
+#' data("path_trackframe")
+#' path_trackframe$time_col <- path_trackframe$time
+#' guess_all_cols(colnames(path_trackframe))
+guess_all_cols <- function(col_names,
                          time_col_candidates = tf_options("time_col"),
                          easting_col_candidates = tf_options("easting_col"),
                          northing_col_candidates = tf_options("northing_col"),
                          id_col_candidates = tf_options("id_col")) {
-  time_guess <- guessing(col_names, time_col_candidates, id = "time")
-  easting_guess <- guessing(col_names, easting_col_candidates, id = "easting")
-  northing_guess <- guessing(col_names, northing_col_candidates, id = "northing")
+  time_guess <- guess_a_col(col_names, time_col_candidates, id = "time")
+  easting_guess <- guess_a_col(col_names, easting_col_candidates, id = "easting")
+  northing_guess <- guess_a_col(col_names, northing_col_candidates, id = "northing")
   id_guess <- id_col_candidates[id_col_candidates %in% col_names]
   if(length(id_guess) == 0) id_guess <- NA
   
@@ -248,24 +244,20 @@ col_guessing <- function(col_names,
   
 }
 
-guessing <- function(col_names, candidates, id) {
+guess_a_col <- function(col_names, candidates, id) {
   ind <- candidates %in% col_names
   if(sum(ind) < 1) {
     stop(sprintf("%s needs to be specified. Guessing not successful.", id))
   }
-  # chosen_guess <- candidates[ind][1]
-  # if (sum(ind) > 1) {
-  #   warning(sprintf("multiple possible %s columns found, %s chosen", id, chosen_guess))
-  # }
   return(candidates[ind])
 }
 
-validate_guesses <- function(data, guesses){
+warn_if_guess_ambiguous <- function(data, guesses){
   for(guessable_col in names(guesses)) {
     guesses_col <- guesses[[guessable_col]]
     chosen_guess <- guesses_col[1]
     if(length(guesses_col) > 1) {
-      if(!all(duplicated(t(data[, colnames(data) %in% guesses_col]))[-1])) {
+      if(!all(duplicated(t(data[, colnames(data) %in% guesses_col, with = FALSE]))[-1])) {
         warning(sprintf("multiple possible columns found. %s chosen as %s", chosen_guess, guessable_col))
       }
     }
@@ -277,12 +269,12 @@ subset_guesses <- function(data,
                            easting_col = tf_options("easting_col"),
                            northing_col = tf_options("northing_col"),
                            id_col = tf_options("id_col")) {
-  guesses <- col_guessing(col_names = colnames(data),
+  guesses <- guess_all_cols(col_names = colnames(data),
                           time_col_candidates = time_col,
                           easting_col_candidates = easting_col,
                           northing_col_candidates = northing_col,
                           id_col_candidates = id_col)
-  validate_guesses(data, guesses)
+  warn_if_guess_ambiguous(data, guesses)
   if (is.na(guesses[["id_col"]][1])) {
     return(data[, c(guesses[["time_col"]][1],
                     guesses[["easting_col"]][1],

@@ -31,7 +31,6 @@ enabling spatial analysis and visualization. The easting and northing columns
 are used as coordinates for the sf object.
 }
 \examples{
-tf <- travelpaths::sim_travel_paths(4, 2:5)
-sf_object <- tf_as_sf(tf, tf_crs = 32610, crs_new = 4326)
+sf_object <- tf_as_sf(tf_mini, tf_crs = 32610, crs_new = 4326)
 print(sf_object)
 }

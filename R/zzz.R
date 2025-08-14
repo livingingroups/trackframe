@@ -1,12 +1,10 @@
-#FIXME: documentation
-
-#' Options for trackframe
+#' Options for col guessing in trackframe
 #'
-#' @param option name of option
-#' @param value  value
+#' @param option a character string name of option. "time_col", "easting_col", "northing_col", or "id_col"
+#' @param value  vector of characters with possible candidates
 #'
+#' @return a vector of candidates for col guessing
 #' @export
-#'
 #' @examples
 #' tf_options("time_col", c("t", "timestamp", "time", "time_index",
 #' "time_col", "time_column", "tindex"))

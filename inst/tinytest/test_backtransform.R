@@ -7,14 +7,14 @@ library(trackframe)
 
 #move2
 set.seed(2025)
-move2 <- sim_travel_path(5, format = "move2")
+move2 <- move2_mini #sim_travel_path(5, format = "move2")
 tf <- as.trackframe(data = move2)
 attr(tf, "transformation_info")
 expect_equal(tf_backtransform(tf), move2)
 
 #sftrack
 set.seed(2025)
-sftrack <- sim_travel_path(5, format = "sftrack")
+sftrack <- sftrack_mini #sim_travel_path(5, format = "sftrack")
 tf <- as.trackframe(data = sftrack)
 sftrack_b <- tf_backtransform(tf)
 # sftrack_b$id <- unlist(sftrack_b$sft_group)
@@ -57,12 +57,12 @@ attributes(sftrack_tf_b)
 
 ###
 
-df <- sim_travel_path(5, format = "data.frame")
+df <- df_mini #sim_travel_path(5, format = "data.frame")
 tf <- as.trackframe(data = df, crs_input = 4326)
 attr(tf, "transformation_info")
 expect_equal(tf_backtransform(tf), df)
 
-dt <- data.table::as.data.table(sim_travel_path(5, format = "data.frame"))
+dt <- data.table::as.data.table(df_mini)
 expect_equal(tf_backtransform(as.trackframe(data = dt, crs_input = 4326)), dt)
 expect_equal(tf_backtransform(
   as.trackframe(data = dt, crs_input = 4326, coerce_to = NULL)
@@ -71,7 +71,7 @@ expect_equal(tf_backtransform(
   as.trackframe(data = dt, crs_input = 4326, coerce_to = "data.table")
 ), dt)
 
-tib <- tibble::as_tibble(sim_travel_path(5, format = "data.frame"))
+tib <- tibble::as_tibble(df_mini)
 expect_equal(tf_backtransform(as.trackframe(data = tib, crs_input = 4326)), tib)
 expect_equal(tf_backtransform(
   as.trackframe(data = tib, crs_input = 4326, coerce_to = "tibble")
