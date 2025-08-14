@@ -19,7 +19,6 @@ The \code{trackframe} should be a data frame-like structure with an attribute
 specifying the column containing track IDs.
 }
 \examples{
-tf <- travelpaths::sim_travel_paths(4, 2:5)
-unique_ids(tf)
+unique_ids(tf_mini)
 
 }

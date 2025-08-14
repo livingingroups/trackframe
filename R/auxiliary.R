@@ -39,8 +39,7 @@ utm_epsg <- function(tf) {
 #' @return A vector of time index values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_path(100, format = "trackframe")
-#' time(tf)
+#' time(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -68,8 +67,7 @@ time.trackframe <- function(x, ...) {
 #' @return A vector of track ID values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
-#' id(tf)
+#' id(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -107,8 +105,7 @@ id <- function(tf) {
 #' @return A vector of easting values extracted from the \code{trackframe}.
 #' 
 #' @examples
-#' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-#' easting(tf)
+#' easting(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -137,8 +134,7 @@ easting <- function(tf){
 #' @return A vector of northing values extracted from the \code{trackframe}.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-#' northing(tf)
+#' northing(tf_mini)
 #' 
 #' @export
 #' @rdname tf_accessor
@@ -159,8 +155,7 @@ northing <- function(tf){
 #' @return A vector of unique track IDs extracted from the \code{trackframe}.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(4, 2:5)
-#' unique_ids(tf)
+#' unique_ids(tf_mini)
 #' 
 #' @export
 unique_ids <- function(tf) {
@@ -180,10 +175,9 @@ unique_ids <- function(tf) {
 #' @return A filtered \code{trackframe} containing only the specified track(s).
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, 2:4)
-#' single_track <- select_id(tf, "track_1")
+#' single_track <- select_id(tf_mini, "track_1")
 #' single_track
-#' multiple_tracks <- select_id(tf, c("track_2", "track_3"))
+#' multiple_tracks <- select_id(tf_mini, c("track_2", "track_3"))
 #' multiple_tracks
 #' @export 
 select_id <- function(tf, id) {
@@ -205,8 +199,7 @@ select_id <- function(tf, id) {
 #' @return an object of class `list_of_trackframes` containing a \code{trackframe} in each list element.
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, 3)
-#' tf_split <- split_by_id(tf)
+#' tf_split <- split_by_id(tf_mini)
 #' class(tf_split)
 #' @export 
 split_by_id <- function(tf) {

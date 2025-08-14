@@ -93,8 +93,7 @@ as.trackframe <- function(data,
 #' @param utm_epsg crs value for utm zone of the \code{trackframe} output
 #' @examples
 #' set.seed(2025)
-#' sim_df <- travelpaths::sim_travel_path(5, format = "data.frame")
-#' as.trackframe(sim_df, crs_input = 4326)
+#' as.trackframe(df_mini, crs_input = 4326)
 #' 
 #' set.seed(2025)
 #' df <- data.frame(
@@ -167,91 +166,23 @@ as.trackframe.data.frame <- function(data,
     
     warn_if_guess_ambiguous(data, guesses)
     
-    # # guess time_col
-    # if(length(time_col) > 1) {
-    #   col_ind <- time_col %in% colnames(data)
-    #   if(sum(col_ind) < 1) {
-    #     stop("time_col needs to be specified. Guessing not successful.")
-    #   } else {
-    #     # if(sum(col_ind) >= 1) {
-    #       time_cols <- time_col
-    #       time_col <- time_col[col_ind][1]
-    #       if(sum(col_ind) > 1) {
-    #          if(!all(duplicated(t(data[, colnames(data) %in% time_cols]))[-1])) {
-    #             warning(sprintf("multiple possible columns found. %s chosen as time_col", time_col))
-    #         }
-    #       }
-    #     # }
-    #   }
-    # }
     time_col <- guesses[["time_col"]][1]
     assert_choice(time_col, colnames(data), null.ok = FALSE)
     assert_character(time_col, len = 1, null.ok = FALSE)
     assert_numeric(data[[time_col]])
     
-    # guess easting_col
-    # if(length(easting_col) > 1) {
-    #   col_ind <- easting_col %in% colnames(data)
-    #   if(sum(col_ind) < 1) {
-    #     stop("easting_col needs to be specified. Guessing not successful.")
-    #   } else {
-    #     easting_cols <- easting_col
-    #     easting_col <- easting_col[col_ind][1]
-    #     if(sum(col_ind) >= 1) {
-    #       if(!all(duplicated(t(data[, colnames(data) %in% easting_cols]))[-1])) {
-    #         warning(sprintf("multiple possible columns found. %s chosen as easting_col", easting_col))
-    #       }
-    #     }
-    #   }
-    # }
     easting_col <- guesses[["easting_col"]][1]
     assert_choice(easting_col, colnames(data),  null.ok = FALSE)
     assert_character(easting_col, len = 1, null.ok = FALSE)
     
-    # # guess northing_col
-    # if(length(northing_col) > 1) {
-    #   col_ind <- northing_col %in% colnames(data)
-    #   if(sum(col_ind) < 1) {
-    #     stop("northing_col needs to be specified. Guessing not successful.")
-    #   } else {
-    #     northing_cols <- northing_col
-    #     northing_col <- northing_col[col_ind][1]
-    #     if(sum(col_ind) >= 1) {
-    #       if(!all(duplicated(t(data[, colnames(data) %in% northing_cols]))[-1])) {
-    #         warning(sprintf("multiple possible columns found. %s chosen as northing_col", northing_col))
-    #       }
-    #     }
-    #   }
-    # }
     northing_col <- guesses[["northing_col"]][1]
     assert_choice(northing_col, colnames(data),  null.ok = FALSE)
     assert_character(northing_col, len = 1, null.ok = FALSE)
 
-    # # guess id_col
-    # if(length(id_col) > 1) {
-    #   col_ind <- id_col %in% colnames(data)
-    #   if(sum(col_ind) < 1) {
-    #     # stop("id_col needs to be specified. Guessing not successful.")
-    #     id_col <- NULL
-    #   } else {
-    #     id_cols <- id_col
-    #     id_col <- id_col[col_ind][1]
-    #     if(sum(col_ind) >= 1) {
-    #       if(!all(duplicated(t(data[, colnames(data) %in% id_cols]))[-1])) {
-    #         warning(sprintf("multiple possible columns found. %s chosen as id_col", id_col))
-    #       }
-    #     }
-    #   }
-    # } else {
-    #   if(length(id_col) == 0) {
-    #     id_col <- NULL
-    #   }
-    # }
     id_col <- guesses[["id_col"]][1]
     if(is.na(id_col)) id_col <- NULL
     assert_choice(id_col, colnames(data),  null.ok = TRUE)
     assert_character(id_col, len = 1, null.ok = TRUE)
-    
     
     assert_numeric(data[[easting_col]])
     assert_numeric(data[[northing_col]])
@@ -351,12 +282,10 @@ as.trackframe.matrix <- function(data,
 #' # example for move2 objects
 #' library(move2)
 #' library(trackframe)
-#' set.seed(2025)
-#' move2_dat <- travelpaths::sim_travel_path(5, format = "move2")
-#' tf <- as.trackframe(data = move2_dat)
+#' tf <- as.trackframe(data = move2_mini)
 #' 
 #' move2_dat2 <- tf_backtransform(tf)
-#' all.equal(move2_dat, move2_dat2)
+#' all.equal(move2_dat2, move2_mini)
 #' 
 #' @export
 #' @rdname as_trackframe
@@ -428,11 +357,10 @@ as.trackframe.move2 <- function(data, time_col = NULL,
 #' # example for sftrack objects
 #' library(sftrack)
 #' set.seed(2025)
-#' sftrack_dat <- travelpaths::sim_travel_path(5, format = "sftrack")
-#' tf <- as.trackframe(data = sftrack_dat)
+#' tf <- as.trackframe(data = sftrack_mini)
 #' sftrack_dat2 <- tf_backtransform(tf)
 #' sftrack_dat2$id <- unlist(sftrack_dat2$sft_group)
-#' all.equal(sftrack_dat2, sftrack_dat)
+#' all.equal(sftrack_dat2, sftrack_mini)
 #' 
 #' @export
 #' @rdname as_trackframe
@@ -568,7 +496,7 @@ as.trackframe.trackframe <- function(data,
 #' @export
 #'
 #' @examples
-#' cocomo <- tf_as_cocomo(travelpaths::sim_travel_paths(3, 3))
+#' cocomo <- tf_as_cocomo(tf_mini)
 #' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
 cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE,
                          sort = TRUE, coerce_to = "base", verbose = FALSE) {
@@ -617,8 +545,7 @@ cocomo_as_tf <- function(x, y, t, ids, utm_epsg = NULL, na_omit = TRUE,
 #'   \item{t}{A vector of time values, sorted in ascending order.}
 #'
 #' @examples
-#' tf <- travelpaths::sim_travel_paths(3, 3)
-#' tf_as_cocomo(tf)
+#' tf_as_cocomo(tf_mini)
 #'
 #' @export
 tf_as_cocomo <- function(tf) {

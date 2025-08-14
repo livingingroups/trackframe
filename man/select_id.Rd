@@ -20,9 +20,8 @@ This function filters a trackframe object to include only tracks with the specif
 It supports selecting a single ID or multiple IDs simultaneously.
 }
 \examples{
-tf <- travelpaths::sim_travel_paths(3, 2:4)
-single_track <- select_id(tf, "track_1")
+single_track <- select_id(tf_mini, "track_1")
 single_track
-multiple_tracks <- select_id(tf, c("track_2", "track_3"))
+multiple_tracks <- select_id(tf_mini, c("track_2", "track_3"))
 multiple_tracks
 }

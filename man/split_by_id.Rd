@@ -17,7 +17,6 @@ an object of class `list_of_trackframes` containing a \code{trackframe} in each 
 This function splits a trackframe into a list of trackframes by the id.
 }
 \examples{
-tf <- travelpaths::sim_travel_paths(3, 3)
-tf_split <- split_by_id(tf)
+tf_split <- split_by_id(tf_mini)
 class(tf_split)
 }

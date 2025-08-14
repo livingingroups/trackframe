@@ -13,11 +13,12 @@ tf_as_xyt(x, ...)
 }
 \value{
 A data frame with the easting, northing, time index, and optionally track ID columns.
-tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
-tf_as_xyt(tf)
 }
 \description{
 This function extracts the core spatial-temporal data from a trackframe object,
 returning a simplified data frame with just the easting (x), northing (y), 
 time (t), and optionally the track ID columns.
+}
+\examples{
+tf_as_xyt(tf_mini)
 }

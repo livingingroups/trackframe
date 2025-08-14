@@ -58,3 +58,23 @@ NULL
 #'
 #' move2 object created with travelpaths::sim_travel_paths().
 "paths_move2"
+
+#' Simulated Travel Path with multiple IDs
+#'
+#' trackframe object created with travelpaths::sim_travel_paths().
+"tf_mini"
+
+#' Simulated Travel Path
+#'
+#' data.frame created with travelpaths::sim_travel_path().
+"df_mini"
+
+#' Simulated Travel Path
+#'
+#' move2 object created with travelpaths::sim_travel_path().
+"move2_mini"
+
+#' Simulated Travel Path
+#'
+#' sftrack object created with travelpaths::sim_travel_path().
+"sftrack_mini"

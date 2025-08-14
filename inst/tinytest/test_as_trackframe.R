@@ -141,7 +141,7 @@ test_as_trackframe <- function(coerce_to = 'base') {
 
 #cocomo
 test_cocomo <- function(coerce_to = 'base') {
-  tf <- sim_travel_paths(3, 3)
+  tf <- tf_mini#sim_travel_paths(3, 3)
   cocomo <-  tf_as_cocomo(tf)
   tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids, coerce_to = coerce_to)
   cn <- c("time", "easting", "northing", "id")
@@ -150,12 +150,10 @@ test_cocomo <- function(coerce_to = 'base') {
 
 
 test_sort <- function(coerce_to) {
-  set.seed(2025)
-  df <- sim_travel_paths(2,3, format = "data.frame")
+  df <- tf_as_xyt(tf_mini) #sim_travel_paths(2,3, format = "data.frame")
   set.seed(2025)
   df2 <- df[sample(6),]
   tf_df <- as.trackframe(df2, coerce_to = coerce_to)
-  expect_warning(as.trackframe(df2)) # no crs provided
   df2_ordered <- df2[order(df2$id, df2$time),]
   expect_equal(as.data.frame(tf_df[ , c("id", "time")]), df2_ordered[, c("id", "time")], check.attributes = FALSE)
   
@@ -238,7 +236,10 @@ test_errors <- function(coerce_to = coerce_to) {
 test_warnings <- function(coerce_to = 'base') {
   #no crs
   set.seed(2025)
-  df <- sim_travel_paths(2,3, format = "data.frame")
+  tf <- tf_mini
+  attr(tf, "easting") <- "latitude"
+  attr(tf, "northing") <- "longitude"
+  df <- tf_as_xyt(tf) #sim_travel_paths(2,3, format = "data.frame")
   expect_warning(as.trackframe(data = df, coerce_to = coerce_to)) # no crs provided
   
   #duplicated guesses

@@ -42,6 +42,6 @@ an object of class trackframe
 Converts a cocomo object to a trackframe
 }
 \examples{
-cocomo <- tf_as_cocomo(travelpaths::sim_travel_paths(3, 3))
+cocomo <- tf_as_cocomo(tf_mini)
 cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
 }

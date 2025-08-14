@@ -51,16 +51,12 @@ The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing northing values.
 }
 \examples{
-tf <- travelpaths::sim_travel_path(100, format = "trackframe")
-time(tf)
+time(tf_mini)
 
-tf <- travelpaths::sim_travel_paths(3, c(2, 4, 5))
-id(tf)
+id(tf_mini)
 
-tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-easting(tf)
+easting(tf_mini)
 
-tf <- travelpaths::sim_travel_path(10, format = "trackframe")
-northing(tf)
+northing(tf_mini)
 
 }

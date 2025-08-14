@@ -41,3 +41,19 @@ save(paths_sftrack, file = "~/travelpaths-devel/pkgs/trackframe/data/paths_sftra
 set.seed(2025)
 paths_move2 <- sim_travel_paths(ntracks = 3, size = 1000, format = "move2")
 save(paths_move2, file = "~/travelpaths-devel/pkgs/trackframe/data/paths_move2.rda", compress="xz")
+
+set.seed(2025)
+tf_mini <- sim_travel_paths(3, c(5, 4, 2))
+save(tf_mini, file = "~/travelpaths-devel/pkgs/trackframe/data/tf_mini.rda", compress="xz")
+
+set.seed(2025)
+df_mini <- sim_travel_path(5, format = "data.frame")
+save(df_mini, file = "~/travelpaths-devel/pkgs/trackframe/data/df_mini.rda", compress="xz")
+
+set.seed(2025)
+sftrack_mini <- sim_travel_path(5, format = "sftrack")
+save(sftrack_mini, file = "~/travelpaths-devel/pkgs/trackframe/data/sftrack_mini.rda", compress="xz")
+
+set.seed(2025)
+move2_mini <- sim_travel_path(5, format = "move2")
+save(move2_mini, file = "~/travelpaths-devel/pkgs/trackframe/data/move2_mini.rda", compress="xz")
