@@ -199,11 +199,11 @@ as.trackframe.data.frame <- function(data,
     lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
     lat_names <- c("lat","latitude") #FIXME: move to options?
     if(easting_col %in% lat_names) {
-      warning(sprintf("%s specified as easting_col seems to correspond to latitude. 
+      warning(sprintf("%s specified as easting_col, but seems to correspond to latitude. 
                       easting should correspond to longitude", easting_col))
     }
     if(northing_col %in% lon_names) {
-      warning(sprintf("%s specified as northing_col seems to correspond to longitude 
+      warning(sprintf("%s specified as northing_col, but seems to correspond to longitude 
                       northing should correspond to latitude", northing_col))
     }
     if(easting_col %in% lon_names | northing_col %in% lat_names) {
@@ -506,7 +506,8 @@ as.trackframe.trackframe <- function(data,
 #' @examples
 #' cocomo <- tf_as_cocomo(tf_mini)
 #' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
-cocomo_as_tf <- function(xs, ys, t, ids, utm_epsg = NULL, na_omit = TRUE) {
+cocomo_as_tf <- function(xs, ys, t, ids, utm_epsg = NULL, na_omit = TRUE,
+                         sort = TRUE, coerce_to = "base", verbose = FALSE) {
   assert_matrix(xs)
   assert_matrix(ys)
   assert_true(NCOL(xs) == NCOL(ys))

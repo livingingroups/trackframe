@@ -439,6 +439,25 @@ test_guess_all_cols <- function() {
                           id_col_candidates = "id2")
   expect_equal(guesses$id_col, "id2")
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
+  
+  data <- data.frame(
+    time_col = as.POSIXct(Sys.time() + 1:5),
+    latitude = runif(5, 0, 10),
+    northing_col = runif(5, 0, 10),
+    id = 1:5
+  )
+  expect_warning(as.trackframe(data = data,
+                               easting_col = "latitude",
+                               northing_col = "northing_col"))
+  data <- data.frame(
+    time_col = as.POSIXct(Sys.time() + 1:5),
+    easting_col = runif(5, 0, 10),
+    longitude = runif(5, 0, 10),
+    id = 1:5
+  )
+  expect_warning(as.trackframe(data = data,
+                               easting_col = "easting_col",
+                               northing_col = "longitude"))
 }
 
 # Run all tests
