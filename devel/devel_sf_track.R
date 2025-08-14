@@ -1,5 +1,5 @@
 library(trackframe)
-as.track_frame.move2 <- function(data, ...) {
+as.trackframe.move2 <- function(data, ...) {
   data_attr <- attributes(data)
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   time_index <- attr(data, "time_column")
@@ -12,7 +12,7 @@ as.track_frame.move2 <- function(data, ...) {
   data[["northing"]] <- x_y[, 2]
   class(data) <- c("tbl_df", "tbl", "data.frame")
   attr(data, "row.names") <- data_attr[["row.names"]]
-  as.track_frame(data, time_col = time_index, easting_col = "easting",
+  as.trackframe(data, time_col = time_index, easting_col = "easting",
                  northing_col = "northing", id_col = id_col)
 }
 
@@ -36,7 +36,7 @@ data <- as_sftrack(raccoon,
 uid <- sapply(data$sft_group, deparse)
 lapply(uid, function(text) eval(parse(text = text)))
 
-as.track_frame.sftrack <- function(data, ...) {
+as.trackframe.sftrack <- function(data, ...) {
   data_attr <- attributes(data)
   x_y <- st_coordinates(data[[attr(data, "sf_column")]]) #FIXME transformation to cartesian coordinates
   time_index <- attr(data, "time_col")
@@ -50,12 +50,12 @@ as.track_frame.sftrack <- function(data, ...) {
   data[["northing"]] <- x_y[, 2]
   class(data) <- c("data.frame")
   attr(data, "row.names") <- data_attr[["row.names"]]
-  as.track_frame(data, time_col = time_index, easting_col = "easting",
+  as.trackframe(data, time_col = time_index, easting_col = "easting",
                  northing_col = "northing", id_col = "track_id")
 }
 
 
-data_tf <- as.track_frame.sftrack(data)
+data_tf <- as.trackframe.sftrack(data)
 attributes(data_tf)
 
 data2 <- data
@@ -92,7 +92,7 @@ data[["easting"]] <- x_y[, 1]
 data[["northing"]] <- x_y[, 2]
 class(data) <- c("tbl_df", "tbl", "data.frame")
 attr(data, "row.names") <- data_attr[["row.names"]]
-as.track_frame(data, time_col = time_index, easting_col = "easting",
+as.trackframe(data, time_col = time_index, easting_col = "easting",
                northing_col = "northing", id_col = id_col)
 
 

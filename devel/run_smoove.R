@@ -10,8 +10,8 @@ library(checkmate)
 FFT <- read.csv("../../data/FFT.csv")
 
 
-# travelpaths:::as.track_frame.data.frame
-FFT_tf <- as.track_frame(FFT,
+# travelpaths:::as.trackframe.data.frame
+FFT_tf <- as.trackframe(FFT,
                          index = "timestamp",
                          lon_col = "location.long", #"utm.easting",
                          lat_col = "location.lat", #"utm.northing",

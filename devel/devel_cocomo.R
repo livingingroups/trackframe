@@ -42,12 +42,12 @@ data <- data.frame("time" = timestamps,
 cols <- setdiff(colnames(ids), "id_code")
 add_cols <- do.call("cbind.data.frame", lapply(ids[, cols], function(x) rep(x, each = nt)))
 data <- cbind(data, add_cols)
-as.track_frame(data, time_col = "time", easting_col = "easting",
+as.trackframe(data, time_col = "time", easting_col = "easting",
                northing_col = "northing", id_col = "track_id")
 
 
 library(checkmate)
-as.track_frame_from_cocomo <- function(xs, ys, timestamps, ids) {
+as.trackframe_from_cocomo <- function(xs, ys, timestamps, ids) {
   assert_matrix(xs)
   assert_matrix(ys)
   assert_posixct(timestamps)
@@ -60,13 +60,13 @@ as.track_frame_from_cocomo <- function(xs, ys, timestamps, ids) {
   cols <- setdiff(colnames(ids), "id_code")
   add_cols <- do.call("cbind.data.frame", lapply(ids[, cols], function(x) rep(x, each = NCOL(xs))))
   data <- cbind(data, add_cols)
-  as.track_frame(data, time_col = "time", easting_col = "easting",
+  as.trackframe(data, time_col = "time", easting_col = "easting",
                  northing_col = "northing", id_col = "track_id")
 }
 
 
-as.track_frame_from_cocomo(xs, ys, timestamps, ids)
+as.trackframe_from_cocomo(xs, ys, timestamps, ids)
 
-tf <- as.track_frame_from_cocomo(xs, ys, timestamps, ids)
+tf <- as.trackframe_from_cocomo(xs, ys, timestamps, ids)
 class(tf)
 head(tf)

@@ -21,7 +21,7 @@ NULL
 
 #' Simulated Travel Path
 #'
-#' track_frame created with travelpaths::sim_travel_path().
+#' trackframe created with travelpaths::sim_travel_path().
 "path_trackframe"
 
 #' Simulated Travel Path
@@ -46,7 +46,7 @@ NULL
 
 #' Simulated Travel Path with multiple IDs
 #'
-#' track_frame created with travelpaths::sim_travel_paths().
+#' trackframe created with travelpaths::sim_travel_paths().
 "paths_trackframe"
 
 #' Simulated Travel Path with multiple IDs

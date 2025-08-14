@@ -29,7 +29,7 @@ update_colnames <- function(cols, col, colname, candidates) {
 }
 
 
-track_frame <- function(data, time_col, lon_col, lat_col, alt_col, id_col) {
+trackframe <- function(data, time_col, lon_col, lat_col, alt_col, id_col) {
     colnames(data) <- update_colnames(colnames(data), col = time_col, colname = "time", candidates = c("time", "timestamp"))
     colnames(data) <- update_colnames(colnames(data), col = lon_col, colname = "lon", candidates = c("lon", "longitude"))
     colnames(data) <- update_colnames(colnames(data), col = lat_col, colname = "lat", candidates = c("lat", "latitude"))
@@ -41,15 +41,15 @@ track_frame <- function(data, time_col, lon_col, lat_col, alt_col, id_col) {
     cols <- c("id", "time", "lon", "lat", "alt")
     cols <- c(intersect(cols, colnames(data)), setdiff(colnames(data), cols))
     data <- data[, cols]
-    class(data) <- union("track_frame", class(data))
+    class(data) <- union("trackframe", class(data))
     data
 }
 
 
 data <- head(raccoon[!is.na(raccoon$latitude), ])
-track_frame(data)
-track_frame(data, "timestamp")
-track_frame(data, id_col = "animal_id")
+trackframe(data)
+trackframe(data, "timestamp")
+trackframe(data, id_col = "animal_id")
 
 
 
@@ -57,8 +57,8 @@ check_time_col <- function()
 
 
 
-as.track_frame <- function(data, ...) {
-    UseMethod("as.track_frame")
+as.trackframe <- function(data, ...) {
+    UseMethod("as.trackframe")
 }
 
 
@@ -70,7 +70,7 @@ id_cols <- c("a", "b")
 choices <- letters
 check_choice(id_cols, choices, null.ok = TRUE)
 
-as.track_frame.sftrack <- function(data, ...) {
+as.trackframe.sftrack <- function(data, ...) {
     data_attr <- attributes(data)
     lon_lat <- st_coordinates(data[[attr(data, "sf_column")]])
     time_col <- attr(data, "time_col")
@@ -82,7 +82,7 @@ as.track_frame.sftrack <- function(data, ...) {
     data[["lat"]] <- lon_lat[, 2]
     class(data) <- c("tbl_df", "tbl", "data.frame")
     attr(data, "row.names") <- data_attr[["row.names"]]
-    as.track_frame(data, time_col = time_col, lon_col = "lon", lat_col = "lat", id_cols = id_cols)
+    as.trackframe(data, time_col = time_col, lon_col = "lon", lat_col = "lat", id_cols = id_cols)
 }
 
 
@@ -120,7 +120,7 @@ data[[attr(data, "group_col")]]
 data[[attr(data, "time_col")]]
 
 
-as.track_frame.sftrack <- function(data, ...) {
+as.trackframe.sftrack <- function(data, ...) {
     lon_lat <- sf::st_coordinates(data[[attr(data, "sf_column")]])    
     colnames(lon_lat) <- c("lon", "lat")
 
@@ -210,7 +210,7 @@ attr(data, "agr")
 attr(data, "track_data")
 
 
-as.track_frame.move2 <- function(data, ...) {
+as.trackframe.move2 <- function(data, ...) {
     data_attr <- attributes(data)
     lon_lat <- sf::st_coordinates(data[[attr(data, "sf_column")]])
     time_col <- attr(data, "time_column")
@@ -222,7 +222,7 @@ as.track_frame.move2 <- function(data, ...) {
     data[["lat"]] <- lon_lat[, 2]
     class(data) <- c("tbl_df", "tbl", "data.frame")
     attr(data, "row.names") <- data_attr[["row.names"]]
-    as.track_frame(data, time_col = time_col, lon_col = "lon", lat_col = "lat", id_col = id_col)
+    as.trackframe(data, time_col = time_col, lon_col = "lon", lat_col = "lat", id_col = id_col)
 }
 
 

@@ -49,7 +49,7 @@ With trackframe, this is simplified to:
 ```{r}
 library(trackframe)
 
-tf <- as.track_frame(data, id_col = 'animal_id')
+tf <- as.trackframe(data, id_col = 'animal_id')
 s <- sapply(split(tf, id(tf)), function(tf){
   average_speed_over_time(easting(tf), northing(tf), time(tf))
 })
