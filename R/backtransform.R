@@ -6,7 +6,6 @@
 #' @export
 #'
 #' @examples
-#' library(travelpaths)
 #' library(trackframe)
 #' # for move2
 #' tf <- as.trackframe(data = move2_mini)

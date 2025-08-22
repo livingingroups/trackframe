@@ -28,9 +28,8 @@ TODO
 ## Accessor
 ```{r}
 library(trackframe)
-library(travelpaths)
-data("travel_paths_trackframe")
-tf <- travel_paths_trackframe
+data("path_trackframe")
+tf <- path_trackframe
 class(tf)
 ```
 
@@ -54,31 +53,30 @@ head(id(tf))
 
 ## sftrack
 ```{r}
-library(travelpaths)
-data("travel_paths_sftrack")
-class(travel_paths_sftrack)
-tf <- as.trackframe(travel_paths_sftrack)
+data("path_sftrack")
+class(path_sftrack)
+tf <- as.trackframe(path_sftrack)
 class(tf)
 sftrack2 <- tf_backtransform(tf)
-all.equal(travel_paths_sftrack, sftrack2)
+all.equal(path_sftrack, sftrack2)
 ```
 
 ## move2
 ```{r}
-data("travel_paths_move2")
-class(travel_paths_move2)
-tf <- as.trackframe(travel_paths_move2)
+data("path_move2")
+class(path_move2)
+tf <- as.trackframe(path_move2)
 class(tf)
 move2_2 <- tf_backtransform(tf)
-all.equal(travel_paths_move2, move2_2)
+all.equal(path_move2, move2_2)
 ```
 
 # Specify underlying data class with coerce_to
 ```{r}
 library(tibble)
 library(data.table)
-data("travel_paths_data_frame")
-df <- travel_paths_data_frame
+data("path_data_frame")
+df <- path_data_frame
 dt <- as.data.table(df) 
 tib <- as_tibble(df) 
 

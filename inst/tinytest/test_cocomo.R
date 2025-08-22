@@ -1,6 +1,5 @@
 library(tinytest)
 library(trackframe)
-library(travelpaths)
 
 set.seed(2025)
 

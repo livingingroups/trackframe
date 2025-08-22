@@ -6,7 +6,6 @@ vignette: >
   %\VignetteIndexEntry{Examples of Trackframe}
   %\VignetteEngine{knitr::knitr}
 editor_options: 
-  chunk_output_type: console
 ---
 
 # Load Package
@@ -114,9 +113,9 @@ str(recovered_sf)
 ## from `cocomo` style data
 
 ```{r}
-library(travelpaths)
 set.seed(2025)
-cocomo <- tf_as_cocomo(sim_travel_paths(3, 3))
+data(tf_mini)
+cocomo <- tf_as_cocomo(tf_mini)
 str(cocomo)
 cocomo$x
 cocomo$y
@@ -142,7 +141,7 @@ str(cocomo2)
 # Extract information
 
 ```{r}
-tf <- sim_travel_paths(3, 2)
+tf <- tf_mini
 ```
 
 
@@ -161,57 +160,3 @@ time(tf)
 ```{r}
 id(tf)
 ```
-
-
-
-# Simulate paths
-
-Generate a single track in `matrix` format
-
-```{r}
-data_matrix <- sim_travel_path(100, format = "matrix")
-```
-
-Generate a single track in a `data.frame` format
-
-```{r}
-data_df <- sim_travel_path(100, format = "data.frame")
-```
-
-Generate a single track in a `trackframe` format
-
-```{r}
-tf <- sim_travel_path(100, format = "trackframe")
-```
-
-Generate 3 tracks with different sizes
-
-```{r}
-ntracks <- 3
-sizes <- c(2, 4, 5)
-multi_track <- sim_travel_paths(ntracks, sizes)
-```
-
-Generate 5 tracks all with the same size
-
-```{r}
-uniform_tracks <- sim_travel_paths(5, 10)
-```
-
-Extract a specific track
-
-```{r}
-track2 <- select_id(multi_track, "track_2")
-track2
-```
-
-Split by id
-
-```{r}
-lotf <- split_by_id(multi_track)
-class(lotf)
-names(lotf)
-lotf[[1]]
-lotf[["track_2"]]
-```
-

@@ -5,8 +5,8 @@
 \title{Converts a cocomo object to a trackframe}
 \usage{
 cocomo_as_tf(
-  x,
-  y,
+  xs,
+  ys,
   t,
   ids,
   utm_epsg = NULL,
@@ -17,9 +17,9 @@ cocomo_as_tf(
 )
 }
 \arguments{
-\item{x}{matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t}
+\item{xs}{matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t}
 
-\item{y}{matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t}
+\item{ys}{matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t}
 
 \item{t}{vector of timestamps in posixct corresponding to the columns of x and y matrices. Timestamps must be uniformly sampled, though it is possible to have gaps (e.g. between different days of recording)}
 

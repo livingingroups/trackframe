@@ -16,7 +16,6 @@ an object which has been coerced to `trackframe`
 Title
 }
 \examples{
-library(travelpaths)
 library(trackframe)
 # for move2
 tf <- as.trackframe(data = move2_mini)

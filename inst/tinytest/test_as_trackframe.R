@@ -1,6 +1,5 @@
 library(tinytest)
 library(trackframe)
-library(travelpaths)
 
 "[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
   base::`[.data.frame`(x, i, j, drop = drop)

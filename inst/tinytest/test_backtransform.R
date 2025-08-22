@@ -1,7 +1,6 @@
 library(tinytest)
 
 # backtransform
-library(travelpaths)
 library(checkmate)
 library(trackframe)
 

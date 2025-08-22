@@ -2,17 +2,20 @@
 % Please edit documentation in R/zzz.R
 \name{tf_options}
 \alias{tf_options}
-\title{Options for trackframe}
+\title{Options for col guessing in trackframe}
 \usage{
 tf_options(option, value)
 }
 \arguments{
-\item{option}{name of option}
+\item{option}{a character string name of option. "time_col", "easting_col", "northing_col", or "id_col"}
 
-\item{value}{value}
+\item{value}{vector of characters with possible candidates}
+}
+\value{
+a vector of candidates for col guessing
 }
 \description{
-Options for trackframe
+Options for col guessing in trackframe
 }
 \examples{
 tf_options("time_col", c("t", "timestamp", "time", "time_index",
