@@ -2,6 +2,7 @@
 travelpaths_*.tar.gz
 Taskfile.yml
 CONTRIBUTING.md
+^.*-Ex\.R$
 ^devel$
 ^.*\.Rproj$
 ^\.Rproj\.user$

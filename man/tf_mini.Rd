@@ -5,7 +5,7 @@
 \alias{tf_mini}
 \title{Simulated Travel Path with multiple IDs}
 \format{
-An object of class \code{trackframe} (inherits from \code{data.frame}) with 11 rows and 4 columns.
+An object of class \code{trackframe} (inherits from \code{data.frame}) with 11 rows and 6 columns.
 }
 \usage{
 tf_mini

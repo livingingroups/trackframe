@@ -48,7 +48,7 @@ time.trackframe <- function(x, ...) {
 }
 
 
-# # TODO: Do we need this?
+# # FIXME: Do we need this?
 # "time<-.trackframe" <- function(tf, value) {
 #   assert_class(tf, "trackframe")
 #   tf[[attr(tf, "time")]] <- value
@@ -82,7 +82,7 @@ id <- function(tf) {
 }
 
 
-# TODO: Do we need this?
+# FIXME: Do we need this?
 "id<-" <- function(tf, value) {
   assert_class(tf, "trackframe")
   id_col <- attr(tf, "id")
@@ -285,4 +285,23 @@ subset_guesses <- function(data,
                     guesses[["northing_col"]][1],
                     guesses[["id_col"]][1])])
   }
+}
+
+make_unique_id <- function(id_col) {
+  unique_id <- sapply(id_col, paste, collapse = "<;>")
+  attr(unique_id, "group_names") <- attr(id_col, "active_group")
+  return(unique_id)
+}
+
+backtransform_id <- function(unique_id, group_names) {
+  id_list <- lapply(str_split(unique_id, pattern = "<;>"),
+                    function(x) {
+                      id_i <- setNames(as.list(x), group_names)
+                      class(id_i) <- "s_group"
+                      id_i
+                    })
+  class(id_list) <- "c_grouping"
+  attr(id_list, "active_group") <- group_names
+  attr(id_list, "sort_index") <- as.factor(sapply(id_list, paste, collapse = "_"))
+  return(id_list)
 }

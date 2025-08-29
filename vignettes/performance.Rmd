@@ -1,4 +1,5 @@
 ---
+title: Example of Trackframe vs move2 performance
 author: "TODO"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,7 +9,6 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
-
 
 
 ## Why `trackframe`?

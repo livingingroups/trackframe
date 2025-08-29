@@ -117,12 +117,12 @@ set.seed(2025)
 data(tf_mini)
 cocomo <- tf_as_cocomo(tf_mini)
 str(cocomo)
-cocomo$x
-cocomo$y
+cocomo$xs
+cocomo$ys
 cocomo$t
 cocomo$ids
 
-cocomo_tf <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
+cocomo_tf <- cocomo_as_tf(cocomo$xs, cocomo$ys, cocomo$t, cocomo$ids)
 cocomo_tf
 class(cocomo_tf)
 

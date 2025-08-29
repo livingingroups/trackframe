@@ -151,7 +151,6 @@ northing(tf)
 time(tf)
 id(tf)
 
-set.seed(2025)
 as.trackframe(df_mini, crs_input = 4326)
 
 set.seed(2025)

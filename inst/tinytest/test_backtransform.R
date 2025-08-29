@@ -6,18 +6,20 @@ library(trackframe)
 
 #move2
 set.seed(2025)
-move2 <- move2_mini #sim_travel_path(5, format = "move2")
-tf <- as.trackframe(data = move2)
-attr(tf, "transformation_info")
-expect_equal(tf_backtransform(tf), move2)
 
+# FIXME: move some of this to travelpaths?
+library(move2)
+m2 <- mt_as_move2(df_mini, coords = c("latitude", "longitude"), time_column = "time", track_id_column = "id", crs = 4326)
+tf <- as.trackframe(data = m2)
+expect_equal(tf_backtransform(tf), m2)
+
+# FIXME: same as above
 #sftrack
 set.seed(2025)
-sftrack <- sftrack_mini #sim_travel_path(5, format = "sftrack")
-tf <- as.trackframe(data = sftrack)
+sftrack_a <- as_sftrack(df_mini, coords = c("latitude", "longitude"), crs = 4326)
+tf <- as.trackframe(data = sftrack_a)
 sftrack_b <- tf_backtransform(tf)
-# sftrack_b$id <- unlist(sftrack_b$sft_group)
-expect_equal(sftrack_b, sftrack)
+expect_equal(sftrack_b, sftrack_a)
 
 ###
 library(sftrack)
@@ -45,18 +47,13 @@ sftrack_tf <- as.trackframe(my_sftrack)
 sftrack_tf_b <- tf_backtransform(tf = sftrack_tf)
 
 expect_equal(NROW(sftrack_tf_b), NROW(my_sftrack))
-sftrack_tf_b$id <- NULL
 expect_equal(colnames(sftrack_tf_b), colnames(my_sftrack))
 expect_equal(sftrack_tf_b, my_sftrack)
-attr(sftrack_tf_b, "agr")
-attr(my_sftrack, "agr")
 
-attributes(my_sftrack)
-attributes(sftrack_tf_b)
 
 ###
 
-df <- df_mini #sim_travel_path(5, format = "data.frame")
+df <- df_mini
 tf <- as.trackframe(data = df, crs_input = 4326)
 attr(tf, "transformation_info")
 expect_equal(tf_backtransform(tf), df)

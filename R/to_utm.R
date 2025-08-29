@@ -1,7 +1,6 @@
 sf_to_utm_epsg <- function(sf_object) {
   sf_object_4326 <- st_transform(sf_object, 4326)
   
-
   lon <- st_coordinates(sf_object_4326)[,1]
   lat <- st_coordinates(sf_object_4326)[,2]
   

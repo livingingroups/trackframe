@@ -3,8 +3,10 @@ author: "Brock"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{Basic Functionality}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Quickstart Vignette
@@ -36,7 +38,9 @@ average_speed_group_no_tf <- function(data) {
     # sftrack and move2 have different ways of encoding
     # the track_id/animal_id so we need to account for both
     if ('sftrack' %in% class(data)) {
-      track_id <- sapply(data[[attr(data, "group_col")]], deparse)
+      # track_id <- sapply(data[[attr(data, "group_col")]], deparse)
+      track_id <- trackframe:::make_unique_id(data[[attr(data, "group_col")]])
+      # attr(data,"group_names") <- attr(data[[attr(data, "group_col")]], "active_group")
       timestamp <- data[[attr(data, 'time_col')]]
     } else if ('move2' %in% class(data)) {
       track_id <- move2::mt_track_id(data)

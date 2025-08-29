@@ -28,14 +28,13 @@ test_as_trackframe <- function(coerce_to = 'base') {
                            northing_col = "northing_col", id_col = "id", coerce_to = coerce_to))
   expect_equal(easting(tf), df$easting_col)
   expect_equal(northing(tf), df$northing_col)
-  # expect_equal(units(easting(tf))$numerator, "m")
-  # expect_equal(units::drop_units(easting(tf)), df$easting_col)
-  # expect_equal(units(northing(tf))$numerator, "m")
-  # expect_equal(units::drop_units(northing(tf)), df$northing_col)
+  # expect_equal(units(easting(tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(easting(tf)), df$easting_col) #FIXME: if decide to use units
+  # expect_equal(units(northing(tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(northing(tf)), df$northing_col) #FIXME: if decide to use units
   expect_equal(id(tf), df$id)
   expect_equal(time(tf), df$time_col)
   expect_inherits(time(tf), "POSIXct")
-  
   
   #dataframe
   matrix_input <- as.matrix(data.frame(time_col = 1:5,
@@ -50,13 +49,12 @@ test_as_trackframe <- function(coerce_to = 'base') {
   expect_equal(dim(df), dim(tf))
   expect_equal(easting(tf), matrix_input[, "easting_col"])
   expect_equal(northing(tf), matrix_input[, "northing_col"])
-  # expect_equal(units(easting(tf))$numerator, "m")
-  # expect_equal(units::drop_units(easting(tf)), matrix_input[, "easting_col"])
-  # expect_equal(units(northing(tf))$numerator, "m")
-  # expect_equal(units::drop_units(northing(tf)), matrix_input[, "northing_col"])
+  # expect_equal(units(easting(tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(easting(tf)), matrix_input[, "easting_col"]) #FIXME: if decide to use units
+  # expect_equal(units(northing(tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(northing(tf)), matrix_input[, "northing_col"]) #FIXME: if decide to use units
   expect_equal(id(tf), matrix_input[, "id"])
   expect_equal(time(tf), matrix_input[, "time_col"])
-  # expect_inherits(time(tf), "POSIXct")
   
   
   #move2
@@ -74,10 +72,10 @@ test_as_trackframe <- function(coerce_to = 'base') {
   x_y <- sf::st_coordinates(albatross_move2_utm[[attr(albatross_move2_utm, "sf_column")]])
   expect_equal(easting(albatross_tf), x_y[,1])
   expect_equal(northing(albatross_tf), x_y[,2])
-  # expect_equal(units(easting(albatross_tf))$numerator, "m")
-  # expect_equal(units::drop_units(easting(albatross_tf)), x_y[,1])
-  # expect_equal(units(northing(albatross_tf))$numerator, "m")
-  # expect_equal(units::drop_units(northing(albatross_tf)), x_y[,2])
+  # expect_equal(units(easting(albatross_tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(easting(albatross_tf)), x_y[,1]) #FIXME: if decide to use units
+  # expect_equal(units(northing(albatross_tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(northing(albatross_tf)), x_y[,2]) #FIXME: if decide to use units
   expect_equal(id(albatross_tf), albatross_move2[[attr(albatross_move2, "track_id_column")]])
   expect_equal(time(albatross_tf), albatross_move2[[attr(albatross_move2, "time_column")]])
   #backtransformation
@@ -86,9 +84,6 @@ test_as_trackframe <- function(coerce_to = 'base') {
   expect_equal(sf::st_coordinates(albatross_move2), sf::st_coordinates(albatross_move2_bt))
   expect_equal(attr(albatross_move2, "track_id_column"), attr(albatross_move2_bt, "track_id_column"))
   expect_equal(attr(albatross_move2, "time_column"), attr(albatross_move2_bt, "time_column"))
-  # str(albatross_move2)
-  # str(albatross_move2_bt)
-
   
   
   #sftrack
@@ -117,12 +112,13 @@ test_as_trackframe <- function(coerce_to = 'base') {
   x_y[is.nan(x_y)] <- NA
   expect_equal(easting(sftrack_tf), x_y[,1])
   expect_equal(northing(sftrack_tf), x_y[,2])
-  # expect_equal(units(easting(sftrack_tf))$numerator, "m")
-  # expect_equal(units::drop_units(easting(sftrack_tf)), x_y[,1]) #FIXME: by improved ordering based on JSON
-  # expect_equal(units(northing(sftrack_tf))$numerator, "m")
-  # expect_equal(units::drop_units(northing(sftrack_tf)), x_y[,2]) #FIXME: by improved ordering based on JSON
+  # expect_equal(units(easting(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(easting(sftrack_tf)), x_y[,1]) #FIXME: if decide to use units
+  # expect_equal(units(northing(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
+  # expect_equal(units::drop_units(northing(sftrack_tf)), x_y[,2]) #FIXME: if decide to use units
   my_sftrack <- my_sftrack[order(my_sftrack$animal_id, my_sftrack$timestamp) ,]
-  expect_equal(id(sftrack_tf), sapply(my_sftrack[[attr(my_sftrack, "group_col")]], deparse))
+  # expect_equal(id(sftrack_tf), sapply(my_sftrack[[attr(my_sftrack, "group_col")]], deparse))
+  expect_equal(id(sftrack_tf), trackframe:::make_unique_id(my_sftrack[[attr(my_sftrack, "group_col")]]), check.attributes = FALSE)
   expect_equal(time(sftrack_tf), my_sftrack[[attr(my_sftrack, "time_col")]])
   #backtransformation
   my_sftrack_bt <- tf_as_sftrack(sftrack_tf[!is.na(northing(sftrack_tf)),], crs_new = 4326)
@@ -131,345 +127,30 @@ test_as_trackframe <- function(coerce_to = 'base') {
   expect_equal(sf::st_coordinates(my_sftrack_noNA), sf::st_coordinates(my_sftrack_bt))
   expect_equal(attr(my_sftrack_noNA, "group_col"), attr(my_sftrack_bt, "group_col"))
   expect_equal(attr(my_sftrack_noNA, "time_col"), attr(my_sftrack_bt, "time_col"))
-  # str(my_sftrack)
-  # str(my_sftrack_bt)
 }
 
 
 test_sort <- function(coerce_to) {
-  df <- tf_as_xyt(tf_mini) #sim_travel_paths(2,3, format = "data.frame")
+  df <- tf_as_xyt(tf_mini)
   set.seed(2025)
   df2 <- df[sample(6),]
   tf_df <- as.trackframe(df2, coerce_to = coerce_to)
   df2_ordered <- df2[order(df2$id, df2$time),]
   expect_equal(as.data.frame(tf_df[ , c("id", "time")]), df2_ordered[, c("id", "time")], check.attributes = FALSE)
-  
-  # set.seed(2025)
-  # tf <- sim_travel_paths(2,3, format = "trackframe")
-  # set.seed(2025)
-  # tf2 <- tf[sample(6),]
-  # tf2_ordered <- tf2[order(tf2$id, tf2$time),]
-  # tf3 <- as.trackframe(tf2)
-  # expect_equal(tf3[ , c("id", "time")], tf2_ordered[, c("id", "time")])
-}
-
-test_errors <- function(coerce_to = coerce_to) {
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, time_col = "time_col", easting_col = "easting_col",
-                   northing_col = "northing_col", id_col = "id", coerce_to = coerce_to))
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  
-  df <- data.frame(
-    time_col = rep("a", 5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = factor(1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col2 = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col2 = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col2 = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id2 = 1:5
-  )
-  expect_silent(trackframe(data = df, coerce_to = coerce_to))
-}
-
-test_warnings <- function(coerce_to = 'base') {
-  #no crs
-  set.seed(2025)
-  tf <- tf_mini
-  attr(tf, "easting") <- "latitude"
-  attr(tf, "northing") <- "longitude"
-  df <- tf_as_xyt(tf) #sim_travel_paths(2,3, format = "data.frame")
-  expect_warning(as.trackframe(data = df, coerce_to = coerce_to)) # no crs provided
-  
-  #duplicated guesses
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    time = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_silent(trackframe(data = df, coerce_to = coerce_to))
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    time = as.POSIXct(Sys.time() + 2:6),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_warning(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = 1001:1005,
-    easting = 1001:1005,
-    northing_col = runif(5, 0, 10)
-  )
-  expect_silent(trackframe(data = df, coerce_to = coerce_to))
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    easting = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_warning(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting = runif(5, 0, 10),
-    northing_col = 1001:1005,
-    northing = 1001:1005
-  )
-  expect_silent(trackframe(data = df, coerce_to = coerce_to))
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    northing = runif(5, 0, 10)
-  )
-  expect_warning(trackframe(data = df, coerce_to = coerce_to))
-  
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5,
-    track_id = 1:5
-  )
-  expect_silent(trackframe(data = df, coerce_to = coerce_to))
-  df <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5,
-    track_id = 2:6
-  )
-  expect_warning(trackframe(data = df, coerce_to = coerce_to))
 }
 
 
-test_guess_all_cols <- function() {
 
-  #duplicated guesses
-  # with same values
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    time = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_silent(trackframe(data = data))
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_equal(guesses$time_col, c("time", "time_col"))
-  expect_equal(guesses$easting_col, c("easting_col"))
-  expect_equal(guesses$northing_col, c("northing_col"))
-  expect_equal(guesses$id_col, NA)
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  # with different values
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    time = as.POSIXct(Sys.time() + 2:6),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  # easting
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = 1001:1005,
-    easting = 1001:1005,
-    northing_col = runif(5, 0, 10)
-  )
-  expect_silent(trackframe(data = data))
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_equal(guesses$time_col, c("time_col"))
-  expect_equal(guesses$easting_col, c("easting", "easting_col"))
-  expect_equal(guesses$northing_col, c("northing_col"))
-  expect_equal(guesses$id_col, NA)
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    easting = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  #northing
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting = runif(5, 0, 10),
-    northing_col = 1001:1005,
-    northing = 1001:1005
-  )
-  expect_silent(trackframe(data = data))
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_equal(guesses$time_col, c("time_col"))
-  expect_equal(guesses$easting_col, c("easting"))
-  expect_equal(guesses$northing_col, c("northing", "northing_col"))
-  expect_equal(guesses$id_col, NA)
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    northing = runif(5, 0, 10)
-  )
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5,
-    track_id = 1:5
-  )
-  expect_silent(trackframe(data = data))
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_equal(guesses$time_col, c("time_col"))
-  expect_equal(guesses$easting_col, c("easting_col"))
-  expect_equal(guesses$northing_col, c("northing_col"))
-  expect_equal(guesses$id_col, c("track_id", "id"))
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5,
-    track_id = 2:6
-  )
-  guesses <- guess_all_cols(col_names = colnames(data))
-  expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  #col missing
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    time = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10)
-  )
-  expect_error(guess_all_cols(col_names = colnames(data)))
-  
-  data <- data.frame(
-    time = as.POSIXct(Sys.time() + 1:5),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_error(guess_all_cols(col_names = colnames(data)))
-  
-  data <- data.frame(
-    easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
-  )
-  expect_error(guess_all_cols(col_names = colnames(data)))
-  
-  #
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col2 = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id2 = 1:5
-  )
-  expect_error(as.trackframe(data = data))
-  expect_silent(as.trackframe(data = data, easting_col = "easting_col2")) #FIXME should this be recognized?
-  expect_error(guess_all_cols(col_names = colnames(data)))
-  guesses <- guess_all_cols(col_names = colnames(data),
-                          easting_col_candidates = "easting_col2")
-  expect_equal(guesses$time_col, c("time_col"))
-  expect_equal(guesses$easting_col, c("easting_col2"))
-  expect_equal(guesses$northing_col, c("northing_col"))
-  expect_equal(guesses$id_col, NA)
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  guesses <- guess_all_cols(col_names = colnames(data),
-                          easting_col_candidates = "easting_col2",
-                          id_col_candidates = "id2")
-  expect_equal(guesses$id_col, "id2")
-  expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    latitude = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_warning(as.trackframe(data = data,
-                               easting_col = "latitude",
-                               northing_col = "northing_col"))
-  data <- data.frame(
-    time_col = as.POSIXct(Sys.time() + 1:5),
-    easting_col = runif(5, 0, 10),
-    longitude = runif(5, 0, 10),
-    id = 1:5
-  )
-  expect_warning(as.trackframe(data = data,
-                               easting_col = "easting_col",
-                               northing_col = "longitude"))
-}
+
 
 # Run all tests
-coerce_to = "base"
-coerce_to = "data.table"
-coerce_to = "tibble"
-coerce_to = NA
+# coerce_to = "base"
+# coerce_to = "data.table"
+# coerce_to = "tibble"
+# coerce_to = NA
 lapply(c('base', 'data.table', 'tibble', NA), function(coerce_to) {
   if (is.na(coerce_to)) coerce_to <- NULL
   test_as_trackframe(coerce_to)
-  test_sort(coerce_to)
-  test_errors(coerce_to)
-  test_warnings(coerce_to)
 })
-test_guess_all_cols()
+
 

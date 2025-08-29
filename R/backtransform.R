@@ -33,10 +33,6 @@ tf_backtransform <- function(tf) {
   class_old <- transformation_info$class[1]
   if(class_old == "move2") {
     return(tf_as_move2(tf, tf_crs = attr(tf, "utm_epsg"), crs_new = transformation_info$crs_code))
-    #FIXME: data.frame vs. tibble vs.data.table
-    #FIXME: drop columns?
-    #FIXME: order?
-  # } else if (class_old ==  "sftrack") {
   } else if ("sftrack" %in% transformation_info$class) {
     return(tf_as_sftrack(tf, tf_crs = attr(tf, "utm_epsg"), crs_new = transformation_info$crs_code))
   } else if (class_old %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
@@ -74,7 +70,7 @@ tf_backtransform <- function(tf) {
 #' tf_as_xyt(tf_mini)
 #' @export 
 tf_as_xyt <- function(x, ...) { #coredata.trackframe
-  #TODO check what we want to do in coredata
+  #FIXME: check what we want to do in coredata
   assert_class(x, "trackframe")
   if (is.null(attr(x, "id"))) {
     cols <- c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))
@@ -129,32 +125,29 @@ tf_as_sf <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
 #' @export
 #' @rdname tf_as
 tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
-  # tf_crs <- 32610
   assert_class(tf, "trackframe")
   transformation_info <- attr(tf, "transformation_info")
+  # We want to create an sftrack object without importing it.
   as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
   if (inherits(as_sftrack, "try-error")) {
     stop("package 'sftrack' is required for this function. Please install it.")
   }
-  # # TODO: Should we drop NA?
+  # # FIXME: Should we drop NA?
   # tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)),]
   
   sf_df <- tf_as_sf(tf = tf, tf_crs = tf_crs, crs_new = crs_new)
-  # sf_df["sft_group"] <- lapply(id(tf), function(text) eval(parse(text = text)))
-  # FIXME: Split does not work if not multiple groups are present.
-  sft_group <- as.list(do.call(rbind.data.frame, lapply(id(tf), function(text) eval(parse(text = text)))))
-  # FIXME: We want to create an sftrack object without importing it.
+  sft_group <- as.list(do.call(rbind.data.frame,
+                               backtransform_id(id(tf), group_names = transformation_info[["group_names"]])))
+
   new_sftrack <- as_sftrack(sf_df, group = sft_group, time = attr(tf, "time"), overwrite_names = TRUE, error = transformation_info$error_col)
 
   if(length(new_sftrack$sft_group[[1]]) == 1) {
     attr_agr <- attr(new_sftrack, "agr")
     new_sftrack[[attr(tf, "id")]] <- unlist(new_sftrack[["sft_group"]])
     attr(new_sftrack, "agr") <- attr_agr
-  } #else {
-  #   new_sftrack[[attr(tf, "id")]] <- NULL #FIXME: make it also work for mor than 1 col
-  # }
-
-  # new_sftrack[[attr(new_sftrack, "group_col")]]
+  } else {
+    new_sftrack[[attr(tf, "id")]] <- NULL
+  }
   return(new_sftrack)
 }
 

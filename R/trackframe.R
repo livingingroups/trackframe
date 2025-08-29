@@ -81,18 +81,10 @@ as.trackframe <- function(data,
   UseMethod("as.trackframe")
 }
 
-# tf_control <- function(time_col_guesses = c("t", "timestamp", "time", "time_index", "tindex"),
-#                        easting_col_guesses = c("easting", "east", "utm.easting", "lon", "long", "longitude", "x"),
-#                        northing_col_guesses = c("northing", "north", "utm.northing", "lat", "latitude", "y"),
-#                        id_col_guesses = c("id", "animal_id", "track_id", "trackid")) {
-#   structure(as.list(environment()), class = "tf_control")
-# }
-
 
 #' @param crs_input crs code for input of coordinates
 #' @param utm_epsg crs value for utm zone of the \code{trackframe} output
 #' @examples
-#' set.seed(2025)
 #' as.trackframe(df_mini, crs_input = 4326)
 #' 
 #' set.seed(2025)
@@ -126,7 +118,7 @@ as.trackframe.data.frame <- function(data,
                                      northing_col = tf_options("northing_col"),
                                      id_col = tf_options("id_col"),
                                      sort = TRUE,
-                                     coerce_to = "base", #FIXME: "data.frame"
+                                     coerce_to = "base", #FIXME: or "data.frame"?
                                      verbose = FALSE,
                                      crs_input = NULL,
                                      utm_epsg = NULL,
@@ -152,7 +144,9 @@ as.trackframe.data.frame <- function(data,
     } else if(coerce_to == "tibble") {
       if(!inherits(data, "tbl") | !inherits(data, "tbl_df")) {
         if(verbose) writeLines("- data coerced by as_tibble(data)")
-        if(!is.null(data$sft_group)) data$sft_group <- NULL #FIXME: same transformation as for id
+      if(!is.null(data$sft_group)) {#data$sft_group <- NULL #FIXME: same transformation as for id
+        data$sft_group <- make_unique_id(data$sft_group)
+        }
         data <- as_tibble(data)
       }
     }
@@ -198,17 +192,31 @@ as.trackframe.data.frame <- function(data,
     # transform if easting %in% c("lon", "long", "longitude")
     lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
     lat_names <- c("lat","latitude") #FIXME: move to options?
-    if(easting_col %in% lat_names) {
-      warning(sprintf("%s specified as easting_col, but seems to correspond to latitude. 
+  if(easting_col %in% lat_names) {
+    warning(sprintf("%s specified as easting_col, but seems to correspond to latitude. 
                       easting should correspond to longitude", easting_col))
-    }
-    if(northing_col %in% lon_names) {
-      warning(sprintf("%s specified as northing_col, but seems to correspond to longitude 
+  }
+  if(northing_col %in% lon_names) {
+    warning(sprintf("%s specified as northing_col, but seems to correspond to longitude 
                       northing should correspond to latitude", northing_col))
-    }
+  }
     if(easting_col %in% lon_names | northing_col %in% lat_names) {
+    # check data consistency
+    if(easting_col %in% lon_names) {
+      #check if longitude between -180 and 180
+      if(any(data[[easting_col]] < -180 | data[[easting_col]] > 180)) {
+        warning(sprintf("Longitude values provided in %s are not between -180 and 180.", easting_col))
+      }
+    }
+    if(northing_col %in% lat_names) {
+      #check if latitude between -90 and 90
+      if(any(data[[northing_col]] < -90 | data[[northing_col]] > 90)) {
+        warning(sprintf("Latitude values provided in %s are not between -90 and 90.", northing_col))
+      }
+    }
+
       if(!all(c(easting_col %in% lon_names, northing_col %in% lat_names))) {
-        stop(sprintf("coordinate system of %s easting_col and northing_col %s do not match.", easting_col, northing_col))
+      stop(sprintf("coordinate system of %s easting_col and northing_col %s do not match. If guessing was not successfull please provide arguments explicitly.", easting_col, northing_col))
       }
       #transform
       if(is.null(crs_input)) {
@@ -297,7 +305,8 @@ as.trackframe.matrix <- function(data,
 #' 
 #' @export
 #' @rdname as_trackframe
-as.trackframe.move2 <- function(data, time_col = NULL,
+as.trackframe.move2 <- function(data,
+                                time_col = NULL,
                                 easting_col = NULL,
                                 northing_col = NULL,
                                 id_col = NULL,
@@ -305,11 +314,12 @@ as.trackframe.move2 <- function(data, time_col = NULL,
                                 coerce_to = "base",
                                 verbose = FALSE,
                                 ...) {
-    if(is.null(time_col)) {
-      time_index <- attr(data, "time_column")
-    } else {
-      time_index <- time_col
-    }
+  #FIXME: transform to sftrack and call as.trackframe.sftrack
+  if(is.null(time_col)) {
+    time_index <- attr(data, "time_column")
+  } else {
+    time_index <- time_col
+  }
   if(is.null(id_col)) {
     id_col <- attr(data, "track_id_column") #move2: The `track_id_column` attribute should be a <character> of length 1
   }
@@ -317,39 +327,37 @@ as.trackframe.move2 <- function(data, time_col = NULL,
     transformation_info$crs_code <- sf::st_crs(data)$input
     # transformation to cartesian coordinates
     utm_epsg <- sf_to_utm_epsg(data)
-    # attr(data, "utm_epsg") <- utm_epsg
     data <- st_transform(data, utm_epsg)
     data_attr <- attributes(data)
     cols <- setdiff(colnames(data), attr(data, "sf_column"))
     data <- data[,cols]
     
-    # x_y <- st_coordinates(data[[attr(data, "sf_column")]])
-    # x_y[is.nan(x_y)] <- NA
-    # time_index <- attr(data, "time_column")
-    # id_col <- attr(data, "track_id_column") #move2: The `track_id_column` attribute should be a <character> of length 1
-    # cols <- setdiff(colnames(data), attr(data, "sf_column"))
-    # class(data) <- "list"
-    # data <- data[cols]
-    # data[["easting"]] <- x_y[, 1]
-    # data[["northing"]] <- x_y[, 2]
-    # # class(data) <- c("tbl_df", "tbl", "data.frame") #FIXME classes?
-
-    
     x_y <- st_coordinates(data[[attr(data, "sf_column")]])
     x_y[is.nan(x_y)] <- NA
-    #FIXME: Can attr(data, "group_col") be null if only 1 track exists?
     if(is.null(easting_col)) {
       easting_col = "easting"
       data[["easting"]] <- x_y[, 1]
     } else {
+    if(length(easting_col) == 1) {
+      lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
+      if(easting_col %in% lon_names) easting_col <- "easting"
       data[[easting_col]] <- x_y[, 1] #FIXME: how to check if transformation makes sense?
+    } else {
+      stop("easting col not identified. Please provide further information on easting_col.")
+    }
     }
     
     if(is.null(northing_col)) {
       northing_col = "northing"
       data[["northing"]] <- x_y[, 2]
     } else {
-      data[[northing_col]] <- x_y[, 2]
+    if(length(northing_col) == 1) {
+      lat_names <- c("lat","latitude") #FIXME: move to options?
+      if(northing_col %in% lat_names) northing_col <- "northing"
+      data[[northing_col]] <- x_y[, 2] #FIXME: how to check if transformation makes sense?
+    } else {
+      stop("northing col not identified. Please provide further information on northing_col")
+    }
     }
 
     class(data) <- c("data.frame")
@@ -389,38 +397,46 @@ as.trackframe.sftrack <- function(data,
   }
   if(is.null(id_col)) {
     id_col = "id"
-    data[["id"]] <- sapply(data[[attr(data, "group_col")]], deparse)
+    if(inherits(data[[attr(data, "group_col")]], "c_grouping"))
+    data[["id"]] <- make_unique_id(data[[attr(data, "group_col")]])
+    attr(data,"group_names") <- attr(data[[attr(data, "group_col")]], "active_group")
   }
   transformation_info <- attributes(data)
   transformation_info$crs_code <- sf::st_crs(data)$input
   # transformation to cartesian coordinates
   utm_epsg <- sf_to_utm_epsg(data)
-  # attr(data, "utm_epsg") <- utm_epsg
   data <- st_transform(data, utm_epsg)
   data_attr <- attributes(data)
   cols <- setdiff(colnames(data), attr(data, "sf_column"))
   data <- data[,cols]
   
-
-
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  #FIXME: Can attr(data, "group_col") be null if only 1 track exists?
   if(is.null(easting_col)) {
     easting_col = "easting"
     data[["easting"]] <- x_y[, 1]
-  } else { #FIXME: check length 1
+  } else {
+    if(length(easting_col) == 1) {
+      lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
+      if(easting_col %in% lon_names) easting_col <- "easting"
     data[[easting_col]] <- x_y[, 1] #FIXME: how to check if transformation makes sense?
+    } else {
+      stop("easting col not identified. Please provide further information on easting_col.")
+    }
   }
   
   if(is.null(northing_col)) {
     northing_col = "northing"
     data[["northing"]] <- x_y[, 2]
   } else {
-    data[[northing_col]] <- x_y[, 2]
+    if(length(northing_col) == 1) {
+      lat_names <- c("lat","latitude") #FIXME: move to options?
+      if(northing_col %in% lat_names) northing_col <- "northing"
+      data[[northing_col]] <- x_y[, 2] #FIXME: how to check if transformation makes sense?
+    } else {
+      stop("northing col not identified. Please provide further information on northing_col")
   }
-  
-
+  }
 
   # FIXME: as.data.frame?
   class(data) <- c("data.frame")
@@ -445,7 +461,8 @@ as.trackframe.trackframe <- function(data,
                                      ...) {
   argg <- list(...)
   if(length(argg) > 0) warning("... arguments are ignored in as.trackframe.trackframe()")
-  # #FIXME: transformation_info
+  # FIXME: what do we expect here?
+  # FIXME: add transformation_info
   # if (!is.null(time_col)) {
   #   checkmate::assert_string(time_col)
   #   checkmate::assert_choice(time_col, colnames(data))
@@ -488,95 +505,6 @@ as.trackframe.trackframe <- function(data,
 }
 
 
-#' Converts a cocomo object to a trackframe
-#'
-#' @param xs matrix of x coordinates (UTM eastings) of all individuals in a group or population (rows) at every time point (columns) x[i,t] gives the x / easting position of individual i at time point t
-#' @param ys matrix of y coordinates (UTM northings) of all individuals in a group or population (rows) at every time point (columns) y[i,t] gives the y / northing position of individual i at time point t
-#' @param t vector of timestamps in posixct corresponding to the columns of x and y matrices. Timestamps must be uniformly sampled, though it is possible to have gaps (e.g. between different days of recording)
-#' @param ids  data frame giving information about the tracked individuals, with rows correpsonding to the rows of the x and y matrices. There must be one column called id_code which contains a unique individual identifier for each animal (e.g. for meerkats: 'VCVM001', for hyenas: 'WRTH', for coatis: 'Luna') The other columns contained are flexible, and can include information on age, sex, dominance, etc
-#' @param na_omit logical indicator if NAs should be omitted
-#' @param utm_epsg crs value for utm zone
-#' @param sort logical, if data should be sorted according to id_col and time_col
-#' @param coerce_to the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.
-#' @param verbose logical, default value is \code{TRUE}
-#'
-#' @return an object of class trackframe
-#' @export
-#'
-#' @examples
-#' cocomo <- tf_as_cocomo(tf_mini)
-#' cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids)
-cocomo_as_tf <- function(xs, ys, t, ids, utm_epsg = NULL, na_omit = TRUE,
-                         sort = TRUE, coerce_to = "base", verbose = FALSE) {
-  assert_matrix(xs)
-  assert_matrix(ys)
-  assert_true(NCOL(xs) == NCOL(ys))
-  assert_true(NROW(xs) == NROW(ys))
-  assert_numeric(t, len = NCOL(xs), any.missing = FALSE)
-  assert_data_frame(ids)
-  assert_choice("id_code", colnames(ids))
-  data <- data.frame("time" = t,
-                     "easting" = as.vector(base::t(xs)),
-                     "northing" = as.vector(base::t(ys)),
-                     "id" = rep(ids$id_code, each = NCOL(xs)))
-  if (NCOL(ids) > 1L) {
-    for (col in setdiff(colnames(ids), "id_code")) {
-      if (col %in% colnames(data)) {
-        new_name <- tail(make.unique(c(colnames(data), col), "_"), 1L)
-        data[[new_name]] <- ids[[col]]
-      } else {
-        data[[col]] <- ids[[col]]
-      }
-    }
-  }
-  if (isTRUE(na_omit)) {
-    data <- data[!is.na(data[["easting"]]) & !is.na(data[["northing"]]), ]
-    rownames(data) <- NULL
-  }
-  as.trackframe(data, time_col = "time", easting_col = "easting",
-                 northing_col = "northing", id_col = "id", utm_epsg = utm_epsg,
-                sort = sort, coerce_to = coerce_to, verbose = verbose)
-}
-
-
-#' Convert a \code{track\_frame} into the \code{cocomo} format
-#'
-#' This function converts a \code{track\_frame} object into the cocomo format.
-#'
-#' @param tf an object inheriting from \code{track\_frame}.
-#'
-#' @return A list with three components:
-#'   \item{x}{A matrix of x-coordinates (easting values). If tf has no id attribute,
-#'     this is a single-column matrix. If tf has ids, rows represent different tracks
-#'     and columns represent time points.}
-#'   \item{y}{A matrix of y-coordinates (northing values). Same structure as x matrix.}
-#'   \item{t}{A vector of time values, sorted in ascending order.}
-#'
-#' @examples
-#' tf_as_cocomo(tf_mini)
-#'
-#' @export
-tf_as_cocomo <- function(tf) {
-  if (is.null(attr(tf, "id"))) {
-    x <- matrix(tf[[attr(tf, "easting")]])
-    y <- matrix(tf[[attr(tf, "northing")]])
-    time <- tf[[attr(tf, "time")]]
-  } else {
-    time <- sort(unique(tf[[attr(tf, "time")]]))
-    ids <- unique_ids(tf)
-    NA_val <- as(NULL, mode(tf[[attr(tf, "easting")]]))
-    x <- y <- matrix(NA_val, nrow = length(ids), ncol = length(time))
-    for (i in seq_along(ids)) {
-        id <- ids[i]
-        idx <- which(tf[[attr(tf, "id")]] == id)
-        m <- match(time, tf[[attr(tf, "time")]][idx])
-        x[i, ] <- tf[[attr(tf, "easting")]][idx][m]
-        y[i, ] <- tf[[attr(tf, "northing")]][idx][m]
-    }
-    rownames(x) <- rownames(y) <- ids
-  }
-  list(xs = x, ys = y, t = time, ids = data.frame(id_code = ids))
-}
 
 
 is.trackframe <- function(x) {
