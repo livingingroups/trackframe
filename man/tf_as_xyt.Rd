@@ -16,7 +16,7 @@ A data frame with the easting, northing, time index, and optionally track ID col
 }
 \description{
 This function extracts the core spatial-temporal data from a trackframe object,
-returning a simplified data frame with just the easting (x), northing (y), 
+returning a simplified data frame with just the easting (x), northing (y),
 time (t), and optionally the track ID columns.
 }
 \examples{

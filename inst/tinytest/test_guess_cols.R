@@ -6,8 +6,7 @@ library(trackframe)
 }
 
 test_guess_all_cols <- function() {
-  
-  #duplicated guesses
+  # duplicated guesses
   # with same values
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -22,7 +21,7 @@ test_guess_all_cols <- function() {
   expect_equal(guesses$northing_col, c("northing_col"))
   expect_equal(guesses$id_col, NA)
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   # with different values
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -32,7 +31,7 @@ test_guess_all_cols <- function() {
   )
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   # easting
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -47,8 +46,8 @@ test_guess_all_cols <- function() {
   expect_equal(guesses$northing_col, c("northing_col"))
   expect_equal(guesses$id_col, NA)
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  
+
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -57,7 +56,7 @@ test_guess_all_cols <- function() {
   )
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   #northing
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -72,7 +71,7 @@ test_guess_all_cols <- function() {
   expect_equal(guesses$northing_col, c("northing", "northing_col"))
   expect_equal(guesses$id_col, NA)
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting = runif(5, 0, 10),
@@ -81,7 +80,7 @@ test_guess_all_cols <- function() {
   )
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -105,7 +104,7 @@ test_guess_all_cols <- function() {
   )
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_warning(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
+
   #col missing
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -113,20 +112,19 @@ test_guess_all_cols <- function() {
     easting_col = runif(5, 0, 10)
   )
   expect_error(guess_all_cols(col_names = colnames(data)))
-  
+
   data <- data.frame(
     time = as.POSIXct(Sys.time() + 1:5),
     northing_col = runif(5, 0, 10)
   )
   expect_error(guess_all_cols(col_names = colnames(data)))
-  
+
   data <- data.frame(
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10)
   )
   expect_error(guess_all_cols(col_names = colnames(data)))
-  
-  #
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col2 = runif(5, 0, 10),
@@ -134,19 +132,26 @@ test_guess_all_cols <- function() {
     id2 = 1:5
   )
   expect_error(as.trackframe(data = data))
-  expect_silent(as.trackframe(data = data, easting_col = "easting_col2")) #FIXME should this be recognized?
+
+  # FIXME should this be recognized?
+  expect_silent(as.trackframe(data = data, easting_col = "easting_col2"))
+
   expect_error(guess_all_cols(col_names = colnames(data)))
-  guesses <- guess_all_cols(col_names = colnames(data),
-                            easting_col_candidates = "easting_col2")
+  guesses <- guess_all_cols(
+    col_names = colnames(data),
+    easting_col_candidates = "easting_col2"
+  )
   expect_equal(guesses$time_col, c("time_col"))
   expect_equal(guesses$easting_col, c("easting_col2"))
   expect_equal(guesses$northing_col, c("northing_col"))
   expect_equal(guesses$id_col, NA)
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-  
-  guesses <- guess_all_cols(col_names = colnames(data),
-                            easting_col_candidates = "easting_col2",
-                            id_col_candidates = "id2")
+
+  guesses <- guess_all_cols(
+    col_names = colnames(data),
+    easting_col_candidates = "easting_col2",
+    id_col_candidates = "id2"
+  )
   expect_equal(guesses$id_col, "id2")
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
 }

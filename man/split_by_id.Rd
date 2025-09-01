@@ -11,7 +11,8 @@ split_by_id(tf)
 Must have an attribute indicating the track ID column.}
 }
 \value{
-an object of class `list_of_trackframes` containing a \code{trackframe} in each list element.
+an object of class `list_of_trackframes` containing a \code{trackframe}
+in each list element.
 }
 \description{
 This function splits a trackframe into a list of trackframes by the id.

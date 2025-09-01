@@ -50,8 +50,10 @@ df <- data.frame(
   northing_col = runif(5, 0, 10),
   id = 1:5
 )
-tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
-                        northing_col = "northing_col", id_col = "id")
+tf <- as.trackframe(
+  df, time_col = "time_col", easting_col = "easting_col",
+  northing_col = "northing_col", id_col = "id"
+)
 head(tf)
 attributes(tf)
 ```
@@ -62,7 +64,7 @@ attributes(tf)
 library(move2)
 albatross_move2 <- mt_read(mt_example()) |>
   sf::st_transform(3857)
-albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2),]
+albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2), ]
 albatross_tf <- as.trackframe(data = albatross_move2)
 class(albatross_tf)
 ```
@@ -71,7 +73,7 @@ Backtransform `trackframe` to `move2` object
 
 ```{r}
 
-recovered_move2 <- tf_as_move2(tf = albatross_tf[!is.na(northing(albatross_tf)),])
+recovered_move2 <- tf_as_move2(tf = albatross_tf[!is.na(northing(albatross_tf)), ])
 str(recovered_move2)
 ```
 
@@ -83,18 +85,20 @@ library(trackframe)
 data("raccoon", package = "sftrack")
 raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
 raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
-coords <- c("longitude","latitude")
-group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+coords <- c("longitude", "latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon + 1)
 time <- "time"
 error <- "fix"
 crs <- 4326
 # create a sftrack object
-my_sftrack <- as_sftrack(data = raccoon,
-                         coords = coords,
-                         group = group,
-                         time = time,
-                         error = error,
-                         crs = crs)
+my_sftrack <- as_sftrack(
+  data = raccoon,
+  coords = coords,
+  group = group,
+  time = time,
+  error = error,
+  crs = crs
+)
 
 sftrack_tf <- as.trackframe(my_sftrack)
 class(sftrack_tf)
@@ -104,7 +108,7 @@ attributes(sftrack_tf)
 Backtransform `trackframe` to `sf` object
 
 ```{r}
-recovered_sf <- tf_backtransform(sftrack_tf[!is.na(northing(sftrack_tf)),])
+recovered_sf <- tf_backtransform(sftrack_tf[!is.na(northing(sftrack_tf)), ])
 recovered_sf <- tf_backtransform(sftrack_tf)
 str(recovered_sf)
 ```

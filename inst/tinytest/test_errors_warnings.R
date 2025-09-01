@@ -14,16 +14,18 @@ test_errors <- function(coerce_to = coerce_to) {
     easting_col = runif(5, 0, 10),
     id = 1:5
   )
-  expect_error(trackframe(data = df, time_col = "time_col", easting_col = "easting_col",
-                          northing_col = "northing_col", id_col = "id", coerce_to = coerce_to))
+  expect_error(trackframe(
+    data = df, time_col = "time_col", easting_col = "easting_col",
+    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to
+  ))
   expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
     id = 1:5
   )
-  
+
   df <- data.frame(
     time_col = rep("a", 5),
     easting_col = runif(5, 0, 10),
@@ -34,7 +36,7 @@ test_errors <- function(coerce_to = coerce_to) {
     trackframe(data = df, coerce_to = coerce_to),
     info = "time_col invalid"
   )
-  
+
   df <- data.frame(
     time_col = factor(1:5),
     easting_col = runif(5, 0, 10),
@@ -43,11 +45,11 @@ test_errors <- function(coerce_to = coerce_to) {
   )
   expect_error(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="time_col invalid"
+    info = "time_col invalid"
   )
-  
+
   expect_error(trackframe(data = df, coerce_to = coerce_to))
-  
+
   df <- data.frame(
     time_col2 = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -56,9 +58,9 @@ test_errors <- function(coerce_to = coerce_to) {
   )
   expect_error(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="`time_col2` not close enough to be guessed"
+    info = "`time_col2` not close enough to be guessed"
   )
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col2 = runif(5, 0, 10),
@@ -67,9 +69,9 @@ test_errors <- function(coerce_to = coerce_to) {
   )
   expect_error(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="`easting_col2` not close enough to be guessed"
+    info = "`easting_col2` not close enough to be guessed"
   )
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -78,9 +80,9 @@ test_errors <- function(coerce_to = coerce_to) {
   )
   expect_error(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="`northing_col2` not close enough to be guessed"
+    info = "`northing_col2` not close enough to be guessed"
   )
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -89,20 +91,20 @@ test_errors <- function(coerce_to = coerce_to) {
   )
   expect_silent(
     tf <- trackframe(data = df, coerce_to = coerce_to),
-    info ="id is optional, this doesn't fail, but id2 col is not recognized as id"
+    info = "id is optional, this doesn't fail, but id2 col is not recognized as id"
   )
   expect_null(id(tf))
 }
 
-test_warnings <- function(coerce_to = 'base') {
+test_warnings <- function(coerce_to = "base") {
   # no crs
   set.seed(2025)
-  tf <- tf_mini
+  tf <- trackframe::tf_mini
   attr(tf, "easting") <- "latitude"
   attr(tf, "northing") <- "longitude"
   df <- tf_as_xyt(tf) #sim_travel_paths(2,3, format = "data.frame")
   expect_warning(as.trackframe(data = df, coerce_to = coerce_to)) # no crs provided
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     time = as.POSIXct(Sys.time() + 1:5),
@@ -111,7 +113,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="duplicated guesses"
+    info = "duplicated guesses"
   )
 
   df <- data.frame(
@@ -122,7 +124,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="multiple conflicting matches for time col"
+    info = "multiple conflicting matches for time col"
   )
 
   df <- data.frame(
@@ -133,7 +135,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="multiple matches for easting_col but they have the same data so no warning"
+    info = "multiple matches for easting_col but they have the same data so no warning"
   )
 
   df <- data.frame(
@@ -144,9 +146,9 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="multiple conflicting matches for easting_col"
+    info = "multiple conflicting matches for easting_col"
   )
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting = runif(5, 0, 10),
@@ -155,7 +157,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="no conflict, northing"
+    info = "no conflict, northing"
   )
 
   df <- data.frame(
@@ -166,9 +168,9 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="yes conflict, northing"
+    info = "yes conflict, northing"
   )
-  
+
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
@@ -178,7 +180,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="no conflict, id"
+    info = "no conflict, id"
   )
 
   df <- data.frame(
@@ -190,7 +192,7 @@ test_warnings <- function(coerce_to = 'base') {
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to),
-    info ="yes conflict, id"
+    info = "yes conflict, id"
   )
 }
 
@@ -200,13 +202,13 @@ test_lonlat <- function(coerce_to) {
     longitude = rep(-100, 5),
     latitude = rep(-100, 5),
     id_1 = "A",
-    id_2 = c(1,1,2,2,2)
+    id_2 = c(1, 1, 2, 2, 2)
   )
   expect_warning(
     as.trackframe(data, crs = 4326, coerce_to = coerce_to),
-    info ="lat warning"
+    info = "lat warning"
   )
-  
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     longitude = rep(200, 5),
@@ -215,9 +217,9 @@ test_lonlat <- function(coerce_to) {
   )
   expect_warning(
     as.trackframe(data, crs = 4326, coerce_to = coerce_to),
-    info ="lon warning"
+    info = "lon warning"
   )
-  
+
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     longitude = rep(200, 5),
@@ -226,7 +228,7 @@ test_lonlat <- function(coerce_to) {
   )
   expect_warning(
     as.trackframe(data, crs = 4326, coerce_to = coerce_to),
-    info ="two warnings"
+    info = "two warnings"
   )
 }
 
@@ -235,7 +237,7 @@ test_lonlat <- function(coerce_to) {
 # coerce_to = "data.table"
 # coerce_to = "tibble"
 # coerce_to = NA
-lapply(c('base', 'data.table', 'tibble', NA), function(coerce_to) {
+lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) coerce_to <- NULL
   test_errors(coerce_to)
   test_warnings(coerce_to)

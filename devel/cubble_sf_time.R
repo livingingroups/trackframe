@@ -144,7 +144,7 @@ str(attributes(weather_tsbl))
 # options(timeout = Inf)
 # install.packages("taxidata", repos = "https://cran.uni-muenster.de/pebesma", type = "source")
 library("trajectories")
-library("taxidata")
+#library("taxidata")
 Beijing <- taxidata
 Beijing <- Beijing[1:2000]
 class(Beijing)

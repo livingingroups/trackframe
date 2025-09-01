@@ -7,7 +7,8 @@
 tf_options(option, value)
 }
 \arguments{
-\item{option}{a character string name of option. "time_col", "easting_col", "northing_col", or "id_col"}
+\item{option}{a character string name of option.
+"time_col", "easting_col", "northing_col", or "id_col"}
 
 \item{value}{vector of characters with possible candidates}
 }

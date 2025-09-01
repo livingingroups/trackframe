@@ -9,10 +9,13 @@ Authors@R: c(
     person("Max Planck Institute of Animal Behavior", role = c("fnd", "cph"))
     )
 Description: Lightweight dataframes of animal movement data for simple multiformat support and performant processing within R.
+URL: https://github.com/livingingroups/travelpaths-devel
+BugReports: https://github.com/livingingroups/travelpaths-devel/issues
 License: GPL (>= 2)
 Imports: checkmate, sf, methods, data.table, tibble, zoo, stringr
 Depends: R (>= 4.1.0)
-Suggests: tinytest, knitr, microbenchmark, markdown, units, cocomo, move2, sftrack
+Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack
+Remotes: livingingroups/cocomo
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 LazyData: true

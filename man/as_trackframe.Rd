@@ -91,23 +91,28 @@ as.trackframe(
 \method{as.trackframe}{trackframe}(data, ...)
 }
 \arguments{
-\item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object containing the tracking data.}
+\item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object
+containing the tracking data.}
 
-\item{time_col}{a character string specifying the column name of the time column. If no column is specified, 
-the `time_col` is tried to be matched by possible names provided in `tf_options("time_col")`. In case of multiple matches, the first match is chosen.}
+\item{time_col}{a character string or vector specifying the column name of the time column.}
 
-\item{easting_col}{a character string specifying the column name of the easting column. If no column is specified, 
-the `easting_col` is tried to be matched by possible names provided in `tf_options("easting_col")`. In case of multiple matches, the first match is chosen.}
+\item{easting_col}{a character string or vector specifying the column name of the easting column.
+If a vector is provided, the first element matching a column name of `data`` is used.}
 
-\item{northing_col}{a character string specifying the column name of the northing column. If no column is specified, 
-the `northing_col` is tried to be matched by possible names provided in `tf_options("northing_col")`. In case of multiple matches, the first match is chosen.}
+\item{northing_col}{a character string or vector specifying the column name of
+the northing column.
+If a vector is provided, the first element matching a column name of `data`` is used.}
 
-\item{id_col}{optional character vector specifying identifier column names. If no column is specified, 
-the `id_col` is tried to be matched by possible names provided in `tf_options("id_col")`. In case of multiple matches, the first match is chosen.}
+\item{id_col}{optional character vector specifying identifier column names.
+If no column is specified,
+If a vector is provided, the first element matching a column name of `data`` is used.}
 
-\item{sort}{logical, if data should be sorted according to id_col and time_col}
+\item{sort}{logical, if data should be sorted by id_col and time_col.}
 
-\item{coerce_to}{the format trackframe is coerced to. `base`, `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.}
+\item{coerce_to}{the type of dataframe that trackframe is coerced to.
+`base`, `data.table` and `tibble` are supported.
+Default is `base` and coerces to a `data.frame` without `data.table` or `tbl` classes.
+If NULL, the returned `trackframe` object takes the same dataframe type as `data` argument}
 
 \item{verbose}{logical, default value is \code{TRUE}}
 
@@ -122,8 +127,11 @@ A \code{trackframe} object with appropriate attributes set.
 }
 \description{
 This function converts an object into a \code{trackframe} object,
-ensuring required columns exist and have valid data types. Coordinates must be provided in easting/northing.
-Coordinates for  \code{data.frame}, \code{sftrack} and \code{move2} objects are transformed to easting/northing if possible.
+checks that required columns exist and have valid data types.
+Coordinates must be provided in easting/northing.
+Coordinates for
+ \code{data.frame}, \code{sftrack} and \code{move2} objects
+ are transformed to easting/northing if possible.
 }
 \examples{
 library(trackframe)
@@ -167,11 +175,11 @@ df <- data.frame(
                id_col = "animal_id")
  # with col guessing
  as.trackframe(df, coerce_to = "base")
- 
+
  tf_df <- as.trackframe(df, coerce_to = "base")
  tf_dt <- as.trackframe(df, coerce_to = "data.table")
  tf_tib <- as.trackframe(df, coerce_to = "tibble")
- 
+
  tf_backtransform(tf_df)
  tf_backtransform(tf_dt)
  tf_backtransform(tf_tib)
