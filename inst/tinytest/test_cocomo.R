@@ -6,7 +6,7 @@ set.seed(2025)
 #cocomo
 old_test_cocomo <- function(coerce_to = 'base') {
   # sim_travel_paths is producing some bad stuff
-  tf <- as.trackframe(sim_travel_paths(3, 3))
+  tf <- as.trackframe(trackframe::tf_mini)
   cocomo <-  tf_as_cocomo(tf) 
   tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids) #, coerce_to = coerce_to)
   cn <- c("time", "easting", "northing", "id")
@@ -136,6 +136,6 @@ test_cocomo <- function(coerce_to = 'base') {
 
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) coerce_to <- NULL
-  #old_test_cocomo()# coerce_to)
-  # test_cocomo()# coerce_to)
+  old_test_cocomo(coerce_to)
+  test_cocomo(coerce_to)
 })
