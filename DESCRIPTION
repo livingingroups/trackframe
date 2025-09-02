@@ -5,7 +5,7 @@ Version: 0.1.2
 Authors@R: c(
     person("Rainer", "Hirk", email = "Rainer.Hirk@quintik.at", role = "aut"),
     person("Florian", "Schwendinger", email = "Florian.Schwendinger@quintik.at", role = "aut"),
-    person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = c("aut", "cre")),
+    person("Katrina", "Brock", email = "kbrock@ab.mpg.de", role = c("aut", "cre"), comment = c(ORCID="0009-0003-4678-9545")),
     person("Max Planck Institute of Animal Behavior", role = c("fnd", "cph"))
     )
 Description: Lightweight dataframes of animal movement data for simple multiformat support and performant processing within R.
