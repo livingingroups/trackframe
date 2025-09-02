@@ -2,7 +2,7 @@
 % Please edit documentation in R/backtransform.R
 \name{tf_backtransform}
 \alias{tf_backtransform}
-\title{Title}
+\title{Backtransform}
 \usage{
 tf_backtransform(tf)
 }
@@ -13,7 +13,7 @@ tf_backtransform(tf)
 an object which has been coerced to `trackframe`
 }
 \description{
-Title
+Backtransform
 }
 \examples{
 library(trackframe)

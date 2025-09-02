@@ -1,0 +1,228 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "trackframe",
+  "description": "Lightweight dataframes of animal movement data for simple multiformat support and performant processing within R.",
+  "name": "trackframe: trackframe",
+  "license": "https://spdx.org/licenses/GPL-2.0",
+  "version": "0.1.0",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.5.0 (2025-04-11)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Rainer",
+      "familyName": "Hirk",
+      "email": "Rainer.Hirk@quintik.at"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Florian",
+      "familyName": "Schwendinger",
+      "email": "Florian.Schwendinger@quintik.at"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Katrina",
+      "familyName": "Brock",
+      "email": "kbrock@ab.mpg.de"
+    }
+  ],
+  "copyrightHolder": [
+    {
+      "@type": "Organization",
+      "name": "Max Planck Institute of Animal Behavior"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "Organization",
+      "name": "Max Planck Institute of Animal Behavior"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Katrina",
+      "familyName": "Brock",
+      "email": "kbrock@ab.mpg.de"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "cocomo",
+      "name": "cocomo",
+      "sameAs": "https://github.com/livingingroups/cocomo"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "tinytest",
+      "name": "tinytest",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tinytest"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "microbenchmark",
+      "name": "microbenchmark",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=microbenchmark"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "markdown",
+      "name": "markdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=markdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "units",
+      "name": "units",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=units"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "travelpaths",
+      "name": "travelpaths"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "move2",
+      "name": "move2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=move2"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "sftrack",
+      "name": "sftrack",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sftrack"
+    }
+  ],
+  "softwareRequirements": {
+    "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "checkmate",
+      "name": "checkmate",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=checkmate"
+    },
+    "2": {
+      "@type": "SoftwareApplication",
+      "identifier": "sf",
+      "name": "sf",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sf"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "tibble",
+      "name": "tibble",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tibble"
+    },
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "zoo",
+      "name": "zoo",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=zoo"
+    },
+    "7": {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 4.1.0"
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "NAKB",
+  "codeRepository": "https://github.com/livingingroups/travelpaths-devel"
+}

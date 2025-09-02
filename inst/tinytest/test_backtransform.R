@@ -8,7 +8,12 @@ library(trackframe)
 
 #move2
 library(move2)
-m2 <- mt_as_move2(df_mini, coords = c("latitude", "longitude"), time_column = "time", track_id_column = "id", crs = 4326)
+m2 <- mt_as_move2(df_mini,
+  coords = c("latitude", "longitude"),
+  time_column = "time",
+  track_id_column = "id",
+  crs = 4326
+)
 tf <- as.trackframe(data = m2)
 expect_equal(tf_backtransform(tf), m2)
 
@@ -23,18 +28,20 @@ expect_equal(sftrack_b, sftrack_a)
 data("raccoon", package = "sftrack")
 raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
 raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
-coords <- c("longitude","latitude")
-group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+coords <- c("longitude", "latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon + 1)
 time <- "time"
 error <- "fix"
 crs <- 4326
 # create a sftrack object
-my_sftrack <- as_sftrack(data = raccoon,
-                         coords = coords,
-                         group = group,
-                         time = time,
-                         error = error,
-                         crs = crs)
+my_sftrack <- as_sftrack(
+  data = raccoon,
+  coords = coords,
+  group = group,
+  time = time,
+  error = error,
+  crs = crs
+)
 
 my_sftrack <- my_sftrack[c(order(my_sftrack$animal_id, my_sftrack$time)), ]
 sftrack_tf <- as.trackframe(my_sftrack)

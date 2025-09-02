@@ -15,13 +15,17 @@ guess_all_cols(
 \arguments{
 \item{col_names}{vector of column names of the input data}
 
-\item{time_col_candidates}{a vector of candidates for time column. Typically provided in tf_options("time_col").}
+\item{time_col_candidates}{a vector of candidates for time column.
+Typically provided in tf_options("time_col").}
 
-\item{easting_col_candidates}{a vector of candidates for easting column. Typically provided in tf_options("easting_col").}
+\item{easting_col_candidates}{a vector of candidates for easting column.
+Typically provided in tf_options("easting_col").}
 
-\item{northing_col_candidates}{a vector of candidates for northing column. Typically provided in tf_options("northing_col").}
+\item{northing_col_candidates}{a vector of candidates for northing column.
+Typically provided in tf_options("northing_col").}
 
-\item{id_col_candidates}{a vector of candidates for id column. Typically provided in tf_options("id_col").}
+\item{id_col_candidates}{a vector of candidates for id column.
+Typically provided in tf_options("id_col").}
 }
 \value{
 a list of guesses
