@@ -6,7 +6,7 @@ if (FALSE) {
 library(checkmate)
 library(trackframe)
 
-#move2
+# move2
 library(move2)
 m2 <- mt_as_move2(df_mini,
   coords = c("latitude", "longitude"),
@@ -17,7 +17,7 @@ m2 <- mt_as_move2(df_mini,
 tf <- as.trackframe(data = m2)
 expect_equal(tf_backtransform(tf), m2)
 
-#sftrack
+# sftrack
 library(sftrack)
 sftrack_a <- as_sftrack(df_mini, coords = c("latitude", "longitude"), crs = 4326)
 tf <- as.trackframe(data = sftrack_a)
@@ -75,7 +75,6 @@ expect_equal(tf_backtransform(
 ), tib)
 
 # coerce_to with sftrack
-#sftrack
 
 # tibble
 sftrack_orig <- as_sftrack(df_mini, coords = c("latitude", "longitude"), crs = 4326)
