@@ -11,3 +11,4 @@ CONTRIBUTING.md
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.pkgcheck$
