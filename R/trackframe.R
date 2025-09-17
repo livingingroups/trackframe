@@ -19,7 +19,6 @@ trackframe <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -61,7 +60,6 @@ trackframe <- function(
 #'  `base`, `data.table` and `tibble` are supported.
 #'  Default is `base` and coerces to a `data.frame` without `data.table` or `tbl` classes.
 #'  If NULL, the returned `trackframe` object takes the same dataframe type as `data` argument
-#' @param verbose logical, default value is \code{TRUE}
 #' @param ... Additional arguments (unused).
 #'
 #' @return A \code{trackframe} object with appropriate attributes set.
@@ -91,7 +89,6 @@ as.trackframe <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 ) {
   UseMethod("as.trackframe")
@@ -136,12 +133,10 @@ as.trackframe.data.frame <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base", #FIXME: or "data.frame"?
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
 ) {
-  assert_logical(verbose, len = 1L)
   cn_input <- colnames(data)
   attributes_input <- attributes(data)
 
@@ -150,18 +145,18 @@ as.trackframe.data.frame <- function(
   if (is.null(coerce_to)) {
   } else if (coerce_to == "base") {
     if (inherits(data, "data.table") || inherits(data, "tbl") || inherits(data, "tbl_df")) {
-      if (verbose) writeLines("- data coerced by as.data.frame(data)")
+      log_debug("- data coerced by as.data.frame(data)")
       data <- as.data.frame(data)
     }
 
   } else if (coerce_to == "data.table") {
     if (!inherits(data, "data.table")) {
-      if (verbose) writeLines("- data coerced by as.data.table(data)")
+      log_debug("- data coerced by as.data.table(data)")
       data <- as.data.table(data)
     }
   } else if (coerce_to == "tibble") {
     if (!inherits(data, "tbl") || !inherits(data, "tbl_df")) {
-      if (verbose) writeLines("- data coerced by as_tibble(data)")
+      log_debug("- data coerced by as_tibble(data)")
       if (!is.null(data$sft_group)) {#data$sft_group <- NULL #FIXME: same transformation as for id
         data$sft_group <- make_unique_id(data$sft_group)
       }
@@ -266,13 +261,11 @@ as.trackframe.data.frame <- function(
   }
 
   attr(data, "utm_epsg") <- utm_epsg
-  if (verbose) {
-    writeLines(sprintf("- %s set as time_col", attr(data, "time")))
-    writeLines(sprintf("- %s set as easting_col", attr(data, "easting")))
-    writeLines(sprintf("- %s set as northing_col", attr(data, "northing")))
-    writeLines(sprintf("- %s set as id_col", attr(data, "id")))
-    writeLines(sprintf("- %i set as utm_epsg", attr(data, "utm_epsg")))
-  }
+  log_debug("- %s set as time_col", attr(data, "time"))
+  log_debug("- %s set as easting_col", attr(data, "easting"))
+  log_debug("- %s set as northing_col", attr(data, "northing"))
+  log_debug("- %s set as id_col", attr(data, "id"))
+  log_debug("- %i set as utm_epsg", attr(data, "utm_epsg"))
 
   if (is.null(attr(data, "transformation_info"))) {
     transformation_info <- list()
@@ -309,7 +302,6 @@ as.trackframe.matrix <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -319,7 +311,7 @@ as.trackframe.matrix <- function(
     easting_col = easting_col, northing_col = northing_col,
     id_col = id_col, crs_input = crs_input,
     utm_epsg = utm_epsg, sort = sort,
-    coerce_to = coerce_to, verbose = verbose, ...)
+    coerce_to = coerce_to, ...)
 }
 
 
@@ -342,7 +334,6 @@ as.trackframe.move2 <- function(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 ) {
   #FIXME: transform to sftrack and call as.trackframe.sftrack
@@ -398,7 +389,7 @@ as.trackframe.move2 <- function(
   as.trackframe(
     data, time_col = time_index, easting_col = easting_col,
     northing_col = northing_col, id_col = id_col, utm_epsg = utm_epsg,
-    sort = sort, coerce_to = coerce_to, verbose = verbose, ...
+    sort = sort, coerce_to = coerce_to, ...
   )
 }
 
@@ -422,7 +413,6 @@ as.trackframe.sftrack <- function(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 ) {
   if (is.null(time_col)) {
@@ -480,7 +470,7 @@ as.trackframe.sftrack <- function(
   as.trackframe(
     data, time_col = time_index, easting_col = easting_col,
     northing_col = northing_col, id_col = id_col, utm_epsg = utm_epsg,
-    sort = sort, coerce_to = coerce_to, verbose = verbose, ...
+    sort = sort, coerce_to = coerce_to, ...
   )
 }
 
@@ -494,7 +484,6 @@ as.trackframe.trackframe <- function(data, ...) {
   # id_col = NULL,
   # sort = TRUE,
   # coerce_to = "base",
-  # verbose = FALSE,
   argg <- list(...)
   if (length(argg) > 0) warning("... arguments are ignored in as.trackframe.trackframe()")
   # FIXME: what do we expect here?
