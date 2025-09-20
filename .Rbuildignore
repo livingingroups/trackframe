@@ -12,3 +12,5 @@ CONTRIBUTING.md
 ^docs$
 ^pkgdown$
 ^\.pkgcheck$
+codemeta.json
+internal-release-checklist.md
