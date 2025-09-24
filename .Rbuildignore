@@ -13,5 +13,6 @@ CONTRIBUTING.md
 ^pkgdown$
 .pkgcheck
 .vscode
+.pkgcheck
 codemeta.json
 internal-release-checklist.md

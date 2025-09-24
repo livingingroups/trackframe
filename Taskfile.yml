@@ -38,7 +38,7 @@ tasks:
   install-deps:
     desc: Install package dependencies
     cmds:
-      - "{{.R_CMD}} -e 'devtools::install_deps(dependencies = TRUE)'"
+      - "{{.R_CMD}} -e 'devtools::install_deps(dependencies = TRUE, upgrade = \"never\")'"
 
   check:
     desc: Run R CMD check on the package
