@@ -11,3 +11,7 @@ CONTRIBUTING.md
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+.pkgcheck
+.vscode
+codemeta.json
+internal-release-checklist.md
