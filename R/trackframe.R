@@ -348,9 +348,9 @@ as.trackframe.move2 <- function(
   }
   transformation_info <- attributes(data)
   transformation_info$crs_code <- sf::st_crs(data)$input
-  transformation_info$crs_code_num <- as.integer(gsub("[^0-9.-]", "",transformation_info$crs_code))
+  transformation_info$crs_code_num <- as.integer(gsub("[^0-9.-]", "", transformation_info$crs_code))
   # transformation to cartesian coordinates
-  if(transformation_info$crs_code_num < 32600 | transformation_info$crs_code_num > 32760){
+  if (transformation_info$crs_code_num < 32600 || transformation_info$crs_code_num > 32760) {
     utm_epsg <- sf_to_utm_epsg(data)
     data <- st_transform(data, utm_epsg)
   } else {
@@ -433,9 +433,9 @@ as.trackframe.sftrack <- function(
   }
   transformation_info <- attributes(data)
   transformation_info$crs_code <- sf::st_crs(data)$input
-  transformation_info$crs_code_num <- as.integer(gsub("[^0-9.-]", "",transformation_info$crs_code))
+  transformation_info$crs_code_num <- as.integer(gsub("[^0-9.-]", "", transformation_info$crs_code))
   # transformation to cartesian coordinates
-  if(transformation_info$crs_code_num < 32600 | transformation_info$crs_code_num > 32760){
+  if (transformation_info$crs_code_num < 32600 || transformation_info$crs_code_num > 32760) {
     utm_epsg <- sf_to_utm_epsg(data)
     data <- st_transform(data, utm_epsg)
   } else {
