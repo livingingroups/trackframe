@@ -26,6 +26,27 @@ tf_options <- local({
   }
 })
 
+log_debug  <- function(
+  ...,
+  namespace = NA_character_,
+  .logcall = sys.call(),
+  .topcall = sys.call(-1),
+  .topenv = parent.frame(),
+  .timestamp = Sys.time()
+) {
+  logger::log_debug(..., "trackframe", .logcall, .topcall, .topenv, .timestamp)
+}
+
+log_info <- function(
+  ...,
+  namespace = NA_character_,
+  .logcall = sys.call(),
+  .topcall = sys.call(-1),
+  .topenv = parent.frame(),
+  .timestamp = Sys.time()
+) {
+  logger::log_info(..., "trackframe", .logcall, .topcall, .topenv, .timestamp)
+}
 
 .onLoad <- function(libname, pkgname) {
   tf_options("time_col", c(
@@ -42,4 +63,5 @@ tf_options <- local({
   tf_options("id_col", c(
     "animal_id", "track_id", "trackid", "trackid_col", "trackid_column", "id")
   )
+  logger::log_formatter(logger::formatter_sprintf, namespace = "trackframe")
 }

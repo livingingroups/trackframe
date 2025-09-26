@@ -18,7 +18,6 @@ trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -32,7 +31,6 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 )
 
@@ -44,7 +42,6 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -58,7 +55,6 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   crs_input = NULL,
   utm_epsg = NULL,
   ...
@@ -72,7 +68,6 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 )
 
@@ -84,7 +79,6 @@ as.trackframe(
   id_col = NULL,
   sort = TRUE,
   coerce_to = "base",
-  verbose = FALSE,
   ...
 )
 
@@ -113,8 +107,6 @@ If a vector is provided, the first element matching a column name of `data`` is 
 `base`, `data.table` and `tibble` are supported.
 Default is `base` and coerces to a `data.frame` without `data.table` or `tbl` classes.
 If NULL, the returned `trackframe` object takes the same dataframe type as `data` argument}
-
-\item{verbose}{logical, default value is \code{TRUE}}
 
 \item{crs_input}{crs code for input of coordinates}
 
