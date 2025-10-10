@@ -127,6 +127,10 @@ tf_as_sf <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
 tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   assert_class(tf, "trackframe")
   transformation_info <- attr(tf, "transformation_info")
+  if (is.null(tf_crs)) {
+    tf_crs <- utm_epsg(tf)
+    if (is.null(tf_crs)) stop("no utm_epsg provided in trackframe. Please provide argument tf_crs")
+  }
   # We want to create an sftrack object without importing it.
   as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
   if (inherits(as_sftrack, "try-error")) {
@@ -135,18 +139,20 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   # # FIXME: Should we drop NA?
   # tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)),]
 
-  sf_df <- tf_as_sf(tf = tf, tf_crs = tf_crs, crs_new = crs_new)
   sft_group <- as.list(do.call(
     rbind.data.frame,
     backtransform_id(id(tf), group_names = transformation_info[["group_names"]])
   ))
 
   new_sftrack <- as_sftrack(
-    sf_df,
+    as.data.frame(tf),
+    coords = c(attr(tf, "easting"), attr(tf, "northing")),
     group = sft_group,
     time = attr(tf, "time"),
-    overwrite_names = TRUE,
-    error = transformation_info$error_col
+    crs = tf_crs,
+    group_name = transformation_info$group_col,
+    error = transformation_info$error_col,
+    overwrite_names = TRUE
   )
 
   if (length(new_sftrack$sft_group[[1]]) == 1) {
@@ -156,6 +162,16 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   } else {
     new_sftrack[[attr(tf, "id")]] <- NULL
   }
+
+  if (!is.null(crs_new)) {
+    new_sftrack <- sf::st_transform(new_sftrack, crs_new)
+  }
+
+  for (colname in c(attr(tf, "easting"), attr(tf, "northing"))) {
+    if (!colname %in% transformation_info$names) new_sftrack[[colname]] <- NULL
+  }
+  class(new_sftrack) <- setdiff(class(new_sftrack), "trackframe")
+
   return(new_sftrack)
 }
 
