@@ -11,21 +11,14 @@ editor_options:
 ---
 
 
-## Why `trackframe`?
-TODO
 
-- The R package `trackframe` is designed to be complementary to more full featured geospatial libraries such as `sf`.
-- `trackframe` offers a flexible object for tracking analysis with an underlying `data.frame`, `data.table`, or `tibble` object where the information about coordinates, time, id , etc. are stored as columns.
-- multiple input objects can be easily coerced to a `trackframe`
-- information like `time`, `id`, `easting` and `northing` are stored as attributes an can be easily accessed by `time()`, `id()`, `easting()`, `northing`.
-- coordinates are always stored in UTM easting/northings
-- a `trackframe` can be easily be backtransformed to the original data by `tf_backtransform()`
-- easy transformation allow to use methods from multiple packages which require different input formats. Several methods are implemented in package `travelpaths`.
-- can easily deal with multiple individuals
-- performance
-- allow the user to perform vectorized R operations on directly on the coordinates
+# Performance
+
+**trackframe** performs well when compared against the speed of other common approaches to animal track manipulation and analysis....
+
 
 ## Accessor
+
 ```{r}
 library(trackframe)
 data("path_trackframe")
@@ -52,6 +45,7 @@ head(id(tf))
 ## Transformations
 
 ## sftrack
+
 ```{r}
 data("path_sftrack")
 class(path_sftrack)
@@ -62,6 +56,7 @@ all.equal(path_sftrack, sftrack2)
 ```
 
 ## move2
+
 ```{r}
 data("path_move2")
 class(path_move2)
@@ -72,6 +67,7 @@ all.equal(path_move2, move2_2)
 ```
 
 # Specify underlying data class with coerce_to
+
 ```{r}
 library(tibble)
 library(data.table)
@@ -105,8 +101,8 @@ all.equal(tf_df, tf_tib2, check.attributes = FALSE)
 
 ```
 
-
 ## Performance
+
 TODO
 
 ### Example of Trackframe vs move2 performance
@@ -115,7 +111,6 @@ TODO
 library(trackframe)
 library(sf)
 ```
-
 
 Distance function for trackframe.
 
@@ -159,6 +154,7 @@ all.equal(brock_mt_distance(albatross_move2), mt_distance(albatross_move2), chec
 ```
 
 Check that the distance functions output the same result:
+
 ```{r}
 all.equal(mt_distance(albatross_move2), tf_distance(albatross_tf), check.attributes = FALSE)
 ```
@@ -176,6 +172,3 @@ m <- microbenchmark(
 m
 plot(m)
 ```
-
-
-

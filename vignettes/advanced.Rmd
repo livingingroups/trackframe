@@ -1,0 +1,94 @@
+---
+author: "TODO"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+title: More stuff that should go somewhere
+vignette: >
+  %\VignetteIndexEntry{Examples of Trackframe}
+  %\VignetteEngine{knitr::knitr}
+editor_options:
+  chunk_output_type: console
+---
+
+# Detailed Considerations
+
+This vignette shows some of the more detailed considerations, and under-the-hood processes, that are important to understand when using **trackframe**. It also shows how to change some of the built-in defaults.
+
+## Load Package
+
+```{r}
+library(trackframe)
+```
+
+## When creating a `trackframe`
+
+### Column guessing
+
+When creating a `trackframe` object from another data type, if the argument `colnames` is not specified, the columns `time_col`, `easting_col`, `northing_col` and `id_col` are guessed automatically. If there are multiple matches, then the first match is chosen. The guesses for each of the four columns are as follows...
+
+
+```{r}
+tf_options("time_col")
+tf_options("easting_col")
+tf_options("northing_col")
+tf_options("id_col")
+```
+
+If needed, these guesses can be modified by supplying calues in `tf_options` can be modified by:
+
+```{r}
+tf_options("time_col", c(tf_options("time_col"), "tindex2"))
+tf_options("time_col")
+```
+
+
+
+### Coordinate transformation
+
+FIXME: Update once we have updated tra
+
+All the S3 methods of `as.trackframe()` automatically transform coordinates to UTM eastings/northings. If not stored in the input object, information `crs_input` needs to be provided (if `crs_input = NULL` , then `4326` is used as the default crs). An output UTM EPSG can be specified, using the `utm_epsg` argument. If `utm_epsg` is not specified, then it is calculated from the latitude/longitude coordinates by default.
+
+Here is an example using a move2 object:
+
+```{r}
+library(move2)
+
+# Load a move2 object using the move2 package
+albatross_move2 <- mt_read(mt_example())
+head(albatross_move2)
+# Original coordinate system is WGS 84 (i.e., crs = 4326)
+
+# Convert to trackframe
+albatross_tf <- as.trackframe(data = albatross_move2)
+
+# Extract the input crs EPSG code from the tf object
+attributes(albatross_tf)$transformation_info$crs_code
+
+# Extract the projected UTM EPSG code from the tf object
+attributes(albatross_tf)$utm_epsg
+
+```
+
+Here is an example using a data.frame object:
+
+```{r}
+
+# Create some example data
+
+df <- data.frame(
+  time_col = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  easting_col = runif(25, 0, 10),
+  northing_col = runif(25, 0, 10),
+  id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe
+tf <- as.trackframe(df)
+
+# Extract the input crs EPSG code from the tf object
+attributes(tf)$transformation_info$crs_code
+
+# Extract the projected UTM EPSG code from the tf object
+attributes(tf)$utm_epsg
+```

@@ -1,0 +1,147 @@
+---
+author: "TODO"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+title: Why trackframe
+vignette: >
+  %\VignetteIndexEntry{Why trackframe}
+  %\VignetteEngine{knitr::knitr}
+editor_options:
+  chunk_output_type: console
+---
+
+# Why trackframe?
+
+The **trackframe** package is designed to be complementary to more full featured geospatial libraries such as **sf**. This vignette demonstrates the main advantages of using **trackframe** rather than non-trackframe approaches to writing functions for manipulating and analyzing animal tracks.
+
+## Main advantages
+
+* The `trackframe` object is a flexible object for storing animal location data; coordinates, times, and animal ids, are store as columns. The underlying data representation is a `data.frame`, `data.table`, or `tibble`.
+* Multiple input object structures (e.g., `data.frames`, `tibbles`, `move2` objects, `sftrack` objects) can be easily coerced into `trackframe` objects.
+* A `trackframe` object can be easily backgransformed to its original data structure using `tf_backtransform()`.
+* Key information, namely the x (easting) and y (northing) coordinates of each point, as well as the timestamp (date & time) and unique animal id, is stored as attributes and can be easily accessed by `easting()`, `northing()`, `time()`, and `id()`, regardless of the columns' actual names.
+* Coordinates are always stored as projected UTM easting/northing (for georeferenced data) or as x/y values on a Cartesian plane (for non georeferenced data, e.g., simulation data).
+* Coordinates are stored in simple numeric columns, allowing the user to perform vectorized R operations directly on the coordinates themselves
+* Fast performance.
+* Integrates seamlessly with the **travelpaths** package.
+
+
+## Example
+
+Below is example function that takes x, y, t data columns from a single animal track as inputs, and outputs the average travel speed of the animal. We want to write code that applies this function to multiple tracks (for e.g., separate tracks for different individual animals) provided in a single object.
+
+```{r}
+average_speed_over_time <- function(x, y, t)  {
+  weighted.mean(sqrt(diff(x)^2 + diff(y)^2) / as.numeric(diff(t)),
+    as.numeric(diff(t)), na.rm = TRUE)
+}
+```
+
+### Without trackframe
+
+Here is an example of how this would be done without **trackframe**.
+
+```{r}
+average_speed_group_no_tf <- function(data) {
+  # Both move2 and sftrack are sf based.
+  if ("sf" %in% class(data)) {
+    # sf objects have a consistent way of providing coordinates
+    # we need to project them into euclidean space
+
+    # coords <- sf::st_coordinates(sf::st_transform(data, 3857))
+    utm_epsg <- trackframe:::sf_to_utm_epsg(data)
+    coords <- sf::st_coordinates(sf::st_transform(data, utm_epsg))
+    coords[is.nan(coords)] <- NA
+    # sftrack and move2 have different ways of encoding
+    # the track_id/animal_id so we need to account for both
+    if ("sftrack" %in% class(data)) {
+      track_id <- sapply(data[[attr(data, "group_col")]], \(x) x[["id"]])
+      timestamp <- data[[attr(data, "time_col")]]
+    } else if ("move2" %in% class(data)) {
+      track_id <- move2::mt_track_id(data)
+      timestamp <- move2::mt_time(data)
+    }
+    # This part is for the vanilla dataframe
+  } else {
+    coords <- as.matrix(data[, c("x", "y")])
+    track_id <- data$animal_id
+    timestamp <- data$t
+  }
+  #  At this point, we have standardized coords, timestamp, and track_id objects
+
+  # Now we can finally use sapply to run our `average_speed_over_time`
+  # function for each track.
+  utid <- sort(unique(track_id))
+  names(utid) <- utid
+  sapply(
+    utid,
+    function(focal_track_id) {
+      idx <- which(track_id == focal_track_id)
+      average_speed_over_time(coords[idx, 1], coords[idx, 2], timestamp[idx])
+    }
+  )
+}
+```
+
+### With trackframe
+
+Using the `as.trackframe` function, we can pull in data of many other types, and **trackframe** will automatically detect which columns are `easting` (i.e., x or longitude), `northing` (i.e., y or latitude), `time` (i.e., the date-time stamp), and `id` (i.e., the identifier of each individual animal). We can then extract those columns as vectors using the `easting()`, `northing()`, `time()`, and `id()` functions respectively. No custom logic dictated by the input format, nor juggling of original column names, is needed to accomplish this.
+
+```{r}
+library(trackframe)
+
+average_speed_group_tf <- function(data, ...) {
+
+  # Automatically convert whatever input type is provided.
+  tf <- as.trackframe(data, ...)
+  # id_col='animal_id' is only used for the vanilla dataframe conversion.
+  # track_id/animal_id is automatically detected from move2 and sftrack objects
+
+  # Run the function over for each animal
+  sapply(split(tf, id(tf)), function(tf) {
+    # Use trackframe functions to specify the necessary columns
+    average_speed_over_time(easting(tf), northing(tf), time(tf))
+  })
+}
+```
+
+### Check output
+
+In the following code, we check that our newly created function (using **trackframe**) works with the three most common formats of animal track data (vanilla dataframe, sftrack, and move2), and that it returns the same results as the messy cross-compatible function that does not use **trackframe**.
+
+```{r}
+# Vanilla Dataframe
+set.seed(2025)
+vanilla_df <- data.frame(
+  x = rnorm(10),
+  y = rnorm(10),
+  t = 1:10,
+  animal_id = c(rep("a", 5), rep("b", 5))
+)
+stopifnot(all.equal(
+  average_speed_group_tf(vanilla_df),
+  average_speed_group_no_tf(vanilla_df)
+))
+
+# sftrack
+sftrack_raccoon <- sftrack::as_sftrack(
+  data = sftrack::raccoon,
+  coords = c("longitude", "latitude"),
+  time = "timestamp",
+  group = "animal_id",
+  crs = 4326)
+
+stopifnot(all.equal(
+  average_speed_group_tf(sftrack_raccoon), #<----this one is coming out weird and I'm not sure why
+  average_speed_group_no_tf(sftrack_raccoon)
+))
+
+# move2
+move2_albatross <- move2::mt_read(move2::mt_example()) |>
+  sf::st_transform(3857)
+
+stopifnot(all.equal(
+  average_speed_group_tf(move2_albatross, id_col = "individual-local-identifier"),
+  average_speed_group_no_tf(move2_albatross)
+))
+```
