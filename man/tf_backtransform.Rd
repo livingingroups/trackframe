@@ -30,7 +30,7 @@ tfb
 sftrack_mini
 
 # for data.frame
-tf <- as.trackframe(data = df_mini)
+tf <- as.trackframe(data = df_mini, crs = NA)
 tfb <- tf_backtransform(tf)
 tfb
 df_mini

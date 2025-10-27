@@ -2,9 +2,9 @@
 author: "TODO"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-title: More stuff that should go somewhere
+title: Detailed Considerations
 vignette: >
-  %\VignetteIndexEntry{Examples of Trackframe}
+  %\VignetteIndexEntry{Detailed Considerations}
   %\VignetteEngine{knitr::knitr}
 editor_options:
   chunk_output_type: console
@@ -51,7 +51,7 @@ All the S3 methods of `as.trackframe()` automatically transform coordinates to U
 
 Here is an example using a move2 object:
 
-```{r}
+```{r, eval = FALSE}
 library(move2)
 
 # Load a move2 object using the move2 package
@@ -72,7 +72,7 @@ attributes(albatross_tf)$utm_epsg
 
 Here is an example using a data.frame object:
 
-```{r}
+```{r eval = FALSE}
 
 # Create some example data
 

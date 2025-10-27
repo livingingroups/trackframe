@@ -20,7 +20,7 @@
 #' sftrack_mini
 #'
 #' # for data.frame
-#' tf <- as.trackframe(data = df_mini)
+#' tf <- as.trackframe(data = df_mini, crs = NA)
 #' tfb <- tf_backtransform(tf)
 #' tfb
 #' df_mini
@@ -30,29 +30,34 @@ tf_backtransform <- function(tf) {
   if (is.null(transformation_info)) {
     stop("no transformation info stored to trackframe")
   }
-  class_old <- transformation_info$class[1]
-  if (class_old == "move2") {
-    tf_as_move2(tf, tf_crs = attr(tf, "utm_epsg"), crs_new = transformation_info$crs_code)
-  } else if ("sftrack" %in% transformation_info$class) {
-    tf_as_sftrack(tf, tf_crs = attr(tf, "utm_epsg"), crs_new = transformation_info$crs_code)
-  } else if (class_old %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
+  class_old <- transformation_info$class
+  if ("move2" %in% class_old) {
+    tf_as_move2(tf)
+  } else if ("sftrack" %in% class_old) {
+    tf_as_sftrack(tf)
+  } else if (class_old[1] %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
     if (attr(tf, "easting") != transformation_info$coord_names[1]) {
       tf[, attr(tf, "easting")] <- NULL
     }
     if (attr(tf, "northing") != transformation_info$coord_names[2]) {
       tf[, attr(tf, "northing")] <- NULL
     }
-    if (class_old ==  "data.frame") {
+    if (class_old[1] ==  "data.frame") {
       data <- as.data.frame(tf)
-    } else if (class_old ==  "data.table") {
+    } else if (class_old[1] ==  "data.table") {
       data <- as.data.table(tf)
-    } else if (class_old %in% c("tbl_df", "tbl")) {
+    } else if (class_old[1] %in% c("tbl_df", "tbl")) {
       data <- as_tibble(tf)
     }
     attributes(data) <- transformation_info$attributes
     data
   } else if (class_old ==  "matrix") {
     stop("backtransformation not supported for class matrix. Use ?coredata instead.")
+  } else {
+    stop(sprintf(
+      "backtransformation not supported for class(es) %s. Use ?coredata instead.",
+      class_old
+    ))
   }
 }
 
@@ -95,42 +100,31 @@ coredata.trackframe <- tf_as_xyt
 #'
 #' @param tf A `trackframe` object containing the tracking data. Must have
 #'           attributes specifying the easting and northing columns (`easting` and `northing`).
-#' @param tf_crs The coordinate reference system (CRS) used in the `trackframe`.
-#' @param crs_new The coordinate reference system (CRS) to be used for the sf object.
 #' @param ... Additional arguments to be passed to `st_as_sf`.
 #' @return An sf object representing the spatial data contained in the `trackframe`.
 #'
 #' @examples
-#' sf_object <- tf_as_sf(tf_mini, tf_crs = 32610, crs_new = 4326)
+#' sf_object <- tf_as_sf(tf_mini)
 #' print(sf_object)
 #' @export
 #' @rdname tf_as
-tf_as_sf <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
+tf_as_sf <- function(tf, ...) {
   # NOTE: tf_as_sf to be consistent with the sf package.
   assert_class(tf, "trackframe")
-  if (is.null(tf_crs)) {
-    tf_crs <- utm_epsg(tf)
-    if (is.null(tf_crs)) stop("no utm_epsg provided in trackframe. Please provide argument tf_crs")
-  }
+  tf_crs <- crs(tf)
   coords <- c(attr(tf, "easting"), attr(tf, "northing"))
   new_sf <- sf::st_as_sf(x = tf, crs = tf_crs, coords = coords, na.fail = FALSE, ...)
-  if (!is.null(crs_new)) {
-    new_sf <- sf::st_transform(new_sf, crs_new)
-  }
   class(new_sf) <- setdiff(class(new_sf), "trackframe")
-  return(new_sf)
+  new_sf
 }
 
 
 #' @export
 #' @rdname tf_as
-tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
+tf_as_sftrack <- function(tf) {
   assert_class(tf, "trackframe")
   transformation_info <- attr(tf, "transformation_info")
-  if (is.null(tf_crs)) {
-    tf_crs <- utm_epsg(tf)
-    if (is.null(tf_crs)) stop("no utm_epsg provided in trackframe. Please provide argument tf_crs")
-  }
+
   # We want to create an sftrack object without importing it.
   as_sftrack <- try(getNamespace("sftrack")$as_sftrack, silent = TRUE)
   if (inherits(as_sftrack, "try-error")) {
@@ -149,7 +143,7 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
     coords = c(attr(tf, "easting"), attr(tf, "northing")),
     group = sft_group,
     time = attr(tf, "time"),
-    crs = tf_crs,
+    crs = crs(tf),
     group_name = transformation_info$group_col,
     error = transformation_info$error_col,
     overwrite_names = TRUE
@@ -163,10 +157,6 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
     new_sftrack[[attr(tf, "id")]] <- NULL
   }
 
-  if (!is.null(crs_new)) {
-    new_sftrack <- sf::st_transform(new_sftrack, crs_new)
-  }
-
   for (colname in c(attr(tf, "easting"), attr(tf, "northing"))) {
     if (!colname %in% transformation_info$names) new_sftrack[[colname]] <- NULL
   }
@@ -178,8 +168,7 @@ tf_as_sftrack <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
 
 #' @export
 #' @rdname tf_as
-tf_as_move2 <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
-  # tf_crs <- 32610
+tf_as_move2 <- function(tf) {
   assert_class(tf, "trackframe")
   mt_as_move2 <- try(getNamespace("move2")$mt_as_move2, silent = TRUE)
   if (inherits(mt_as_move2, "try-error")) {
@@ -187,10 +176,11 @@ tf_as_move2 <- function(tf, tf_crs = NULL, crs_new = NULL, ...) {
   }
   # TODO: Should we drop NA?
   tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)), ]
-  sf_df <- tf_as_sf(tf = tf, tf_crs = tf_crs, crs_new = crs_new)
+  sf_df <- tf_as_sf(tf = tf)
   # FIXME: We want to create an move2 object without importing it.
   mt_as_move2(
     sf_df,
     time_column = attr(tf, "time"),
-    track_id_column = attr(tf, "id"))
+    track_id_column = attr(tf, "id")
+  )
 }

@@ -17,7 +17,7 @@
 #'  The other columns contained are flexible,
 #'  and can include information on age, sex, dominance, etc
 #' @param na_omit logical indicator if NAs should be omitted
-#' @param utm_epsg crs value for utm zone
+#' @param crs coordinate reference system
 #' @param sort logical, if data should be sorted according to id_col and time_col
 #' @param coerce_to the format trackframe is coerced to. `base`,
 #' `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.
@@ -30,7 +30,7 @@
 #' cocomo <- tf_as_cocomo(tf_mini)
 #' cocomo_as_tf(cocomo$xs, cocomo$ys, cocomo$t, cocomo$ids)
 cocomo_as_tf <- function(
-  xs, ys, t, ids, utm_epsg = NULL, na_omit = TRUE,
+  xs, ys, t, ids, crs = NA, na_omit = TRUE,
   sort = TRUE, coerce_to = "base", verbose = FALSE
 ) {
   assert_matrix(xs)
@@ -62,7 +62,7 @@ cocomo_as_tf <- function(
   }
   as.trackframe(
     data, time_col = "time", easting_col = "easting",
-    northing_col = "northing", id_col = "id", utm_epsg = utm_epsg,
+    northing_col = "northing", id_col = "id", crs = crs,
     sort = sort, coerce_to = coerce_to, verbose = verbose
   )
 }

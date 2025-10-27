@@ -53,12 +53,10 @@ log_info <- function(
     "t", "timestamp", "time", "time_index", "time_col", "time_column", "tindex")
   )
   tf_options("easting_col", c(
-    "easting", "east", "utm.easting", "easting_col", "easting_column",
-    "lon", "long", "longitude", "x"
+    "easting", "east", "utm.easting", "easting_col", "easting_column", "x"
   ))
   tf_options("northing_col", c(
-    "northing", "north", "utm.northing", "northing_col", "northing_column",
-    "lat", "latitude", "y"
+    "northing", "north", "utm.northing", "northing_col", "northing_column", "y"
   ))
   tf_options("id_col", c(
     "animal_id", "track_id", "trackid", "trackid_col", "trackid_column", "id")

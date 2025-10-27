@@ -1,4 +1,5 @@
 library(travelpaths)
+devtools::load_all('pkgs/travelpaths')
 set.seed(2025)
 path_matrix <- sim_travel_path(size = 1000, format = "matrix")
 save(path_matrix, file = "~/travelpaths-devel/pkgs/trackframe/data/path_matrix.rda",

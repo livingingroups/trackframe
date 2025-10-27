@@ -9,7 +9,7 @@ cocomo_as_tf(
   ys,
   t,
   ids,
-  utm_epsg = NULL,
+  crs = NA,
   na_omit = TRUE,
   sort = TRUE,
   coerce_to = "base",
@@ -37,7 +37,7 @@ individual identifier for each animal (e.g. for meerkats:
 The other columns contained are flexible,
 and can include information on age, sex, dominance, etc}
 
-\item{utm_epsg}{crs value for utm zone}
+\item{crs}{coordinate reference system}
 
 \item{na_omit}{logical indicator if NAs should be omitted}
 

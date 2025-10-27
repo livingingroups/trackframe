@@ -17,7 +17,7 @@ The **trackframe** package is designed to be complementary to more full featured
 ## Main advantages
 
 * The `trackframe` object is a flexible object for storing animal location data; coordinates, times, and animal ids, are store as columns. The underlying data representation is a `data.frame`, `data.table`, or `tibble`.
-* Multiple input object structures (e.g., `data.frames`, `tibbles`, `move2` objects, `sftrack` objects) can be easily coerced into `trackframe` objects.
+* Multiple input object structures (e.g., `data.frame`s, `tibble`s, `move2` objects, `sftrack` objects) can be easily coerced into `trackframe` objects.
 * A `trackframe` object can be easily backgransformed to its original data structure using `tf_backtransform()`.
 * Key information, namely the x (easting) and y (northing) coordinates of each point, as well as the timestamp (date & time) and unique animal id, is stored as attributes and can be easily accessed by `easting()`, `northing()`, `time()`, and `id()`, regardless of the columns' actual names.
 * Coordinates are always stored as projected UTM easting/northing (for georeferenced data) or as x/y values on a Cartesian plane (for non georeferenced data, e.g., simulation data).
@@ -49,8 +49,8 @@ average_speed_group_no_tf <- function(data) {
     # we need to project them into euclidean space
 
     # coords <- sf::st_coordinates(sf::st_transform(data, 3857))
-    utm_epsg <- trackframe:::sf_to_utm_epsg(data)
-    coords <- sf::st_coordinates(sf::st_transform(data, utm_epsg))
+    stopifnot(!sf::st_is_longlat(sf::st_crs(data)))
+    coords <- sf::st_coordinates(data)
     coords[is.nan(coords)] <- NA
     # sftrack and move2 have different ways of encoding
     # the track_id/animal_id so we need to account for both
@@ -119,7 +119,7 @@ vanilla_df <- data.frame(
   animal_id = c(rep("a", 5), rep("b", 5))
 )
 stopifnot(all.equal(
-  average_speed_group_tf(vanilla_df),
+  average_speed_group_tf(vanilla_df, crs = NA),
   average_speed_group_no_tf(vanilla_df)
 ))
 
@@ -129,19 +129,30 @@ sftrack_raccoon <- sftrack::as_sftrack(
   coords = c("longitude", "latitude"),
   time = "timestamp",
   group = "animal_id",
-  crs = 4326)
+  crs = 4326
+)
+
+sftrack_raccoon_proj <- sf::st_transform(
+  sftrack_raccoon,
+  trackframe::suggest_utm_crs(sftrack_raccoon)
+)
 
 stopifnot(all.equal(
-  average_speed_group_tf(sftrack_raccoon), #<----this one is coming out weird and I'm not sure why
-  average_speed_group_no_tf(sftrack_raccoon)
+  average_speed_group_tf(sftrack_raccoon_proj),
+  # ^ this one is coming out weird and I'm not sure why
+  average_speed_group_no_tf(sftrack_raccoon_proj)
 ))
 
 # move2
-move2_albatross <- move2::mt_read(move2::mt_example()) |>
-  sf::st_transform(3857)
+move2_albatross <- move2::mt_read(move2::mt_example())
+
+move2_albatross_proj <- sf::st_transform(
+  move2_albatross,
+  trackframe::suggest_utm_crs(move2_albatross)
+)
 
 stopifnot(all.equal(
-  average_speed_group_tf(move2_albatross, id_col = "individual-local-identifier"),
-  average_speed_group_no_tf(move2_albatross)
+  average_speed_group_tf(move2_albatross_proj),
+  average_speed_group_no_tf(move2_albatross_proj)
 ))
 ```

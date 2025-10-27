@@ -11,7 +11,7 @@ df <- data.frame(
   t = 1:10,
   animal_id = c(rep("a", 5), rep("b", 5))
 )
-tf_df <- as.trackframe(df, coerce_to = "base")
+tf_df <- as.trackframe(df, coerce_to = "base", crs = NA)
 
 
 #data.table
@@ -23,7 +23,7 @@ dt <- data.table(
   t = 1:10,
   animal_id = c(rep("a", 5), rep("b", 5))
 )
-tf_dt <- as.trackframe(dt, coerce_to = "data.table")
+tf_dt <- as.trackframe(dt, coerce_to = "data.table", crs = NA)
 
 
 #tibble
@@ -35,7 +35,7 @@ tib <- tibble(
   t = 1:10,
   animal_id = c(rep("a", 5), rep("b", 5))
 )
-tf_tib <- as.trackframe(tib, coerce_to = "tibble")
+tf_tib <- as.trackframe(tib, coerce_to = "tibble", crs = NA)
 
 expect_inherits(tf_df, "trackframe")
 expect_inherits(tf_df, "data.frame")
@@ -88,7 +88,8 @@ for (row_idx in seq_len(nrow(scenarios))) {
   to <- unlist(scenarios[row_idx, "to"])
   tf <- as.trackframe(
     input_data[[from]],
-    coerce_to = if (is.na(to)) NULL else to
+    coerce_to = if (is.na(to)) NULL else to,
+    crs = NA
   )
 
   expect_inherits(tf, "data.frame")

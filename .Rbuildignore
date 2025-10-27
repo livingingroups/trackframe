@@ -16,3 +16,4 @@ CONTRIBUTING.md
 .pkgcheck
 codemeta.json
 internal-release-checklist.md
+^doc$

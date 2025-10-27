@@ -6,19 +6,15 @@
 \alias{tf_as_move2}
 \title{Convert a Track Frame to Simple Features (sf) Object}
 \usage{
-tf_as_sf(tf, tf_crs = NULL, crs_new = NULL, ...)
+tf_as_sf(tf, ...)
 
-tf_as_sftrack(tf, tf_crs = NULL, crs_new = NULL, ...)
+tf_as_sftrack(tf)
 
-tf_as_move2(tf, tf_crs = NULL, crs_new = NULL, ...)
+tf_as_move2(tf)
 }
 \arguments{
 \item{tf}{A `trackframe` object containing the tracking data. Must have
 attributes specifying the easting and northing columns (`easting` and `northing`).}
-
-\item{tf_crs}{The coordinate reference system (CRS) used in the `trackframe`.}
-
-\item{crs_new}{The coordinate reference system (CRS) to be used for the sf object.}
 
 \item{...}{Additional arguments to be passed to `st_as_sf`.}
 }
@@ -31,6 +27,6 @@ enabling spatial analysis and visualization. The easting and northing columns
 are used as coordinates for the sf object.
 }
 \examples{
-sf_object <- tf_as_sf(tf_mini, tf_crs = 32610, crs_new = 4326)
+sf_object <- tf_as_sf(tf_mini)
 print(sf_object)
 }

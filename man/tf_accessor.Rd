@@ -5,6 +5,8 @@
 \alias{id}
 \alias{easting}
 \alias{northing}
+\alias{crs}
+\alias{crs_type}
 \title{Extract Index from a Track Frame}
 \usage{
 \method{time}{trackframe}(x, ...)
@@ -14,6 +16,10 @@ id(tf)
 easting(tf)
 
 northing(tf)
+
+crs(tf)
+
+crs_type(tf)
 }
 \arguments{
 \item{x}{A \code{trackframe} object containing the tracking data.
@@ -21,8 +27,7 @@ Must have an attribute indicating the time column (`time`).}
 
 \item{...}{...}
 
-\item{tf}{A \code{trackframe} object containing the tracking data.
-Must have an attribute indicating the northing column (`northing`).}
+\item{tf}{A \code{trackframe} object containing the tracking data.}
 }
 \value{
 A vector of time index values extracted from the \code{trackframe}.
@@ -32,6 +37,15 @@ A vector of track ID values extracted from the \code{trackframe}.
 A vector of easting values extracted from the \code{trackframe}.
 
 A vector of northing values extracted from the \code{trackframe}.
+
+A representation of crs extracted from the \code{trackframe}.
+ If crs_type is geographic or projected, then crs is a valid input to sf::st_crs.
+ If crs_type is nongeoreferenced, then crs can be any non-null value including NA.
+
+One of:
+ \code{geographic} (longlat)
+ \code{projected} e.g. utm
+ \code{nongeoreferenced} designed for use in captive or simulated scenarios
 }
 \description{
 This function retrieves the time index values from a \code{trackframe} object.
@@ -49,6 +63,10 @@ specifying the column containing easting values.
 This function retrieves the northing values from a \code{trackframe} object.
 The \code{trackframe} has a data frame-like structure with an attribute
 specifying the column containing northing values.
+
+This function retrieves the crs value from a \code{trackframe} object.
+
+This function retrieves the crs value from a \code{trackframe} object.
 }
 \examples{
 time(tf_mini)
@@ -58,5 +76,9 @@ id(tf_mini)
 easting(tf_mini)
 
 northing(tf_mini)
+
+crs(tf_mini)
+
+crs_type(tf_mini)
 
 }

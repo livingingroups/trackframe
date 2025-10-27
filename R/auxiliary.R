@@ -22,8 +22,12 @@ id_col <- function(tf) {
   attr(tf, "id")
 }
 
-utm_epsg <- function(tf) {
-  attr(tf, "utm_epsg")
+crs <- function(tf) {
+  attr(tf, "crs")
+}
+
+crs_type <- function(tf) {
+  attr(tf, "crs_type")
 }
 
 
@@ -137,6 +141,45 @@ easting <- function(tf) {
 northing <- function(tf) {
   assert_class(tf, "trackframe")
   tf[[attr(tf, "northing")]]
+}
+
+#' Extract Coordinate Reference System from a Track Frame
+#'
+#' This function retrieves the crs value from a \code{trackframe} object.
+#'
+#' @param tf A \code{trackframe} object containing the tracking data.
+#' @return A representation of crs extracted from the \code{trackframe}.
+#'  If crs_type is geographic or projected, then crs is a valid input to sf::st_crs.
+#'  If crs_type is nongeoreferenced, then crs can be any non-null value including NA.
+#'
+#' @examples
+#' crs(tf_mini)
+#'
+#' @export
+#' @rdname tf_accessor
+crs <- function(tf) {
+  assert_class(tf, "trackframe")
+  attr(tf, "crs")
+}
+
+#' Extract Coordinate Reference System Type from a Track Frame
+#'
+#' This function retrieves the crs value from a \code{trackframe} object.
+#'
+#' @param tf A \code{trackframe} object containing the tracking data.
+#' @return One of:
+#'  \code{geographic} (longlat)
+#'  \code{projected} e.g. utm
+#'  \code{nongeoreferenced} designed for use in captive or simulated scenarios
+#'
+#' @examples
+#' crs_type(tf_mini)
+#'
+#' @export
+#' @rdname tf_accessor
+crs_type <- function(tf) {
+  assert_class(tf, "trackframe")
+  attr(tf, "crs_type")
 }
 
 

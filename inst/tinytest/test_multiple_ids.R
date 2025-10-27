@@ -2,6 +2,8 @@ library(tinytest)
 library(sftrack)
 library(trackframe)
 
+projected_crs <- "EPSG:32632"
+
 
 id_list <- make_c_grouping(
   list(
@@ -31,7 +33,7 @@ test_multiple_ids <- function(coerce_to) {
     coords = df[, c("easting_col", "northing_col")],
     group = list(id = df$id_1, month = df$id_2),
     time = df$time_col,
-    crs = 32610
+    crs = projected_crs
   )
 
   my_sftrack_ids <- trackframe:::make_unique_id(my_sftrack[[attr(my_sftrack, "group_col")]])
@@ -71,7 +73,7 @@ test_multiple_ids <- function(coerce_to) {
     coords = df[, c("easting_col", "northing_col")],
     group = list(id = df$id_1, month = df$id_2, sex = df$id_3),
     time = df$time_col,
-    crs = 32610
+    crs = projected_crs
   )
 
   expect_equal(

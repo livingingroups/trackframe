@@ -14,7 +14,7 @@ BugReports: https://github.com/livingingroups/travelpaths-devel/issues
 License: GPL (>= 2)
 Imports: checkmate, sf, methods, data.table, tibble, zoo, stringr, logger
 Depends: R (>= 4.1.0)
-Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack
+Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack, withr
 Remotes: livingingroups/cocomo
 Encoding: UTF-8
 RoxygenNote: 7.3.3

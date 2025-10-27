@@ -15,22 +15,25 @@ test_as_trackframe <- function(coerce_to = "base") {
   )
   tf <- trackframe(
     data = df, time_col = "time_col", easting_col = "easting_col",
-    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to
+    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to,
+    crs = NA
   )
-  tf2 <- trackframe(data = df, coerce_to = coerce_to)
+  tf2 <- trackframe(data = df, coerce_to = coerce_to, crs = NA)
   expect_equal(tf, tf2)
   tf3 <- as.trackframe(
     data = df, time_col = "time_col", easting_col = "easting_col",
-    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to
+    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to,
+    crs = NA
   )
   expect_equal(tf, tf3)
-  tf4 <- as.trackframe(data = df, coerce_to = coerce_to)
+  tf4 <- as.trackframe(data = df, coerce_to = coerce_to, crs = NA)
   expect_equal(tf, tf4)
   expect_inherits(tf, "trackframe")
   expect_equal(dim(df), dim(tf))
   expect_error(trackframe(
     df, time_col = "time_col2", easting_col = "easting_col",
-    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to
+    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to,
+    crs = NA
   ))
   expect_equal(easting(tf), df$easting_col)
   expect_equal(northing(tf), df$northing_col)
@@ -51,7 +54,7 @@ test_as_trackframe <- function(coerce_to = "base") {
   ))
   expect_inherits(matrix_input, "matrix")
   tf <- trackframe(matrix_input, time_col = "time_col", easting_col = "easting_col",
-    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to)
+    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to, crs = NA)
   expect_inherits(tf, "trackframe")
   expect_equal(dim(df), dim(tf))
   expect_equal(easting(tf), matrix_input[, "easting_col"])
@@ -74,9 +77,7 @@ test_as_trackframe <- function(coerce_to = "base") {
   expect_inherits(albatross_tf, "trackframe")
   expect_equal(NROW(albatross_move2), NROW(albatross_tf))
 
-  epsg_code <- trackframe:::sf_to_utm_epsg(albatross_move2)
-  albatross_move2_utm <- sf::st_transform(albatross_move2, epsg_code)
-  x_y <- sf::st_coordinates(albatross_move2_utm[[attr(albatross_move2_utm, "sf_column")]])
+  x_y <- sf::st_coordinates(albatross_move2[[attr(albatross_move2, "sf_column")]])
   expect_equal(easting(albatross_tf), x_y[, 1])
   expect_equal(northing(albatross_tf), x_y[, 2])
   # expect_equal(units(easting(albatross_tf))$numerator, "m") #FIXME: if decide to use units
@@ -86,7 +87,7 @@ test_as_trackframe <- function(coerce_to = "base") {
   expect_equal(id(albatross_tf), albatross_move2[[attr(albatross_move2, "track_id_column")]])
   expect_equal(time(albatross_tf), albatross_move2[[attr(albatross_move2, "time_column")]])
   #backtransformation
-  albatross_move2_bt <- tf_as_move2(albatross_tf[!is.na(northing(albatross_tf)), ], crs_new = 3857)
+  albatross_move2_bt <- tf_as_move2(albatross_tf[!is.na(northing(albatross_tf)), ])
   expect_equal(dim(albatross_move2), dim(albatross_move2_bt))
   expect_equal(sf::st_coordinates(albatross_move2), sf::st_coordinates(albatross_move2_bt))
   expect_equal(
@@ -109,39 +110,50 @@ test_as_trackframe <- function(coerce_to = "base") {
   error <- "fix"
   crs <- 4326
   # create a sftrack object
-  my_sftrack <- as_sftrack(
+  raccoon_sftrack <- as_sftrack(
     data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs
-  )
+  ) |> sf::st_transform(suggest_utm_crs(raccoon$latitude, raccoon$longitude))
 
-  sftrack_tf <- as.trackframe(my_sftrack, coerce_to = coerce_to)
-  expect_inherits(sftrack_tf, "trackframe")
-  expect_equal(NROW(my_sftrack), NROW(sftrack_tf))
+  raccoon_tf <- as.trackframe(raccoon_sftrack, coerce_to = coerce_to)
+  expect_inherits(raccoon_tf, "trackframe")
+  expect_equal(NROW(raccoon_sftrack), NROW(raccoon_tf))
 
-  epsg_code <- trackframe:::sf_to_utm_epsg(my_sftrack)
-  my_sftrack_utm <- sf::st_transform(my_sftrack, epsg_code)
-  my_sftrack_utm <- my_sftrack_utm[order(my_sftrack_utm$animal_id, my_sftrack_utm$timestamp), ]
-  x_y <- sf::st_coordinates(my_sftrack_utm[[attr(my_sftrack_utm, "sf_column")]])
+  raccoon_sftrack <- raccoon_sftrack[order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp), ]
+  x_y <- sf::st_coordinates(raccoon_sftrack[[attr(raccoon_sftrack, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  expect_equal(easting(sftrack_tf), x_y[, 1])
-  expect_equal(northing(sftrack_tf), x_y[, 2])
+  expect_equal(easting(raccoon_tf), x_y[, 1])
+  expect_equal(northing(raccoon_tf), x_y[, 2])
   # expect_equal(units(easting(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
   # expect_equal(units::drop_units(easting(sftrack_tf)), x_y[,1]) #FIXME: if decide to use units
   # expect_equal(units(northing(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
   # expect_equal(units::drop_units(northing(sftrack_tf)), x_y[,2]) #FIXME: if decide to use units
-  my_sftrack <- my_sftrack[order(my_sftrack$animal_id, my_sftrack$timestamp), ]
+  raccoon_sftrack <- raccoon_sftrack[order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp), ]
   # expect_equal(id(sftrack_tf), sapply(my_sftrack[[attr(my_sftrack, "group_col")]], deparse))
   expect_equal(
-    id(sftrack_tf), trackframe:::make_unique_id(my_sftrack[[attr(my_sftrack, "group_col")]]),
+    id(raccoon_tf),
+    trackframe:::make_unique_id(raccoon_sftrack[[attr(raccoon_sftrack, "group_col")]]),
     check.attributes = FALSE
   )
-  expect_equal(time(sftrack_tf), my_sftrack[[attr(my_sftrack, "time_col")]])
+  expect_equal(time(raccoon_tf), raccoon_sftrack[[attr(raccoon_sftrack, "time_col")]])
   #backtransformation
-  my_sftrack_bt <- tf_as_sftrack(sftrack_tf[!is.na(northing(sftrack_tf)), ], crs_new = 4326)
-  my_sftrack_no_na <- my_sftrack[!is.na(my_sftrack$longitude), ]
-  expect_equal(NROW(my_sftrack_no_na), NROW(my_sftrack_bt))
-  expect_equal(sf::st_coordinates(my_sftrack_no_na), sf::st_coordinates(my_sftrack_bt))
-  expect_equal(attr(my_sftrack_no_na, "group_col"), attr(my_sftrack_bt, "group_col"))
-  expect_equal(attr(my_sftrack_no_na, "time_col"), attr(my_sftrack_bt, "time_col"))
+  sftrack_bt <- tf_as_sftrack(raccoon_tf[!is.na(northing(raccoon_tf)), ])
+  sftrack_no_na <- raccoon_sftrack[!is.na(raccoon_sftrack$longitude), ]
+  expect_equal(NROW(sftrack_no_na), NROW(sftrack_bt))
+  expect_equal(sf::st_coordinates(sftrack_no_na), sf::st_coordinates(sftrack_bt))
+  expect_equal(attr(sftrack_no_na, "group_col"), attr(sftrack_bt, "group_col"))
+  expect_equal(attr(sftrack_no_na, "time_col"), attr(sftrack_bt, "time_col"))
+
+  raccoon_vanilla_sf <- sf::st_as_sf(
+    raccoon[!is.na(raccoon[[coords[1]]]) & !is.na(raccoon[[coords[2]]]), ],
+    coords = coords,
+    crs = crs
+  )
+  raccoon_vanilla_sf <- sf::st_transform(
+    raccoon_vanilla_sf,
+    suggest_utm_crs(raccoon_vanilla_sf)
+  )
+  # FIXME: this case should work
+  expect_error(as.trackframe(raccoon_vanilla_sf))
 }
 
 
@@ -157,7 +169,11 @@ test_sort <- function(coerce_to) {
 }
 
 
-
+test_incompatible_sf <- function() {
+  expect_error(
+    as.trackframe(sf::st_read(system.file("shape/nc.shp", package = "sf")))
+  )
+}
 
 
 # Run all tests

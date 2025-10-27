@@ -18,8 +18,7 @@ trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs_input = NULL,
-  utm_epsg = NULL,
+  crs = NULL,
   ...
 )
 
@@ -42,8 +41,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs_input = NULL,
-  utm_epsg = NULL,
+  crs = NULL,
   ...
 )
 
@@ -55,8 +53,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs_input = NULL,
-  utm_epsg = NULL,
+  crs = NULL,
   ...
 )
 
@@ -108,9 +105,7 @@ If a vector is provided, the first element matching a column name of `data`` is 
 Default is `base` and coerces to a `data.frame` without `data.table` or `tbl` classes.
 If NULL, the returned `trackframe` object takes the same dataframe type as `data` argument}
 
-\item{crs_input}{crs code for input of coordinates}
-
-\item{utm_epsg}{crs value for utm zone of the \code{trackframe} output}
+\item{crs}{crs code for input of coordinates}
 
 \item{...}{Additional arguments (unused).}
 }
@@ -134,7 +129,8 @@ df <- data.frame(
   id = 1:5
 )
 tf <- trackframe(df, time_col = "time_col", easting_col = "easting_col",
-                        northing_col = "northing_col", id_col = "id")
+  northing_col = "northing_col", id_col = "id", crs = NA)
+
 attributes(tf)
 df <- data.frame(
   time_col = as.POSIXct(Sys.time() + 1:5),
@@ -143,7 +139,7 @@ df <- data.frame(
   id = 1:5
 )
 tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
-                        northing_col = "northing_col", id_col = "id")
+                        northing_col = "northing_col", id_col = "id", crs = NA)
 class(tf)
 attributes(tf)
 easting(tf)
@@ -151,26 +147,29 @@ northing(tf)
 time(tf)
 id(tf)
 
-as.trackframe(df_mini, crs_input = 4326)
+as.trackframe(df_mini, crs = NA)
 
 set.seed(2025)
 df <- data.frame(
   x = rnorm(10),
-    y = rnorm(10),
-      t = 1:10,
-        animal_id = c(rep('a', 5), rep('b', 5))
-        )
- as.trackframe(df,
-               time_col = "t",
-               easting_col = "x",
-               northing_col = "y",
-               id_col = "animal_id")
+  y = rnorm(10),
+  t = 1:10,
+  animal_id = c(rep('a', 5), rep('b', 5))
+)
+ as.trackframe(
+  df,
+  time_col = "t",
+  easting_col = "x",
+  northing_col = "y",
+  id_col = "animal_id",
+  crs = NA
+)
  # with col guessing
- as.trackframe(df, coerce_to = "base")
+ as.trackframe(df, coerce_to = "base", crs = NA)
 
- tf_df <- as.trackframe(df, coerce_to = "base")
- tf_dt <- as.trackframe(df, coerce_to = "data.table")
- tf_tib <- as.trackframe(df, coerce_to = "tibble")
+ tf_df <- as.trackframe(df, coerce_to = "base", crs = NA)
+ tf_dt <- as.trackframe(df, coerce_to = "data.table", crs = NA)
+ tf_tib <- as.trackframe(df, coerce_to = "tibble", crs = NA)
 
  tf_backtransform(tf_df)
  tf_backtransform(tf_dt)

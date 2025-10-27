@@ -5,7 +5,7 @@
 \alias{path_trackframe}
 \title{Simulated Travel Path}
 \format{
-An object of class \code{trackframe} (inherits from \code{data.frame}) with 1000 rows and 6 columns.
+An object of class \code{trackframe} (inherits from \code{data.frame}) with 1000 rows and 4 columns.
 }
 \usage{
 path_trackframe

@@ -14,7 +14,7 @@ test_guess_all_cols <- function() {
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10)
   )
-  expect_silent(trackframe(data = data))
+  expect_silent(trackframe(data = data, crs = NA))
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_equal(guesses$time_col, c("time", "time_col"))
   expect_equal(guesses$easting_col, c("easting_col"))
@@ -39,7 +39,7 @@ test_guess_all_cols <- function() {
     easting = 1001:1005,
     northing_col = runif(5, 0, 10)
   )
-  expect_silent(trackframe(data = data))
+  expect_silent(trackframe(data = data, crs = NA))
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_equal(guesses$time_col, c("time_col"))
   expect_equal(guesses$easting_col, c("easting", "easting_col"))
@@ -64,7 +64,7 @@ test_guess_all_cols <- function() {
     northing_col = 1001:1005,
     northing = 1001:1005
   )
-  expect_silent(trackframe(data = data))
+  expect_silent(trackframe(data = data, crs = NA))
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_equal(guesses$time_col, c("time_col"))
   expect_equal(guesses$easting_col, c("easting"))
@@ -88,7 +88,7 @@ test_guess_all_cols <- function() {
     id = 1:5,
     track_id = 1:5
   )
-  expect_silent(trackframe(data = data))
+  expect_silent(trackframe(data = data, crs = NA))
   guesses <- guess_all_cols(col_names = colnames(data))
   expect_equal(guesses$time_col, c("time_col"))
   expect_equal(guesses$easting_col, c("easting_col"))
@@ -131,10 +131,10 @@ test_guess_all_cols <- function() {
     northing_col = runif(5, 0, 10),
     id2 = 1:5
   )
-  expect_error(as.trackframe(data = data))
+  expect_error(as.trackframe(data = data, crs = NA))
 
   # FIXME should this be recognized?
-  expect_silent(as.trackframe(data = data, easting_col = "easting_col2"))
+  expect_silent(as.trackframe(data = data, easting_col = "easting_col2", crs = NA))
 
   expect_error(guess_all_cols(col_names = colnames(data)))
   guesses <- guess_all_cols(

@@ -2,10 +2,10 @@
 author: "Brock"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-title: Quickstart Vignette
+title: Quickstart Guide
 vignette: >
   %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Basic Functionality}
+  %\VignetteIndexEntry{Quickstart Guide}
 ---
 
 # Quickstart Guide
@@ -36,11 +36,11 @@ df <- data.frame(
 # Convert to trackframe with explicit column naming
 tf <- as.trackframe(
   df, time_col = "time_col", easting_col = "easting_col",
-  northing_col = "northing_col", id_col = "id"
+  northing_col = "northing_col", id_col = "id", crs = "EPSG:32632"
 )
 
 # Convert to trackframe without naming columns, relying instead on column guessing
-tf <- as.trackframe(df)
+tf <- as.trackframe(df, crs = "EPSG:32632")
 
 head(tf)
 attributes(tf)
@@ -52,9 +52,10 @@ attributes(tf)
 library(move2)
 
 # Load a move2 object using the move2 package
-albatross_move2 <- mt_read(mt_example()) |>
-  sf::st_transform(3857)
-albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2), ]
+albatross_move2 <- mt_read(mt_example())
+albatross_move2 <- albatross_move2[
+  !sf::st_is_empty(albatross_move2),
+] |> sf::st_transform(suggest_utm_crs(albatross_move2))
 
 # Convert to trackframe
 albatross_tf <- as.trackframe(data = albatross_move2)
@@ -83,7 +84,7 @@ my_sftrack <- as_sftrack(
   time = time,
   error = error,
   crs = crs
-)
+) |> sf::st_transform(suggest_utm_crs(raccoon$latitude, raccoon$longitude))
 
 # Convert to trackframe
 sftrack_tf <- as.trackframe(my_sftrack)
@@ -207,7 +208,7 @@ tf <- tf[order(id(tf), time(tf)), ]
 As a trackframe object, we now have direct access to the coordinates, and so we can apply the `step_length()` function:
 
 ```{r}
-#now, extract all of the step lengths
+# now, extract all of the step lengths
 step_length_vec <- step_length(easting(tf), northing(tf))
 # (Length of vector is one less than the number of rows in the tf, because the
 # first location doesn't have a step length)
