@@ -50,16 +50,17 @@ log_info <- function(
 
 .onLoad <- function(libname, pkgname) {
   tf_options("time_col", c(
-    "t", "timestamp", "time", "time_index", "time_col", "time_column", "tindex")
-  )
+    "t", "timestamp", "time", "time_index", "time_col", "time_column", "tindex", "datetime"
+  ))
   tf_options("easting_col", c(
-    "easting", "east", "utm.easting", "easting_col", "easting_column", "x"
+    "easting", "east", "utm.easting", "easting_col", "easting_column", "x", "utm.x"
   ))
   tf_options("northing_col", c(
-    "northing", "north", "utm.northing", "northing_col", "northing_column", "y"
+    "northing", "north", "utm.northing", "northing_col", "northing_column", "y", "utm.y"
   ))
   tf_options("id_col", c(
-    "animal_id", "track_id", "trackid", "trackid_col", "trackid_column", "id")
-  )
+    "animal_id", "track_id", "trackid", "trackid_col", "trackid_column", "id",
+    "individual_local_identifier"
+  ))
   logger::log_formatter(logger::formatter_sprintf, namespace = "trackframe")
 }
