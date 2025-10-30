@@ -7,6 +7,7 @@
 #' @importFrom tibble as_tibble
 #' @importFrom zoo coredata
 #' @importFrom stringr str_split
+#' @importFrom digest digest
 
 NULL
 

@@ -30,11 +30,14 @@ tf_backtransform <- function(tf) {
   if (is.null(transformation_info)) {
     stop("no transformation info stored to trackframe")
   }
+  if (!is.null(transformation_info[["id_hash_orig"]])) {
+    id_hash_tf <- id_hash(tf)
+  }
   class_old <- transformation_info$class
   if ("move2" %in% class_old) {
-    tf_as_move2(tf)
+    tf_bt <- tf_as_move2(tf)
   } else if ("sftrack" %in% class_old) {
-    tf_as_sftrack(tf)
+    tf_bt <- tf_as_sftrack(tf)
   } else if (class_old[1] %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
     if (attr(tf, "easting") != transformation_info$coord_names[1]) {
       tf[, attr(tf, "easting")] <- NULL
@@ -43,14 +46,14 @@ tf_backtransform <- function(tf) {
       tf[, attr(tf, "northing")] <- NULL
     }
     if (class_old[1] ==  "data.frame") {
-      data <- as.data.frame(tf)
+      tf_bt <- as.data.frame(tf)
     } else if (class_old[1] ==  "data.table") {
-      data <- as.data.table(tf)
+      tf_bt <- as.data.table(tf)
     } else if (class_old[1] %in% c("tbl_df", "tbl")) {
-      data <- as_tibble(tf)
+      tf_bt <- as_tibble(tf)
     }
-    attributes(data) <- transformation_info$attributes
-    data
+    transformation_info$attributes$row.names <- attr(tf_bt, "row.names")
+    attributes(tf_bt) <- transformation_info$attributes
   } else if (class_old ==  "matrix") {
     stop("backtransformation not supported for class matrix. Use ?coredata instead.")
   } else {
@@ -59,6 +62,21 @@ tf_backtransform <- function(tf) {
       class_old
     ))
   }
+  if (!is.null(transformation_info[["id_hash_orig"]])) {
+    # check if tf was manipulated after first transformation
+    if (length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])) {
+      if (all(id_hash_tf == transformation_info[["id_hash_ordered"]])) {
+        id_hash_tf <- id_hash(tf) # needed as as_sftrack might change the order
+        idx <- match(transformation_info[["id_hash_orig"]], id_hash_tf)
+        tf_bt <- tf_bt[idx, ]
+      } else {
+        warning("Rows of trackframe were reordered in between. Reordering is not possible.")
+      }
+    } else {
+      warning("Rows of trackframe were deleted in between. Reordering is not possible.")
+    }
+  }
+  return(tf_bt)
 }
 
 

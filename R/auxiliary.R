@@ -366,3 +366,20 @@ backtransform_id <- function(unique_id, group_names) {
   attr(id_list, "sort_index") <- as.factor(sapply(id_list, paste, collapse = "_"))
   id_list
 }
+
+if (getRversion() <= "4.4.0") {
+  `%||%` <- function(x, y) {
+    if (is.null(x)) y else x
+  }
+}
+
+id_hash <- function(data,
+  time_col = attr(data, "time"),
+  id_col = attr(data, "id")) {
+  if (is.null(id_col)) {
+    cols <- time_col
+  } else {
+    cols <- c(time_col, id_col)
+  }
+  apply(data[, cols, with = FALSE], 1, digest)
+}

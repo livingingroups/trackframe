@@ -247,11 +247,18 @@ as.trackframe.data.frame <- function(
   # sort data by id and time
   if (isTRUE(sort)) {
     if (is.null(attr(data, "id"))) {
-      data <- data[order(time(data)), ]
+      idx <- order(time(data))
     } else {
-      data <- data[order(id(data), time(data)), ]
+      idx <- order(id(data), time(data))
     }
+    id_hash_unsort <- id_hash(data)
+    data <- data[idx, ]
+    transformation_info <- attr(data, "transformation_info")
+    transformation_info$id_hash_orig <- id_hash_unsort
+    transformation_info$id_hash_ordered <- id_hash(data)
+    attr(data, "transformation_info") <- transformation_info
   }
+
   # # set units
   # units(data[[attr(data, "easting")]]) <- "m"
   # units(data[[attr(data, "northing")]]) <- "m"
