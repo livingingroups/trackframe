@@ -43,36 +43,49 @@ tf_options("time_col")
 
 
 
-### Coordinate transformation
+### Compatible Coordinate Systems
 
-FIXME: Update once we have updated tra
+`trackframe` only supports cartesian/eucliean coordinate systems ie coordinate systems
+with the same units on both axises. For georeferenced coordinates, this means projected coordinates.
+For sf objects (move2 and sftrack), `trackframe` identifies the coordinate system using `sf::st_crs`.
+For non-sf objects, the user must specify the coordinate system with the `crs` arg in `as.trackframe`.
+`NA` can be used to indicate non-georeferenced coordinate systems which still must be cartesian.
+(Although we have no way to enforce this.)
 
-All the S3 methods of `as.trackframe()` automatically transform coordinates to UTM eastings/northings. If not stored in the input object, information `crs_input` needs to be provided (if `crs_input = NULL` , then `4326` is used as the default crs). An output UTM EPSG can be specified, using the `utm_epsg` argument. If `utm_epsg` is not specified, then it is calculated from the latitude/longitude coordinates by default.
+For this reason, `trackframe` may not be appropriate for studying processes that cover large
+enough portions of the earth that distortion from projected coordinates causes meaningful inaccuracy.
 
-Here is an example using a move2 object:
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 library(move2)
 
 # Load a move2 object using the move2 package
 albatross_move2 <- mt_read(mt_example())
-head(albatross_move2)
-# Original coordinate system is WGS 84 (i.e., crs = 4326)
 
+# Original coordinate system is WGS 84 (i.e., crs = 4326)
+sf::st_crs(albatross_move2)
+```
+
+```{r, eval = TRUE, error = TRUE}
 # Convert to trackframe
 albatross_tf <- as.trackframe(data = albatross_move2)
+```
+
+Fails as this is lat lon.
+
+```{r, eval=TRUE}
+albatross_tf <- albatross_move2 |>
+  sf::st_transform(32738) |>
+  as.trackframe()
 
 # Extract the input crs EPSG code from the tf object
 attributes(albatross_tf)$transformation_info$crs_code
-
-# Extract the projected UTM EPSG code from the tf object
-attributes(albatross_tf)$utm_epsg
 
 ```
 
 Here is an example using a data.frame object:
 
-```{r eval = FALSE}
+```{r eval = TRUE}
 
 # Create some example data
 
@@ -83,12 +96,12 @@ df <- data.frame(
   id = rep(1:5, each = 5)
 )
 
-# Convert to trackframe
-tf <- as.trackframe(df)
+# Convert to trackframe with unspecified crs
+tf <- as.trackframe(df, crs = NA)
+
+# Trackframe with specified crs
+tf <- as.trackframe(df, crs = "EPSG:32632")
 
 # Extract the input crs EPSG code from the tf object
 attributes(tf)$transformation_info$crs_code
-
-# Extract the projected UTM EPSG code from the tf object
-attributes(tf)$utm_epsg
 ```

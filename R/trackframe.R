@@ -58,9 +58,9 @@ trackframe <- function(
 #' This function converts an object into a \code{trackframe} object,
 #' checks that required columns exist and have valid data types.
 #' Coordinates must be provided in easting/northing.
-#' Coordinates for
-#'  \code{data.frame}, \code{sftrack} and \code{move2} objects
-#'  are transformed to easting/northing if possible.
+#' Coordinate system must be cartesian: either a projected coordinate system
+#' for georeferenced data or another cartesian coordinate system for non-
+#' georeferenced data (e.g. for captive or simulated data).
 #'
 #' @param data
 #'  a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object
@@ -109,13 +109,15 @@ as.trackframe <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
+  crs = NULL,
   ...
 ) {
   UseMethod("as.trackframe")
 }
 
 
-#' @param crs crs code for input of coordinates
+#' @param crs coordinate reference system code for of coordinates. Required for non-sf input.
+#'  Use `NA` to denote non georeferenced cartesian coordinates.
 #' @examples
 #' as.trackframe(df_mini, crs = NA)
 #'
@@ -126,6 +128,8 @@ as.trackframe <- function(
 #'   t = 1:10,
 #'   animal_id = c(rep('a', 5), rep('b', 5))
 #' )
+#'
+#'  # crs = NA indicates non georeferenced coordinates
 #'  as.trackframe(
 #'   df,
 #'   time_col = "t",
@@ -144,6 +148,10 @@ as.trackframe <- function(
 #'  tf_backtransform(tf_df)
 #'  tf_backtransform(tf_dt)
 #'  tf_backtransform(tf_tib)
+#'
+#   # Projected CRS, acceptable
+#'  tf_df <- as.trackframe(df, coerce_to = "base", crs = "EPSG:32632")
+#'  # Non cartesian/lat long crs e.g. "EPSG:4326" is not acceptable.
 #'
 #' @export
 #' @rdname as_trackframe
@@ -293,6 +301,8 @@ as.trackframe.matrix <- function(
 #' # example for move2 objects
 #' library(move2)
 #' library(trackframe)
+#'
+#' # column mapping and crs are implicit so do not need to be specified in args.
 #' tf <- as.trackframe(data = move2_mini)
 #'
 #' move2_dat2 <- tf_backtransform(tf)
