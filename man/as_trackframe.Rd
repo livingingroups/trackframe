@@ -117,9 +117,9 @@ A \code{trackframe} object with appropriate attributes set.
 \description{
 This function converts an object into a \code{trackframe} object,
 checks that required columns exist and have valid data types.
-Coordinates must be provided in easting/northing. Coordinates
-coordinate system must be cartesian: either a projected coordinate system
-for georeference data or another cartesian coordinate system for non-
+Coordinates must be provided in easting/northing.
+Coordinate system must be cartesian: either a projected coordinate system
+for georeferenced data or another cartesian coordinate system for non-
 georeferenced data (e.g. for captive or simulated data).
 }
 \examples{
