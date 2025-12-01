@@ -1,6 +1,6 @@
 ---
 title: Example of Trackframe vs move2 performance
-author: "TODO"
+author: "Trackframe team"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

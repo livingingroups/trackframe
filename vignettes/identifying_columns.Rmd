@@ -1,0 +1,230 @@
+---
+author: "Alison Ashbury"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+title: Identifying the Key Columns
+vignette: >
+  %\VignetteIndexEntry{Identifying the key columns}
+  %\VignetteEngine{knitr::knitr}
+editor_options:
+  chunk_output_type: console
+---
+
+
+# Identifying the Key Columns
+
+When creating a `trackframe` object from another animal track data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options.
+
+Note that the (`time_col`) and coordinate (`northing_col` & `easting_col`) columns are compulsory; `as.trackframe` will fail if it is unable to identify these 3 columns. The animal id (`id_col`) column, however, is optional; `as.trackframe` will neither error nor warn if it can't identify an animal id column.
+
+## Load Package
+
+```{r}
+library(trackframe)
+```
+
+## 1) Identifying key columns from inherited information
+
+If the input object given to `as.trackframe` is a...
+
+-   a `data.frame`, `data.table`, or `tibble`: no information about the (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`) columns is inherited, all are identified from other sources.
+-   an `sf` object (but not `sftrack` or `move2`): the `easting_col` and `northing_col` are identified from the input object's `geometry` column. The `time_col` and `id_col` are identified from other sources.
+-   an `sftrack` or `move2` object: all 4 of the key columns are identifiable from the input object's attributes.
+
+## 2) Identifying key columns from arguments
+
+To explicitly tell `as.trackframe` which are the key columns, you can specify the column names that correspond to the `time_col`, `easting_col`, `northing_col` and `id_col` using the respective arguments in the `as.trackframe` function. If you want, you can also give each argument a vector of possible column names; this is useful if you have an idea of what column names your input object will have, but there is more than one possibility for any of the key columns.
+
+```{r}
+# Create example data
+df <- data.frame(
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe with one column name per key column given
+# in arguments
+tf_arg <- as.trackframe(
+  df,
+  time_col = "timestamp",
+  easting_col = "x",
+  northing_col = "y",
+  id_col = "id",
+  crs = NA
+)
+
+head(tf_arg)
+attributes(tf_arg)[1:6]
+
+# Convert to trackframe with multiple possible column names per key
+# column given in arguments
+tf_arg_2 <- as.trackframe(
+  df,
+  time_col = c("date_time", "time", "timestamp"),
+  easting_col = c("X", "x"),
+  northing_col = c("Y", "y"),
+  id_col = c("id", "ID"),
+  crs = NA
+)
+
+head(tf_arg_2)
+attributes(tf_arg_2)[1:6]
+```
+
+This approach works best if you are applying `as.trackframe` directly in a script to some known input data, or you are building a package where you know for certain the column names in your  user's input data object. If you cannot be sure of the column names in the input data, then it is better to use pre-set global options to identify the key columns.
+
+## 3) Identifying key columns from pre-set global options
+
+To allow the most flexibility, you can have `as.trackframe` identify the key columns by matching the column names to vectors of pre-set global options. This is useful if you are running `as.trackframe` in many places throughout your code and you want to be able to easily change the vector of possible column names for all occurrences at once. Also, for R package developers, using `tf_options` instead of passing arguments directly to `as.trackframe` allows your user to override the choices that you've set, if needed.
+
+By default, the vectors of possible column names are as follows:
+
+```{r}
+tf_options("time_col")
+tf_options("easting_col")
+tf_options("northing_col")
+tf_options("id_col")
+```
+
+You can modify the `tf_options` globally, as follows:
+
+```{r}
+# e.g., add "tindex2" to the default options for the time_col
+tf_options("time_col", c(tf_options("time_col"), "tindex2"))
+tf_options("time_col")
+
+# e.g., replace the default options for the time_col with
+# just "date_time", "time" and "timestamp"
+tf_options("time_col", c("date_time", "time", "timestamp"))
+tf_options("time_col")
+
+# e.g., replace the default options for the time_col with
+# just "date_time"
+tf_options("time_col", "date_time")
+tf_options("time_col")
+
+# reset to default
+tf_options("time_col", c("t", "timestamp", "time", "time_index",
+    "time_col", "time_column", "tindex"))
+```
+
+In the following examples, pre-set global options (alone, and then in combination with options given in arguments), are used by `as.trackframe` to identify the key columns. 
+```{r}
+# Create example data
+df <- data.frame(
+  tindex = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  y_north = runif(25, 0, 10),
+  id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe, identifying key columns using pre-set global options
+tf_go <- as.trackframe(
+  df,
+  crs = NA
+)
+
+head(tf_go)
+attributes(tf_go)[1:6]
+
+# Convert to trackframe, using a mix of pre-set global options and column names
+# supplied to arguments
+tf_go_2 <- as.trackframe(
+  df,
+  time_col = "tindex",
+  northing_col = "y_north",
+  crs = NA
+)
+
+head(tf_go_2)
+attributes(tf_go_2)[1:6]
+```
+
+## Dealing with multiple key column name matches
+
+When `as.trackframe` is identifying the key columns from vectors with multiple options (whether they've been specified in the arguments of the function, or via pre-set global options), and it encounters multiple matches for a given column (e.g., the input data as a column named "y" *and* a column named "northing"), then the first match in the options vector is chosen. If the data in the matched columns is identical, then the first match is silently chosen, whereas if the data are not identical, then a warning is given. 
+
+
+```{r}
+# Create example data
+df <- data.frame(
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  northing = runif(25, 0, 10),
+  id = rep(1:5, each = 5),
+  animal_id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe, using pre-set global options
+tf_2 <- as.trackframe(
+  df,
+  crs = NA
+)
+
+head(tf_2)
+attributes(tf_2)[1:6]
+```
+
+In the above example, the columns `id` and `animal_id` contain identical values. The `animal_id` column was silently chosen to be the `id_col`, because "animal_id" comes before "id" in the `tf_options("id_col")` vector. The columns `y` and `northing` do not contain identical values. Here, the `northing` column was chosen to be the `northing_col` because "northing" comes before "y" in the `tf_options("northing_col")` vector. Because the two columns (`y` and `northing`) do not contain identical values, a warning is issued.
+
+You can avoid this warning in three ways:
+
+1) Specify the key columns directly when calling `as.trackframe`, using the function arguments.
+2) Remove or rename non-key columns whose names match those in the key-column option vectors, before converting your data to a `trackframe` object.
+3) Modify the global `tf_options` so that column names in your data that are not actual key columns are excluded from the options vector.  
+
+```{r}
+# Create example data
+df <- data.frame(
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  northing = runif(25, 0, 10),
+  id = rep(1:5, each = 5),
+  animal_id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe
+tf_2 <- as.trackframe(
+  df,
+  crs = NA
+) # --> this generates a WARNING
+
+# Convert to trackframe, option 1: specify key columns in arguments
+tf_2 <- as.trackframe(
+  df,
+  northing_col = "y",
+  crs = NA
+) # --> no warning
+
+# Convert to trackframe, option 2: remove or rename relevant columns
+names(df)[which(names(df) == "northing")] <- "irrelevant_new_name"
+
+tf_2 <- as.trackframe(
+  df,
+  crs = NA
+) # --> no warning
+
+# Convert to trackframe, option 3: modify global options
+tf_options("northing_col",
+  tf_options("northing_col")[-which(tf_options("northing_col") ==
+        "northing")])
+
+tf_2 <- as.trackframe(
+  df,
+  crs = NA
+) # --> no warning
+
+#reset to default
+tf_options("northing_col", c("northing", tf_options("northing_col")))
+```
+
+If you are seeing "Warning message: In warn_if_guess_ambiguous(data, guesses) :  multiple possible columns found" while using a function or workflow that is not part of the trackframe package, you may be using a package that calls `as.trackframe()` behind the scenes. 
+
+In this case, you still have the same three options. You can remove or rename relevant columns (option 2) or modify the global `tf_options` (option 3). Alternatively, you can convert your data to a `trackframe` object yourself, using `as.trackframe` and explicitly specify the correct column names (option 1). Once you have a valid `trackframe` object, you can then run the unction or workflow that originally generated the warning on your new `trackframe` object instead of on your original data.
+

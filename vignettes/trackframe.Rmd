@@ -1,5 +1,5 @@
 ---
-author: "Brock"
+author: "Trackframe Team"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 title: Quickstart Guide
@@ -10,7 +10,7 @@ vignette: >
 
 # Quickstart Guide
 
-This vignette demonstrates the main functions of **trackframe** and how to get started using this package. For a full description of the benefits of using **trackframe** over other approaches, see [Why trackframe?](#%7BWhy%20trackframe%7D).
+This vignette demonstrates the main functions of trackframe and how to get started using this package. For a full description of the benefits of using trackframe over other approaches, see [Why trackframe?](comparison.html)
 
 ## Load Package
 
@@ -20,49 +20,128 @@ library(trackframe)
 
 ## Create a `trackframe`
 
-The following shows how to convert common animal track data types into `trackframe` objects. To determine which columns are relevant to **trackframe**, there is a column guessing process. For more information, see [advanced vignette / specific considerations].
+It's quite simple to convert common animal track data representations into `trackframe` objects. When creating a `trackframe` object from another data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options. For details about the process and specifications of identifying the key columns, see [Identifying the Key Columns](identifying_columns.html).
 
-### ...from a `data.frame`
+`as.trackframe` also sorts the data that it is given, firsb by the values in the `id_col` and then by the values in the `time_col`. To prevent this default sorting, you can set `sort = FALSE` in the `as.trackframe` function.
 
+### ...from a non-sf `data.frame`
+
+Convert a plain (base R) `data.frame` to a `trackframe` object, first by specifying the column names in the arguments of `as.trackframe` and then via the global options:
 ```{r}
-# Create some example data
+# Create example data
 df <- data.frame(
-  time_col = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
-  easting_col = runif(25, 0, 10),
-  northing_col = runif(25, 0, 10),
-  id = rep(1:5, each = 5)
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  id = rep(5:1, each = 5)
 )
 
-# Convert to trackframe with explicit column naming
-tf <- as.trackframe(
-  df, time_col = "time_col", easting_col = "easting_col",
-  northing_col = "northing_col", id_col = "id", crs = "EPSG:32632"
+# Convert to trackframe using column names supplied to the relevant arguments
+# to identify key columns
+tf_args <- as.trackframe(
+  df,
+  time_col = "timestamp",
+  easting_col = "x",
+  northing_col = "y",
+  id_col = "id",
+  crs = "EPSG:32632"
 )
 
-# Convert to trackframe without naming columns, relying instead on column guessing
-tf <- as.trackframe(df, crs = "EPSG:32632")
+# Convert to trackframe using the pre-set global package options to identify
+# the key columns
+tf_go <- as.trackframe(df,
+  crs = "EPSG:32632"
+)
 
-head(tf)
-attributes(tf)
+#in this case, tf_args is the same as tf_go
+identical(tf_args, tf_go)
+head(tf_args)
+head(tf_go)
+attributes(tf_args)[1:6]
+attributes(tf_go)[1:6]
+```
+
+Now take a look at how `as.trackframe` sorting works:
+```{r}
+# As above, convert to trackframe using column names supplied to the relevant arguments
+# to identify key columns, with sort = TRUE (the default)
+tf_args_sorted <- as.trackframe(
+  df,
+  time_col = "timestamp",
+  easting_col = "x",
+  northing_col = "y",
+  id_col = "id",
+  crs = "EPSG:32632",
+  sort = TRUE
+)
+
+tf_args_unsorted <- as.trackframe(
+  df,
+  time_col = "timestamp",
+  easting_col = "x",
+  northing_col = "y",
+  id_col = "id",
+  crs = "EPSG:32632",
+  sort = FALSE
+)
+
+# Compare sorted vs unsorted
+tf_args_sorted
+tf_args_unsorted
 ```
 
 ### ...from a `move2` object
 
+When applying `as.trackframe` to a move2 object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see [Compatible Coordinate Systems](crs.html).
+
 ```{r}
 library(move2)
 
-# Load a move2 object using the move2 package
+# Load a move2 object using the move2 package, and project the coordinates to UTMs
 albatross_move2 <- mt_read(mt_example())
-albatross_move2 <- albatross_move2[
+albatross_move2_proj <- albatross_move2[
+  !sf::st_is_empty(albatross_move2),
+] |> sf::st_transform(crs = 3857)
+
+# Convert to trackframe, key columns and crs will be identified using metadata of the
+# input move2 object
+albatross_tf <- as.trackframe(data = albatross_move2_proj)
+
+# Check out the new trackframe object
+class(albatross_tf)
+attributes(albatross_tf)[1:6]
+str(albatross_tf)
+```
+
+<!-- You can use the `suggest_utm_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data.
+
+[ONCE THIS IS IMPLEMENTED, remove code block above, and activate code block below.]
+
+```{r, eval=FALSE, include = FALSE}
+library(move2)
+
+# Load a move2 object using the move2 package, and project the coordinates to UTMs
+albatross_move2 <- mt_read(mt_example())
+albatross_move2_proj <- albatross_move2[
   !sf::st_is_empty(albatross_move2),
 ] |> sf::st_transform(suggest_utm_crs(albatross_move2))
 
-# Convert to trackframe
-albatross_tf <- as.trackframe(data = albatross_move2)
+# Convert to trackframe, key columns and crs will be identified using metadata of the
+# input move2 object
+albatross_tf <- as.trackframe(data = albatross_move2_proj)
+
+# Check out the new trackframe object
 class(albatross_tf)
+crs(albatross_tf)
+attributes(albatross_tf)
+str(albatross_tf)
 ```
 
+-->
+
 ### ...from an `sftrack` object
+
+As with `move2` objects, when applying `as.trackframe` to an `sftrack` object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see [Compatible Coordinate Systems](crs.html).
 
 ```{r}
 library(sftrack)
@@ -84,33 +163,132 @@ my_sftrack <- as_sftrack(
   time = time,
   error = error,
   crs = crs
+) |> sf::st_transform(crs = 3857)
+
+# Convert to trackframe, key columns and crs will be identified using metadata of the
+# input sftrack object
+sftrack_tf <- as.trackframe(my_sftrack)
+class(sftrack_tf)
+attributes(sftrack_tf)[1:6]
+```
+
+<!-- You can use the `suggest_utm_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data. 
+
+[ONCE THIS IS IMPLEMENTED, remove code block above, and activate code block below.]
+
+```{r, eval=FALSE, include = FALSE}
+library(sftrack)
+
+# Load and prep an sftrack object
+data("raccoon", package = "sftrack")
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+coords <- c("longitude", "latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon + 1)
+time <- "time"
+error <- "fix"
+crs <- 4326
+
+my_sftrack <- as_sftrack(
+  data = raccoon,
+  coords = coords,
+  group = group,
+  time = time,
+  error = error,
+  crs = crs
 ) |> sf::st_transform(suggest_utm_crs(raccoon$latitude, raccoon$longitude))
 
-# Convert to trackframe
+# Convert to trackframe, key columns and crs will be identified using metadata of the
+# input sftrack object
 sftrack_tf <- as.trackframe(my_sftrack)
 class(sftrack_tf)
 attributes(sftrack_tf)
 ```
+-->
 
-## Extract specific columns from a `trackframe`
 
-**trackframe** has specific fuctions to extract the most important columns from the a `trackframe` object, regardless of the actual names of those columns. The following four functions extract the easting column (i.e., x or longitude), the northing column (i.e., y or latitude), the time column, and the animal id column, respectively.
+<!-- ### ...from an `sf` object
+
+ISSUE #139 
+
+Add an example of a regular sf object... at least an sf POINT dataframe, maybe also MULTIPOINT or MULTILINESTRING sf dataframes. -->
+
+
+## Extract and/or replace key columns from a `trackframe`
+
+Trackframe has specific functions to extract or replace values in the key columns from the a `trackframe` object, regardless of the actual names of those columns. The following four functions get the values in the `time_col`, `easting_col`, `northing_col` and `id_col`, and can be used to extract and/or replace values in those columns.
 
 ```{r}
-easting(tf)
+# Create example data
+df <- data.frame(
+  timestamp = rep(as.POSIXct(Sys.time() + 1:5), times = 5),
+  x = runif(25, 0, 10),
+  y = runif(25, 0, 10),
+  id = rep(1:5, each = 5)
+)
+
+# Convert to trackframe
+tf <- as.trackframe(df,
+  crs = "EPSG:32632")
 ```
 
-```{r}
-northing(tf)
-```
 
 ```{r}
+# Extract the values in the time_col
 time(tf)
 ```
 
 ```{r}
+# Extract the values in the easting_col
+easting(tf)
+```
+
+```{r}
+# Extract the values in the northing_col
+northing(tf)
+```
+
+```{r}
+# Extract the values in the id_col
 id(tf)
 ```
+
+<!-- [ONCE THESE FUNCTIONS ARE IMPLEMENTED, remove the 4 code blocks above, and activate the 4 code blocks below.]
+
+```{r, include=FALSE, eval=FALSE}
+# Extract the values in the time_col
+time(tf)
+
+# Replace the second value in the time_col
+#time(tf)[2] <- as.POSIXct("2025-11-17 14:08:00 CET")
+```
+
+```{r, include=FALSE, eval=FALSE}
+# Extract the values in the easting_col
+easting(tf)
+
+# Replace all values in the easting_col with a new vector
+# easting(tf) <- runif(25, 0, 10)
+```
+
+```{r, include=FALSE, eval=FALSE}
+# Extract the values in the northing_col
+northing(tf)
+
+# Replace every values in the northing_col with a 5
+#northing(tf) <- 5
+```
+
+```{r, include=FALSE, eval=FALSE}
+# Extract the values in the id_col
+id(tf)
+
+# Replace the values in the id_col based on a conditional
+# id(tf) <- ifelse(id(tf) == 1, "Bob", "Other")
+
+tf
+```
+-->
 
 There is a also a function to extract a vector of the unique values in the animal id column:
 
@@ -123,7 +301,7 @@ unique_ids(tf)
 To extract the track of a specific animal, use the `select_id` function.
 
 ```{r}
-tf_2 <- select_id(tf, "2")
+tf_2 <- select_id(tf, "Bob")
 tf_2
 ```
 
@@ -134,26 +312,48 @@ tf_split <- split_by_id(tf)
 class(tf_split)
 names(tf_split)
 tf_split[[1]]
-tf_split[["2"]]
+tf_split[["Bob"]]
 ```
 
-## Extract specific column names from a `trackframe`
+<!-- FIXME: Insert explainer for [#89](https://github.com/livingingroups/travelpaths-devel/issues/89) and [#91](https://github.com/livingingroups/travelpaths-devel/issues/91), once they've been implemented.
 
-FIXME: Insert explainer for [#89](https://github.com/livingingroups/travelpaths-devel/issues/89) and [#91](https://github.com/livingingroups/travelpaths-devel/issues/91), once they've been implemented.
+
+"easting_col" gets / sets the attribute
+"easting" gets / sets the corresponding values in the dataframe
+
+Not yet fully implemented. Return to this once they are.
+-->
+
 
 ## Transform from a `trackframe`
 
-To transform a `trackframe` object into another type of animal track data, there are two approaches.
+To transform a `trackframe` object into another representation of animal track data, there are two approaches.
 
-The first approach takes any `trackframe` object and transforms it into a specific other animal track data type using the `tf_as_*` functions. In this case, the output object will have the same CRS as the `trackframe` object.
+The first approach takes any `trackframe` object and transforms it into another animal track data representation using the `tf_as_*` functions. In this case, the output object will be sorted in the same order as the `trackframe` object.
 
-The second approaches takes a `trackframe` object *that was created from another type of animal track data using the* `as.trackframe` *function*, and transforms it back into its original object type using the `tf_backtransform` function. In this case, the output object will have the same CRS as the original input object.
+The second approach takes a `trackframe` object *that was created from another representation of animal track data using the* `as.trackframe` *function*, and transforms it *back* into its original data representation using the `tf_backtransform` function. In this case, if sorting was performed during the conversion of the original object in `as.trackframe` will be undone.
 
 The first approach can be used on any `trackframe` object, regardless of its history. The second approach can only be used on `trackframe` objects that were created using the `as.trackframe` function.
 
-### ... to a `data.frame`
+### ... to a non-sf `data.frame`
 
-FIXME: Logic from [#87](https://github.com/livingingroups/travelpaths-devel/issues/87) related to backtransformation should go here once that logic is implemented.
+```{r}
+# First approach (ignoring that this object was originally a df obj)
+df1_recovered <- tf_as_xyt(tf_args)
+head(df1_recovered)
+attributes(df1_recovered)
+
+# Second approach (backtransforming this object to its original type, i.e., a dataframe obj)
+df2_recovered <- tf_backtransform(tf_args)
+head(df2_recovered)
+attributes(df2_recovered)
+
+# Compare to original df
+head(df)
+attributes(df)
+```
+
+Note that `df1_recovered` (the dataframe created by `tf_as_xyt`) is sorted in ascending order by `id` and `timestamp` (this sorting that was performed when it was first converted to a `trackframe` object, and has now been maintained), whereas `df2_recovered` (the dataframe created by `tf_backtransform`) is in the order of the original, pre-conversion-to-trackframe, `dataframe` object.  
 
 ### ... to a `move2` object
 
@@ -161,11 +361,13 @@ FIXME: Logic from [#87](https://github.com/livingingroups/travelpaths-devel/issu
 # First approach (ignoring that this object was originally a move2 obj)
 ap1_recovered_move2 <- tf_as_move2(albatross_tf)
 
-# Second approach (backtransforming this object to its original type, i.e., a move2 obj)
+# Second approach (backtransforming this object to its original representation, i.e., a move2 obj)
 ap2_recovered_move2 <- tf_backtransform(albatross_tf)
 
-head(ap1_recovered_move2) # <- points have same CRS as albatross_tf
-head(ap2_recovered_move2) # <- points have same CRS as original albatross_move2
+# Compare with each other and original object
+head(ap1_recovered_move2)
+head(ap2_recovered_move2)
+head(albatross_move2_proj)
 ```
 
 ### ... to an `sftrack` object
@@ -177,72 +379,62 @@ ap1_recovered_sf <- tf_as_sftrack(sftrack_tf)
 # Second approach
 ap2_recovered_sf <- tf_backtransform(sftrack_tf)
 
+# Compare with each other and original object
 head(ap1_recovered_sf)
 head(ap2_recovered_sf)
 head(my_sftrack)
 ```
 
+Here again you can see evidence of `as.trackframe`'s default `sort = TRUE`. Sorted: `ap1_recovered_sf` (the dataframe created by `tf_as_sftrack`) is sorted in ascending order by `id` and `timestamp`, with animal id `TTP-041` appearing in the `head()` call. This is the order that the data were sorted into when it was first converted to an `as.trackframe` object. Unsorted: `ap2_recovered_sf` (the dataframe created by `tf_backtransform`) has been "unsorted" -- animal id `TTP-058` appears first in the `head()`. This is the order of the original, pre-conversion-to-trackframe, `sftrack` object.
+
+
+<!-- ### ...to an `sf` object
+
+ISSUE #139 
+
+Add an example of a regular sf object... at least an sf POINT dataframe, maybe also MULTIPOINT or MULTILINESTRING sf dataframes. -->
+
 ## Example Workflow
 
-The following example shows how to create a function that will add a "step length" column to a `trackframe` object, and then create a `trackframe` object from a move2 object, split it by animal id, add the "step length" column, then transform the object back into a move2 object.
+The following example shows how to use `trackframe` to create a function that can take any representation of animal track data as input, and will add a "step length" column to the data.
 
-It is advantageous to use the **trackframe** package for this, as it allows the `step_length()` function to be easily applied to any animal movement data structure, by simply converting the data to `trackframe`, rather than having to alter the function itself.
-
-First, create the `step_length()` function:
+Within the function, you can convert the data to a `trackframe` object, then apply the desired calculations, then convert the data back to its original representation. The trackframe approach requires far fewer, and simpler, lines of code than writing the function in such a way that it can recognize and accommodate each of multiple different data representations. Furthermore, because `trackframe` stores coordinate columns as plain numeric vectors, it's easy to write functions that employ basic geometry and math to perform calculations directly on the location coordinates values themselves. See [Why trackframe?](comparison.html) for more information on the design of the `trackframe` object.
 
 ```{r}
-step_length <- function(x, y)  {
-  sqrt(diff(x)^2 + diff(y)^2)
-}
-```
-
-Because this function operates directly on the location coordinates themselves, it's impossible to apply it directly to a move2 object (which stores the location coordinates in a special geometry column). So, we can easily convert the move2 object to a trackframe object:
-
-```{r}
-tf <- as.trackframe(albatross_move2)
-
-# sort by id then by time (can use regular dataframe operators)
-tf <- tf[order(id(tf), time(tf)), ]
-```
-
-As a trackframe object, we now have direct access to the coordinates, and so we can apply the `step_length()` function:
-
-```{r}
-# now, extract all of the step lengths
-step_length_vec <- step_length(easting(tf), northing(tf))
-# (Length of vector is one less than the number of rows in the tf, because the
-# first location doesn't have a step length)
-
-# need to also replace the first "step" of each individual with NA (since this is
-# not a real step, just the distance between one indivs last location and another
-# indivs first location)
-step_length_vec[which(id(tf)[1:(nrow(tf) - 1)] != id(tf)[2:nrow(tf)])] <- NA
-
-# now attach the new vector to the tf (and put NA in first row)
-tf$step_length <- c(NA, step_length)
-
-# take a look at it ######UPDATE ONCE THIS EXISTS
-##tf[1345:1355, c(time(tf), id(tf), "Step_length")]
-cbind(time(tf), id(tf), tf[, "step_length"])[1345:1355, ]#temp fix
-```
-
-\^\^ FIXME: Update 'take a look code', once [#89](https://github.com/livingingroups/travelpaths-devel/issues/89) and [#91](https://github.com/livingingroups/travelpaths-devel/issues/91), have been implemented.
-
-Then we can convert the whole thing back to a move2 object if needed:
-
-```{r}
-albatross_move2_w_step_length <- tf_backtransform(tf)
-```
-
-Using **trackframe** would also allow you to wrap the entire thing into a function, which could then be applied to animal movement data of any structure (e.g., move2, sf_track, etc), for example:
-
-```{r}
+# Function to add a step length column to a animal track data object
 add_step_length_col <- function(x) {
+  # convert input data object to a tf object
   tf <- as.trackframe(x)
+  # sort by animal id then time
   tf <- tf[order(id(tf), time(tf)), ]
-  step_length_col <- step_length(easting(tf), northing(tf))
+  # use basic geometry to calculate the distance between successive locations
+  step_length_col <- sqrt(diff(easting(tf))^2 + diff(northing(tf))^2)
+  # replace the first "step" of each individual with NA
   step_length_col[which(id(tf)[1:(nrow(tf) - 1)] != id(tf)[2:nrow(tf)])] <- NA
+  # attach step length column to tf (with preceeding NA for first location)
   tf$step_length <- c(NA, step_length_col)
+  # transform the tf back into its orginal input representation
   tf_backtransform(tf)
 }
+
+# apply the function to a projected move2 object
+albatross_move2_proj2 <- add_step_length_col(albatross_move2_proj)
+
+# take a look at it
+head(albatross_move2_proj2)
+tail(albatross_move2_proj)
+
+# look at rows where the animal id changes
+albatross_move2_proj2[1345:1355, c("timestamp", "individual-local-identifier", "step_length")]
+```
+
+Without changing the function at all, we can apply `add_step_length_col` to another animal track data representation, such as an `sftrack` object.
+
+```{r}
+# apply the function to a projected sftrack object
+my_sftrack <- add_step_length_col(my_sftrack)
+
+# take a look at it
+head(my_sftrack)
+tail(my_sftrack)
 ```
