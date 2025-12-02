@@ -57,11 +57,11 @@ To convert a `cocomo` object to a `trackframe` object, we can use the dedicated 
 ```{r}
 # Convert cocomo object to trackframe object
 cocomo_tf <- cocomo_as_tf(cocomo_obj,
-                           xs = cocomo_obj$xs,
-                           ys = cocomo_obj$ys,
-                           t = cocomo_obj$t,
-                           ids = cocomo_obj$ids,
-                           crs = 32632)
+  xs = cocomo_obj$xs,
+  ys = cocomo_obj$ys,
+  t = cocomo_obj$t,
+  ids = cocomo_obj$ids,
+  crs = 32632)
 
 
 cocomo_tf
