@@ -14,6 +14,7 @@ editor_options:
 
 Here, we show how to convert between some less common animal track data representations and `trackframe` objects using the `as.trackframe` function. For more common animal track data representations (including plain (base R) `data.frame`, `move2`, and `sftrack` objects), check out the [Quickstart vignette](trackframe.html).
 
+<!-- Right now, it's just cocomo, but i figure maybe we want to add here in the future? or should this just be cocomo? if so, easy to change, just let me know! -->
 
 ## Converting to and from `cocomo` objects
 
