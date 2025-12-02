@@ -51,8 +51,6 @@ cocomo_obj$ids
 
 ### Create a `trackframe` from a `cocomo` object
 
-<!-- Are there plans for as.trackframe to be able to handle cocomo objects as well? or will cocomo_as_tf() be used isntead? Right now it's hard to make a proper example becuase cocomo_as_tf() requires something for the 'utm_epsg' argument, and I have nothing -->
-
 To convert a `cocomo` object to a `trackframe` object, we can use the dedicated `cocomo_as_tf` function, and specify where to find the information for each of the key columns.
 
 ```{r}
@@ -62,7 +60,7 @@ cocomo_tf <- cocomo_as_tf(cocomo_obj,
                            ys = cocomo_obj$ys,
                            t = cocomo_obj$t,
                            ids = cocomo_obj$ids,
-                          utm_epsg = 32632)
+                           crs = 32632)
 
 
 cocomo_tf
@@ -73,32 +71,16 @@ attributes(cocomo_tf)[1:6]
 
 ### Create a `cocomo` object from a `trackframe`
 
-To transform a `trackframe` object into a `cocomo` object, there are two approaches.
-
-The first approach takes any `trackframe` object and transforms it into a `cocomo` object, using the `tf_as_cocomo` function. 
-
-The second approach takes a `trackframe` object *that was created from a `cocomo` object using the* `as.trackframe` *function*, and transforms it *back* into a `cocomo` object using the `tf_backtransform` function. 
-
+To transform a `trackframe` object into a `cocomo` object, use the `tf_as_cocomo` function. 
 
 ```{r}
-# First approach
 ap1_recovered_cocomo <- tf_as_cocomo(cocomo_tf)
 head(ap1_recovered_cocomo)
 attributes(ap1_recovered_cocomo)
 
-# Second approach
-ap2_recovered_cocomo <- tf_backtransform(cocomo_tf)
-head(ap2_recovered_cocomo)
-attributes(ap2_recovered_cocomo)
-
-# Compare to original cocomo
+# Compare to original cocomo object
 head(cocomo_obj)
 attributes(cocomo_obj)
 ```
-
-<!-- I'm pretty sure that the tf_backtransform option isn't working properly. -->
-
-
-
 
 
