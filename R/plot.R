@@ -1,16 +1,15 @@
 #' Obtain arrow points of starting points
 #'
-#' @param tf trackframe
-#' @param sort logical
+#' @param tf an object of class trackframe
+#' @param sort a logical indicator
 #'
 #' @export
 get_arrow_points <- function(tf, sort = TRUE) {
   x <- attr(tf, "easting")
   y <- attr(tf, "northing")
   id <- attr(tf, "id")
-  # can we ensure that tf is already sorted?
   if (isTRUE(sort)) {
-    tf <- tf[order(id(tf), time(tf)), ]
+    tf <- sort(tf)
   }
   tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
   starting_points <- tf[!duplicated(tf[[id]]), ]
@@ -28,33 +27,19 @@ get_arrow_points <- function(tf, sort = TRUE) {
 }
 
 
-if (getRversion() <= "4.4.0") {
-  `%||%` <- function(x, y) {
-    if (is.null(x)) y else x
-  }
-}
-
-
 #' Set cols of facet
 #'
-#' @param n number of groups
+#' calculates the number of columns specified for plots using tinyplot engine.
+#'
+#' @param n an integer value (corresponding to the number of differents ids)
 #'
 #' @export
 set_facet_ncol <- function(n) {
-  if (n > 4) {
-    if (n %% 4 == 0) {
-      n_col <- 4
-    } else if (n %% 3 == 0) {
-      n_col <- 3
-    } else {
-      n_col <- 2
-    }
-  } else if (n == 4) {
-    n_col <- 2
-  } else {
-    n_col <- n
-  }
-  return(n_col)
+  if (n < 4) return(n)
+  if (n == 4) return(2)
+  if (n %% 4 == 0) return(4)
+  if (n %% 3  == 0) return(3)
+  return(2)
 }
 
 
@@ -68,7 +53,7 @@ eval_list <- function(x) {
   eval(x)
 }
 
-#' Add plots
+#' Add plots to tinyplot plots
 #'
 #' @param call tinyplot call
 #' @param ... ...
@@ -92,34 +77,21 @@ plot_add <- function(call, ...) {
 #'
 #' @param x an object of class \code{trackframe}
 #' @param direction logical indicator if the path direction should be added to the plot
-#' @param arrow_length length of the arrow of the direction (argument passed to
-#' \code{\link[graphics]{arrows}})
-#' @param arrow_code code of the arrow of the direction (argument passed to
-#' \code{\link[graphics]{arrows}})
-#' @param arrow_col color of the arrow of the direction (argument passed to
-#' \code{\link[graphics]{arrows}})
-#' @param arrow_lty line type of the arrow of the direction (argument passed to
-#' \code{\link[graphics]{arrows}})
-#' @param arrow_lwd line width of the arrow of the direction (argument passed to
-#' \code{\link[graphics]{arrows}})
+#' @param arrow_style a list of length, code, col, lty, lwd of the arrow of the direction (argument
+#' passed to
+#' \code{\link[graphics]{arrows}}) specifying the style of the arrows
 #' @param nfacet_col number of columns used in facet.args argument ncol
+#' @param start_point logical if starting point should be plotted
+#' @param start_point_style a list where col, pch and cex for starting points are specified
+#' @param end_point logical if starting point should be plotted
+#' @param end_point_style a list where col, pch and cex for end points are specified
+#' @param marker (optional) column name of additional markers to be ploted (depending on a 0/1
+#'   labeling)
+#' @param marker_style a list where col, pch and cex for markers are specified
 #' @param ... other arguments used in \code{\link[tinyplot]{tinyplot}}
-#' @param start_point logical if starting point shoul be plotted
-#' @param start_point_col color of starting point
-#' @param start_point_pch pch of starting point
-#' @param start_point_cex cex of starting point
-#' @param end_point logical if starting point shoul be plotted
-#' @param end_point_col color of end point
-#' @param end_point_pch pch of end point
-#' @param end_point_cex cex of end point
-#' @param change_point_id column id of change points if available
-#' @param change_point_col color of change points
-#' @param change_point_pch pch of change points
-#' @param change_point_cex cex of change points
 #'
 #' @examples
 #' library(trackframe)
-#' library(tinyplot)
 #'
 #' data("tf_mini", package = "trackframe")
 #'
@@ -128,6 +100,7 @@ plot_add <- function(call, ...) {
 #'
 #' plot(data)
 #' # set different theme
+#' library(tinyplot)
 #' tinytheme("clean2")
 #' plot(data)
 #'
@@ -137,36 +110,24 @@ plot_add <- function(call, ...) {
 #' plot(track_1)
 #' plot(track_1, direction = TRUE)
 #'
+#' plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
+#'
 #' @export
 plot.trackframe <- function(
   x,
   direction = FALSE,
-  arrow_length = 0.1,
-  arrow_code = 2,
-  arrow_col = "black",
-  arrow_lty = 3,
-  arrow_lwd = 1,
+  arrow_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
   nfacet_col = NULL,
   start_point = FALSE,
-  start_point_col = "green",
-  start_point_pch = 0,
-  start_point_cex = 1,
+  start_point_style = list(col = "green", pch = 0, cex = 1),
   end_point = FALSE,
-  end_point_col = "red",
-  end_point_pch = 1,
-  end_point_cex = 1,
-  change_point_id = NULL,
-  change_point_col = "blue",
-  change_point_pch = 4,
-  change_point_cex = 1,
+  end_point_style = list(col = "red", pch = 1, cex = 1),
+  marker = NULL,
+  marker_style = list(col = "blue", pch = 4, cex = 1),
   ...
 ) {
   # sort data by id and time
-  if (is.null(attr(x, "id"))) {
-    x <- x[order(time(x)), ]
-  } else {
-    x <- x[order(id(x), time(x)), ]
-  }
+  x <- sort(x)
 
   x_col <- attr(x, "easting")
   y_col <- attr(x, "northing")
@@ -193,16 +154,17 @@ plot.trackframe <- function(
     arrows_facet <- "by"
   } else {
     form <- as.formula(paste(y_col, "~", x_col))
-    default_options <- list(type = "l", grid = TRUE, main = unique(id(x)))
+    default_options <- list(type = "l", grid = TRUE, main = "")
     arrows_facet <- id_col
   }
 
   # delete restricted elements
-  restricted <- c("x", "y", "data")
+  restricted <- c("y", "data")
   args <- list(...) # args = list()
   if (any(names(args) %in% restricted)) {
     warning(sprintf(
-      "argument %s is restricted and therefore ignored",
+      "argument %s is restricted as formula and data are extracted from the trackframe itself and
+      is therefore ignored",
       names(args)[names(args) %in% restricted]
     ))
   }
@@ -212,27 +174,36 @@ plot.trackframe <- function(
 
   # add starting point
   if (isTRUE(start_point)) {
+    start_point_style_defaults <- list(col = "green", pch = 0, cex = 1)
+    start_point_style <- modifyList(start_point_style_defaults, start_point_style)
     plot_add(plt_call, add = TRUE, data = x[!duplicated(x[[id_col]]), ], type = "p",
-      cex = start_point_cex, pch = start_point_pch, col = start_point_col)
+      cex = start_point_style[["cex"]], pch = start_point_style[["pch"]],
+      col = start_point_style[["col"]])
   }
   # add end point
   if (isTRUE(end_point)) {
+    end_point_style_defaults <- list(col = "red", pch = 1, cex = 1)
+    end_point_style <- modifyList(end_point_style_defaults, end_point_style)
     plot_add(plt_call, add = TRUE, data = x[!duplicated(x[[id_col]], fromLast = TRUE), ],
-      type = "p", cex = end_point_cex, pch = end_point_pch, col = end_point_col)
+      type = "p", cex = end_point_style[["cex"]], pch = end_point_style[["pch"]],
+      col = end_point_style[["col"]])
   }
 
   # add change points
-  if (!is.null(change_point_id)) {
-    if (any(x[[change_point_id]] != 0)) {
-      plot_add(plt_call, add = TRUE, data = x[x[[change_point_id]] != 0, ], type = "p",
-        cex = change_point_cex, pch = change_point_pch, col = change_point_col)
-      # NOTE: do we want to add cp numbers?
+  if (!is.null(marker)) {
+    if (any(x[[marker]] != 0)) {
+      marker_style_defaults <- list(col = "blue", pch = 4, cex = 1)
+      marker_style <- modifyList(marker_style_defaults, marker_style)
+      plot_add(plt_call, add = TRUE, data = x[x[[marker]] != 0, ], type = "p",
+        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
     }
   }
 
   if (isTRUE(direction)) {
     # add arrow in path direction from (x1, y1) to (x2, y2)
     arrow_points <- get_arrow_points(x)
+    arrow_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
+    arrow_style <- modifyList(arrow_style_defaults, arrow_style)
     plot_add(
       plt_call,
       add = TRUE,
@@ -241,11 +212,11 @@ plot.trackframe <- function(
         y0 = arrow_points[["y0"]],
         x1 = arrow_points[["x1"]],
         y1 = arrow_points[["y1"]],
-        length = arrow_length,
-        code = arrow_code,
-        arrow_col = arrow_col,
-        arrow_lty = arrow_lty,
-        arrow_lwd = arrow_lwd
+        length = arrow_style[["length"]],
+        code = arrow_style[["code"]],
+        arrow_col = arrow_style[["col"]],
+        arrow_lty = arrow_style[["lty"]],
+        arrow_lwd = arrow_style[["lwd"]]
       ),
       facet = arrows_facet
     )

@@ -16,7 +16,20 @@ plot_time_path(data[data$id == "track_1", ])
 
 data$cp_id <- 0
 data$cp_id[c(2, 4, 9)] <- 1
-plot_time_path(data[data$id == "track_1", ], change_point_id = "cp_id")
+plot_time_path(data[data$id == "track_1", ], marker = "cp_id")
 
 plot(data, change_point_id = "cp_id")
-plot(data, direction = TRUE, change_point_id = "cp_id", start_point = TRUE, end_point = TRUE)
+plot(data, direction = TRUE, marker = "cp_id", start_point = TRUE, end_point = TRUE)
+
+plot(data, direction = TRUE, marker = "cp_id", marker_style = list(col = "yellow"),
+  start_point = TRUE, end_point = TRUE)
+
+plot(data, direction = TRUE, marker = "cp_id", marker_style = list(cex = 5),
+  start_point = TRUE, end_point = TRUE)
+
+plot(data, direction = TRUE, marker = "cp_id", marker_style = list(col = "yellow", cex = 1,
+    pch = 4), start_point = TRUE, end_point = TRUE)
+
+plot(data, change_point_id = "cp_id", direction = TRUE, arrow_style = list(col = "yellow"))
+plot(data, change_point_id = "cp_id", direction = TRUE, arrow_style = list(col = "yellow",
+    lwd = 4, length = 3))

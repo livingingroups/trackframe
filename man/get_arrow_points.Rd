@@ -7,9 +7,9 @@
 get_arrow_points(tf, sort = TRUE)
 }
 \arguments{
-\item{tf}{trackframe}
+\item{tf}{an object of class trackframe}
 
-\item{sort}{logical}
+\item{sort}{a logical indicator}
 }
 \description{
 Obtain arrow points of starting points

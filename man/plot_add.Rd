@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot_add}
 \alias{plot_add}
-\title{Add plots}
+\title{Add plots to tinyplot plots}
 \usage{
 plot_add(call, ...)
 }
@@ -12,5 +12,5 @@ plot_add(call, ...)
 \item{...}{...}
 }
 \description{
-Add plots
+Add plots to tinyplot plots
 }

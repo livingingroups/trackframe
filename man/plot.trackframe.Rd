@@ -7,24 +7,14 @@
 \method{plot}{trackframe}(
   x,
   direction = FALSE,
-  arrow_length = 0.1,
-  arrow_code = 2,
-  arrow_col = "black",
-  arrow_lty = 3,
-  arrow_lwd = 1,
+  arrow_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
   nfacet_col = NULL,
   start_point = FALSE,
-  start_point_col = "green",
-  start_point_pch = 0,
-  start_point_cex = 1,
+  start_point_style = list(col = "green", pch = 0, cex = 1),
   end_point = FALSE,
-  end_point_col = "red",
-  end_point_pch = 1,
-  end_point_cex = 1,
-  change_point_id = NULL,
-  change_point_col = "blue",
-  change_point_pch = 4,
-  change_point_cex = 1,
+  end_point_style = list(col = "red", pch = 1, cex = 1),
+  marker = NULL,
+  marker_style = list(col = "blue", pch = 4, cex = 1),
   ...
 )
 }
@@ -33,46 +23,23 @@
 
 \item{direction}{logical indicator if the path direction should be added to the plot}
 
-\item{arrow_length}{length of the arrow of the direction (argument passed to
-\code{\link[graphics]{arrows}})}
-
-\item{arrow_code}{code of the arrow of the direction (argument passed to
-\code{\link[graphics]{arrows}})}
-
-\item{arrow_col}{color of the arrow of the direction (argument passed to
-\code{\link[graphics]{arrows}})}
-
-\item{arrow_lty}{line type of the arrow of the direction (argument passed to
-\code{\link[graphics]{arrows}})}
-
-\item{arrow_lwd}{line width of the arrow of the direction (argument passed to
-\code{\link[graphics]{arrows}})}
+\item{arrow_style}{a list of length, code, col, lty, lwd of the arrow of the direction (argument passed to
+\code{\link[graphics]{arrows}}) specifying the style of the arrows}
 
 \item{nfacet_col}{number of columns used in facet.args argument ncol}
 
-\item{start_point}{logical if starting point shoul be plotted}
+\item{start_point}{logical if starting point should be plotted}
 
-\item{start_point_col}{color of starting point}
+\item{start_point_style}{a list where col, pch and cex for starting points are specified}
 
-\item{start_point_pch}{pch of starting point}
+\item{end_point}{logical if starting point should be plotted}
 
-\item{start_point_cex}{cex of starting point}
+\item{end_point_style}{a list where col, pch and cex for end points are specified}
 
-\item{end_point}{logical if starting point shoul be plotted}
+\item{marker}{(optional) column name of additional markers to be ploted (depending on a 0/1
+labeling)}
 
-\item{end_point_col}{color of end point}
-
-\item{end_point_pch}{pch of end point}
-
-\item{end_point_cex}{cex of end point}
-
-\item{change_point_id}{column id of change points if available}
-
-\item{change_point_col}{color of change points}
-
-\item{change_point_pch}{pch of change points}
-
-\item{change_point_cex}{cex of change points}
+\item{marker_style}{a list where col, pch and cex for markers are specified}
 
 \item{...}{other arguments used in \code{\link[tinyplot]{tinyplot}}}
 }
@@ -82,7 +49,6 @@ Plots coordinates of objects of class \code{\link[trackframe]{trackframe}} based
 }
 \examples{
 library(trackframe)
-library(tinyplot)
 
 data("tf_mini", package = "trackframe")
 
@@ -91,6 +57,7 @@ class(data)
 
 plot(data)
 # set different theme
+library(tinyplot)
 tinytheme("clean2")
 plot(data)
 
@@ -99,5 +66,7 @@ plot(data, direction = TRUE)
 track_1 <- select_id(data, "track_1")
 plot(track_1)
 plot(track_1, direction = TRUE)
+
+plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
 
 }

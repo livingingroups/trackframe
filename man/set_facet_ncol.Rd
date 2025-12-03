@@ -7,8 +7,8 @@
 set_facet_ncol(n)
 }
 \arguments{
-\item{n}{number of groups}
+\item{n}{an integer value (corresponding to the number of differents ids)}
 }
 \description{
-Set cols of facet
+calculates the number of columns specified for plots using tinyplot engine.
 }

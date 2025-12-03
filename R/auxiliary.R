@@ -383,3 +383,13 @@ id_hash <- function(data,
   }
   apply(data[, cols, with = FALSE], 1, digest)
 }
+
+
+sort.trackframe <- function(x, decreasing = FALSE) {
+  if (is.null(attr(x, "id"))) {
+    x <- x[order(time(x), decreasing = decreasing), ]
+  } else {
+    x <- x[order(id(x), time(x), decreasing = decreasing), ]
+  }
+  return(x)
+}
