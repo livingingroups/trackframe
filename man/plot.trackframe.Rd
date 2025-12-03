@@ -23,7 +23,8 @@
 
 \item{direction}{logical indicator if the path direction should be added to the plot}
 
-\item{arrow_style}{a list of length, code, col, lty, lwd of the arrow of the direction (argument passed to
+\item{arrow_style}{a list of length, code, col, lty, lwd of the arrow of the direction (argument
+passed to
 \code{\link[graphics]{arrows}}) specifying the style of the arrows}
 
 \item{nfacet_col}{number of columns used in facet.args argument ncol}

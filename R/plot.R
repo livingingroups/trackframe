@@ -252,20 +252,6 @@ type_arrows <- function(
   arrow_lty = par("lty"),
   arrow_lwd = par("lwd")
 ) {
-  # assert_numeric(x0)
-  data_arrows <- function(datapoints, lwd, lty, col, ...) {
-    if (nrow(datapoints) == 0) {
-      msg <- "`type_hline() only works on existing plots with x and y data points."
-      stop(msg, call. = FALSE)
-    }
-    ul_lwd <- length(unique(lwd))
-    ul_lty <- length(unique(lty))
-    ul_col <- length(unique(col))
-    return(list(
-      type_info = list(ul_lty = ul_lty, ul_lwd = ul_lwd, ul_col = ul_col)
-    ))
-  }
-
   draw_arrows <- function() {
     fun <- function(
       ifacet,
@@ -278,9 +264,9 @@ type_arrows <- function(
       nfacets,
       by_continuous,
       facet_by,
-      type_info,
       ...
     ) {
+      type_info <- list(ul_lty = par("lty"), ul_lwd = par("lwd"), ul_col = "black")
       grp_aes <- type_info[["ul_col"]] == 1 ||
         type_info[["ul_lty"]] == ngrps ||
         type_info[["ul_lwd"]] == ngrps
@@ -329,7 +315,7 @@ type_arrows <- function(
     }
     return(fun)
   }
-  out <- list(draw = draw_arrows(), data = data_arrows, name = "hline")
+  out <- list(draw = draw_arrows(), data = NULL, name = "arrows")
   class(out) <- "tinyplot_type"
   return(out)
 }
