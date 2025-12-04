@@ -1,10 +1,10 @@
 #' Set cols of facet
 #'
-#' calculates the number of columns specified for plots using tinyplot engine.
+#' Set cols of facet
 #'
-#' @param n an integer value (corresponding to the number of differents ids)
+#' Calculates the desired number of columns for trackframe plots using tinyplot engine.
 #'
-#' @return an integer which determines the number of facet columns used in tinyplot
+#' @param n an integer value (corresponding to the number of different ids)
 #'
 #' @export
 set_facet_ncol <- function(n) {
