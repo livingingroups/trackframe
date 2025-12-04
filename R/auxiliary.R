@@ -385,11 +385,75 @@ id_hash <- function(data,
 }
 
 
-sort.trackframe <- function(x, decreasing = FALSE) {
+#' Sorting of Trackframes
+#'
+#' Sort a trackframe into ascending or descending order. Sorts if available by track id and time
+#' columns of the trackframe. If no id column is available only sorted by time.
+#'
+#' @param x an object of class trackframe
+#' @param decreasing logical indicating if sort should be increasing or decreasing.
+#' @param ... additional arguments passed to order
+#'
+#' @return an object of class trackframe
+#' @export
+sort.trackframe <- function(x, decreasing = FALSE, ...) {
   if (is.null(attr(x, "id"))) {
-    x <- x[order(time(x), decreasing = decreasing), ]
+    x <- x[order(time(x), decreasing = decreasing, ...), ]
   } else {
-    x <- x[order(id(x), time(x), decreasing = decreasing), ]
+    x <- x[order(id(x), time(x), decreasing = decreasing, ...), ]
   }
   return(x)
+}
+
+
+#' Obtain starting points
+#'
+#' This function obtains starting points for all tracks of objects of class trackframe.
+#'
+#' @param tf an object of class trackframe
+#'
+#' @return a list with elements x0, y0 providing the x and y coordinates of th starting points all
+#' different tracks.
+#' Each element of the list is of length of the number of unique id's.
+#'
+#' @export
+get_starting_points <- function(tf) {
+  assert_class(tf, "trackframe")
+  x <- attr(tf, "easting")
+  y <- attr(tf, "northing")
+  id <- attr(tf, "id")
+  tf <- sort(tf)
+  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
+  starting_points <- tf[!duplicated(tf[[id]]), ]
+  list(
+    x0 = setNames(starting_points[[x]], starting_points[[id]]),
+    y0 = setNames(starting_points[[y]], starting_points[[id]])
+  )
+}
+
+#' Obtain direction points
+#'
+#' This function obtains direction points (representing the second data point) for all tracks of
+#' objects of class trackframe.
+#'
+#' @param tf an object of class trackframe
+#'
+#' @return a list with elements x1, y1 providing the x and y coordinates of the direction points
+#' of all different tracks.
+#' Each element of the list is of length of the number of unique id's in the trackframe.
+#'
+#' @export
+get_direction_points <- function(tf) {
+  assert_class(tf, "trackframe")
+  x <- attr(tf, "easting")
+  y <- attr(tf, "northing")
+  id <- attr(tf, "id")
+  tf <- sort(tf)
+  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
+  tf <- tf[duplicated(tf[[id]]), ]
+  direction_points <- tf[!duplicated(tf[[id]]), ]
+  list(
+    x1 = setNames(direction_points[[x]], direction_points[[id]]),
+    y1 = setNames(direction_points[[y]], direction_points[[id]])
+  )
 }

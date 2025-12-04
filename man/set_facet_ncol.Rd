@@ -9,6 +9,9 @@ set_facet_ncol(n)
 \arguments{
 \item{n}{an integer value (corresponding to the number of differents ids)}
 }
+\value{
+an integer which determines the number of facet columns used in tinyplot
+}
 \description{
 calculates the number of columns specified for plots using tinyplot engine.
 }

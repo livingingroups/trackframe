@@ -1,45 +1,18 @@
-#' Obtain arrow points of starting points
-#'
-#' @param tf an object of class trackframe
-#' @param sort a logical indicator
-#'
-#' @export
-get_arrow_points <- function(tf, sort = TRUE) {
-  x <- attr(tf, "easting")
-  y <- attr(tf, "northing")
-  id <- attr(tf, "id")
-  if (isTRUE(sort)) {
-    tf <- sort(tf)
-  }
-  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
-  starting_points <- tf[!duplicated(tf[[id]]), ]
-  tf2 <- tf[duplicated(tf[[id]]), ]
-  direction_points <- tf2[!duplicated(tf2[[id]]), ]
-  if (NROW(starting_points) != NROW(direction_points)) {
-    stop("direction points do not exist for all IDs. Set direction = FALSE.")
-  }
-  list(
-    x0 = starting_points[[x]],
-    y0 = starting_points[[y]],
-    x1 = direction_points[[x]],
-    y1 = direction_points[[y]]
-  )
-}
-
-
 #' Set cols of facet
 #'
 #' calculates the number of columns specified for plots using tinyplot engine.
 #'
 #' @param n an integer value (corresponding to the number of differents ids)
 #'
+#' @return an integer which determines the number of facet columns used in tinyplot
+#'
 #' @export
 set_facet_ncol <- function(n) {
-  if (n < 4) return(n)
-  if (n == 4) return(2)
-  if (n %% 4 == 0) return(4)
-  if (n %% 3  == 0) return(3)
-  return(2)
+  if (n < 4) return(as.integer(n))
+  if (n == 4) return(2L)
+  if (n %% 4 == 0) return(4L)
+  if (n %% 3  == 0) return(3L)
+  return(2L)
 }
 
 
@@ -201,7 +174,12 @@ plot.trackframe <- function(
 
   if (isTRUE(direction)) {
     # add arrow in path direction from (x1, y1) to (x2, y2)
-    arrow_points <- get_arrow_points(x)
+    starting_points <- get_starting_points(x)
+    direction_points <- get_direction_points(x)
+    if (NROW(starting_points) != NROW(direction_points)) {
+      stop("direction points do not exist for all IDs. Set direction = FALSE.")
+    }
+    arrow_points <- c(starting_points, direction_points)
     arrow_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
     arrow_style <- modifyList(arrow_style_defaults, arrow_style)
     plot_add(
@@ -321,7 +299,7 @@ type_arrows <- function(
 }
 
 
-# FIXME: implement for multiple IDs if desired
+# NOTE: implement for multiple IDs if desired
 
 #' Plot Time Path
 #'
