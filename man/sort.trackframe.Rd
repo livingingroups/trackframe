@@ -11,7 +11,7 @@
 
 \item{decreasing}{logical indicating if sort should be increasing or decreasing.}
 
-\item{...}{additional arguments passeed to order}
+\item{...}{additional arguments passed to order}
 }
 \value{
 an object of class trackframe

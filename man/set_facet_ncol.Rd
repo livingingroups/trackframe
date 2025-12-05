@@ -7,11 +7,11 @@
 set_facet_ncol(n)
 }
 \arguments{
-\item{n}{an integer value (corresponding to the number of differents ids)}
-}
-\value{
-an integer which determines the number of facet columns used in tinyplot
+\item{n}{an integer value (corresponding to the number of different ids)}
 }
 \description{
-calculates the number of columns specified for plots using tinyplot engine.
+Set cols of facet
+}
+\details{
+Calculates the desired number of columns for trackframe plots using tinyplot engine.
 }
