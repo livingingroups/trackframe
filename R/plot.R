@@ -16,33 +16,6 @@ set_facet_ncol <- function(n) {
 }
 
 
-#' Evaluates list
-#'
-#' @param x  a list
-#'
-#' @export
-eval_list <- function(x) {
-  mode(x) <- "call"
-  eval(x)
-}
-
-#' Add plots to tinyplot plots
-#'
-#' @param call tinyplot call
-#' @param ... ...
-#'
-#' @export
-plot_add <- function(call, ...) {
-  args <- list(...)
-  if ("data" %in% names(args)) {
-    call$data <- args$data
-  }
-  new_call <- modifyList(call, args)
-  new_call[["add"]] <- TRUE
-  eval_list(new_call)
-}
-
-
 #' Plot trackframes
 #'
 #' Plots coordinates of objects of class \code{\link[trackframe]{trackframe}} based on
@@ -142,14 +115,13 @@ plot.trackframe <- function(
     ))
   }
   control <- modifyList(default_options, args[!names(args) %in% restricted])
-  plt_call <- c(list(tinyplot, form, data = x), control)
-  eval_list(plt_call)
+  do.call(tinyplot, c(list(form, data = x), control))
 
   # add starting point
   if (isTRUE(start_point)) {
     start_point_style_defaults <- list(col = "green", pch = 0, cex = 1)
     start_point_style <- modifyList(start_point_style_defaults, start_point_style)
-    plot_add(plt_call, add = TRUE, data = x[!duplicated(x[[id_col]]), ], type = "p",
+    tinyplot_add(data = x[!duplicated(x[[id_col]]), ], type = "p",
       cex = start_point_style[["cex"]], pch = start_point_style[["pch"]],
       col = start_point_style[["col"]])
   }
@@ -157,7 +129,7 @@ plot.trackframe <- function(
   if (isTRUE(end_point)) {
     end_point_style_defaults <- list(col = "red", pch = 1, cex = 1)
     end_point_style <- modifyList(end_point_style_defaults, end_point_style)
-    plot_add(plt_call, add = TRUE, data = x[!duplicated(x[[id_col]], fromLast = TRUE), ],
+    tinyplot_add(data = x[!duplicated(x[[id_col]], fromLast = TRUE), ],
       type = "p", cex = end_point_style[["cex"]], pch = end_point_style[["pch"]],
       col = end_point_style[["col"]])
   }
@@ -167,7 +139,7 @@ plot.trackframe <- function(
     if (any(x[[marker]] != 0)) {
       marker_style_defaults <- list(col = "blue", pch = 4, cex = 1)
       marker_style <- modifyList(marker_style_defaults, marker_style)
-      plot_add(plt_call, add = TRUE, data = x[x[[marker]] != 0, ], type = "p",
+      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
         cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
     }
   }
@@ -182,9 +154,7 @@ plot.trackframe <- function(
     arrow_points <- c(starting_points, direction_points)
     arrow_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
     arrow_style <- modifyList(arrow_style_defaults, arrow_style)
-    plot_add(
-      plt_call,
-      add = TRUE,
+    tinyplot_add(
       type = type_arrows(
         x0 = arrow_points[["x0"]],
         y0 = arrow_points[["y0"]],
@@ -377,23 +347,20 @@ plot_time_path <- function(
   control <- modifyList(default_options, args[!names(args) %in% restricted])
   par(mfrow = mfrow,
     mar = mar)
-  plt_call_x <- c(list(tinyplot, form_x, data = x), control)
-  eval_list(plt_call_x)
+  do.call(tinyplot, c(list(form_x, data = x), control))
   # add change points
   if (!is.null(change_point_id)) {
     if (any(x[[change_point_id]] != 0)) {
-      plot_add(plt_call_x, add = TRUE, data = x[x[[change_point_id]] != 0, ], type = "p",
+      tinyplot_add(data = x[x[[change_point_id]] != 0, ], type = "p",
         cex = change_point_cex, pch = change_point_pch, col = change_point_col)
       # NOTE: do we want to add cp numbers?
     }
   }
-
-  plt_call_y <- c(list(tinyplot, form_y, data = x), control)
-  eval_list(plt_call_y)
+  do.call(tinyplot, c(list(form_y, data = x), control))
   # add change points
   if (!is.null(change_point_id)) {
     if (any(x[[change_point_id]] != 0)) {
-      plot_add(plt_call_y, add = TRUE, data = x[x[[change_point_id]] != 0, ], type = "p",
+      tinyplot_add(data = x[x[[change_point_id]] != 0, ], type = "p",
         cex = change_point_cex, pch = change_point_pch, col = change_point_col)
       # NOTE: do we want to add cp numbers?
     }
