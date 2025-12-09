@@ -433,8 +433,8 @@ get_starting_points <- function(tf) {
 
 #' Obtain direction points
 #'
-#' This function obtains direction points (representing the second data point) for all tracks of
-#' objects of class trackframe.
+#' This function returns the second data point for each track.
+#' This can be useful for plotting direction indicators at the start of each track.
 #'
 #' @param tf an object of class trackframe
 #'
