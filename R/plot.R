@@ -174,7 +174,7 @@ plot.trackframe <- function(
 
 #' Add arrows to a plot
 #'
-#' This function adds an arrow to a current plot.
+#' This function adds an arrows to the current (tinyplot) plot.
 #'
 #' @param x0 x0 in \code{\link[graphics]{arrows}}
 #' @param y0 y0 in \code{\link[graphics]{arrows}}
