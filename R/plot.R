@@ -295,7 +295,7 @@ type_arrows <- function(
     }
     return(fun)
   }
-  out <- list(draw = draw_arrows(), data = NULL, name = "arrows")
+  out <- list(draw = draw_arrows(), data = NULL, name = "l")
   class(out) <- "tinyplot_type"
   return(out)
 }
