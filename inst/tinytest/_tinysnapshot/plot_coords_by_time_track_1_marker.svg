@@ -68,6 +68,10 @@
 <line x1='28.80' y1='109.35' x2='489.60' y2='109.35' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='28.80' y1='66.33' x2='489.60' y2='66.33' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <polyline points='45.87,216.00 60.58,36.00 443.11,36.00 457.82,69.04 472.53,49.43 ' style='stroke-width: 0.75;' />
+<line x1='57.88' y1='38.70' x2='63.28' y2='33.30' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='57.88' y1='33.30' x2='63.28' y2='38.70' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='455.12' y1='71.74' x2='460.52' y2='66.34' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='455.12' y1='66.34' x2='460.52' y2='71.74' style='stroke-width: 0.75; stroke: #0000FF;' />
 </g>
 <defs>
   <clipPath id='cpMjguODB8NDg5LjYwfDI4MC44MHw0NzUuMjA='>
@@ -121,6 +125,10 @@
 <line x1='28.80' y1='315.62' x2='489.60' y2='315.62' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <line x1='28.80' y1='290.37' x2='489.60' y2='290.37' style='stroke-width: 0.75; stroke: #D3D3D3; stroke-dasharray: 1.00,3.00;' />
 <polyline points='45.87,428.32 60.58,288.00 443.11,288.00 457.82,468.00 472.53,386.23 ' style='stroke-width: 0.75;' />
+<line x1='57.88' y1='290.70' x2='63.28' y2='285.30' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='57.88' y1='285.30' x2='63.28' y2='290.70' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='455.12' y1='470.70' x2='460.52' y2='465.30' style='stroke-width: 0.75; stroke: #0000FF;' />
+<line x1='455.12' y1='465.30' x2='460.52' y2='470.70' style='stroke-width: 0.75; stroke: #0000FF;' />
 </g>
 </g>
 </svg>
