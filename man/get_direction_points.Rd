@@ -10,11 +10,15 @@ get_direction_points(tf)
 \item{tf}{an object of class trackframe}
 }
 \value{
-a list with elements x1, y1 providing the x and y coordinates of the direction points
-of all different tracks.
-Each element of the list is of length of the number of unique id's in the trackframe.
+a trackframe providing the x and y coordinates of the direction points
+of all different tracks sorted by id (if available) and time.
 }
 \description{
 This function obtains direction points (representing the second data point) for all tracks of
 objects of class trackframe.
+}
+\examples{
+library(trackframe)
+get_direction_points(tf_mini)
+
 }

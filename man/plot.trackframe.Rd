@@ -7,7 +7,7 @@
 \method{plot}{trackframe}(
   x,
   direction = FALSE,
-  arrow_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
+  direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
   nfacet_col = NULL,
   start_point = FALSE,
   start_point_style = list(col = "green", pch = 0, cex = 1),
@@ -23,17 +23,16 @@
 
 \item{direction}{logical indicator if the path direction should be added to the plot}
 
-\item{arrow_style}{a list of length, code, col, lty, lwd of the arrow of the direction (argument
-passed to
-\code{\link[graphics]{arrows}}) specifying the style of the arrows}
+\item{direction_style}{a list of length, code, col, lty, lwd of the arrow of the direction
+(argument passed to \code{\link[graphics]{arrows}}) specifying the style of the arrows}
 
 \item{nfacet_col}{number of columns used in facet.args argument ncol}
 
-\item{start_point}{logical if starting point should be plotted}
+\item{start_point}{logical if starting point of each track should be plotted}
 
 \item{start_point_style}{a list where col, pch and cex for starting points are specified}
 
-\item{end_point}{logical if starting point should be plotted}
+\item{end_point}{logical if end point of each track should be plotted}
 
 \item{end_point_style}{a list where col, pch and cex for end points are specified}
 

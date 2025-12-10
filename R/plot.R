@@ -8,6 +8,7 @@
 #'
 #' @export
 set_facet_ncol <- function(n) {
+  assert_integerish(n)
   if (n < 4) return(as.integer(n))
   if (n == 4) return(2L)
   if (n %% 4 == 0) return(4L)
@@ -23,13 +24,12 @@ set_facet_ncol <- function(n) {
 #'
 #' @param x an object of class \code{trackframe}
 #' @param direction logical indicator if the path direction should be added to the plot
-#' @param arrow_style a list of length, code, col, lty, lwd of the arrow of the direction (argument
-#' passed to
-#' \code{\link[graphics]{arrows}}) specifying the style of the arrows
+#' @param direction_style a list of length, code, col, lty, lwd of the arrow of the direction
+#' (argument passed to \code{\link[graphics]{arrows}}) specifying the style of the arrows
 #' @param nfacet_col number of columns used in facet.args argument ncol
-#' @param start_point logical if starting point should be plotted
+#' @param start_point logical if starting point of each track should be plotted
 #' @param start_point_style a list where col, pch and cex for starting points are specified
-#' @param end_point logical if starting point should be plotted
+#' @param end_point logical if end point of each track should be plotted
 #' @param end_point_style a list where col, pch and cex for end points are specified
 #' @param marker (optional) column name of additional markers to be ploted (depending on a 0/1
 #'   labeling)
@@ -62,7 +62,7 @@ set_facet_ncol <- function(n) {
 plot.trackframe <- function(
   x,
   direction = FALSE,
-  arrow_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
+  direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
   nfacet_col = NULL,
   start_point = FALSE,
   start_point_style = list(col = "green", pch = 0, cex = 1),
@@ -72,6 +72,16 @@ plot.trackframe <- function(
   marker_style = list(col = "blue", pch = 4, cex = 1),
   ...
 ) {
+  assert_class(x, "trackframe")
+  assert_logical(direction)
+  assert_list(direction_style)
+  assert_integerish(nfacet_col, null.ok = TRUE)
+  assert_logical(start_point)
+  assert_list(start_point_style)
+  assert_logical(end_point)
+  assert_list(end_point_style)
+  assert_character(marker, null.ok = TRUE)
+  assert_list(marker_style)
   # sort data by id and time
   x <- sort(x)
 
@@ -151,21 +161,22 @@ plot.trackframe <- function(
     if (NROW(starting_points) != NROW(direction_points)) {
       stop("direction points do not exist for all IDs. Set direction = FALSE.")
     }
-    arrow_points <- c(starting_points, direction_points)
-    arrow_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
-    arrow_style <- modifyList(arrow_style_defaults, arrow_style)
+    # needed to match ids to ensure correct ordering in id's
+    uids <- unique(id(x))
+    direction_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
+    direction_style <- modifyList(direction_style_defaults, direction_style)
     tinyplot_add(
       type = type_arrows(
-        x0 = arrow_points[["x0"]],
-        y0 = arrow_points[["y0"]],
-        x1 = arrow_points[["x1"]],
-        y1 = arrow_points[["y1"]],
-        length = arrow_style[["length"]],
-        code = arrow_style[["code"]],
-        arrow_col = arrow_style[["col"]],
-        arrow_lty = arrow_style[["lty"]],
-        arrow_lwd = arrow_style[["lwd"]]
+        x0 = easting(starting_points)[match(uids, id(starting_points))],
+        y0 = northing(starting_points)[match(uids, id(starting_points))],
+        x1 = easting(direction_points)[match(uids, id(direction_points))],
+        y1 = northing(direction_points)[match(uids, id(direction_points))],
+        length = direction_style[["length"]],
+        code = direction_style[["code"]]
       ),
+      col = direction_style[["col"]],
+      lty = direction_style[["lty"]],
+      lwd = direction_style[["lwd"]],
       facet = arrows_facet
     )
   }
@@ -174,7 +185,7 @@ plot.trackframe <- function(
 
 #' Add arrows to a plot
 #'
-#' This function adds an arrows to the current (tinyplot) plot.
+#' This function adds arrows to the current (tinyplot) plot. Defines a type for tinyplots.
 #'
 #' @param x0 x0 in \code{\link[graphics]{arrows}}
 #' @param y0 y0 in \code{\link[graphics]{arrows}}
@@ -183,9 +194,26 @@ plot.trackframe <- function(
 #' @param length length in \code{\link[graphics]{arrows}}
 #' @param angle angle in \code{\link[graphics]{arrows}}
 #' @param code code in \code{\link[graphics]{arrows}}
-#' @param arrow_col col in \code{\link[graphics]{arrows}}
-#' @param arrow_lty lty in \code{\link[graphics]{arrows}}
-#' @param arrow_lwd lwd in \code{\link[graphics]{arrows}}
+#'
+#' @examples
+#' library(trackframe)
+#' library(tinyplot)
+#'
+#' df_mini
+#' tinyplot(x = df_mini$easting, y = df_mini$northing, type = "l")
+#' tinyplot_add(
+#'   type = type_arrows(
+#'     x0 = df_mini$easting[1],
+#'     y0 = df_mini$northing[1],
+#'     x1 = df_mini$easting[2],
+#'     y1 = df_mini$northing[2],
+#'     length = 0.5,
+#'     code = 2
+#'     ),
+#'   col = "blue",
+#'   lty = 2,
+#'   lwd = 2
+#' )
 #'
 #' @export
 type_arrows <- function(
@@ -195,11 +223,15 @@ type_arrows <- function(
   y1,
   length = 0.25,
   angle = 30,
-  code = 2,
-  arrow_col = "black",
-  arrow_lty = par("lty"),
-  arrow_lwd = par("lwd")
+  code = 2
 ) {
+  assert_numeric(x0)
+  assert_numeric(y0, len = length(x0))
+  assert_numeric(x1, len = length(x0))
+  assert_numeric(y1, len = length(x0))
+  assert_numeric(length, len = 1)
+  assert_numeric(angle, len = 1)
+  assert_integerish(angle, len = 1)
   draw_arrows <- function() {
     fun <- function(
       ifacet,
@@ -256,9 +288,9 @@ type_arrows <- function(
         length = length,
         angle = angle,
         code = code,
-        col = arrow_col,
-        lty = arrow_lty,
-        lwd = arrow_lwd
+        col = icol,
+        lty = ilty,
+        lwd = ilwd
       )
     }
     return(fun)
@@ -269,32 +301,41 @@ type_arrows <- function(
 }
 
 
-# NOTE: implement for multiple IDs if desired
-
 #' Plot Time Path
 #'
+#' This functions plots x-coordinates as well as y-coordinates over time in separate plots.
+#'
 #' @param x an object of class trackframe
-#' @param change_point_id column id of change points if available
-#' @param change_point_col color of change points
-#' @param change_point_pch pch of change points
-#' @param change_point_cex cex of change points
+#' @param marker (optional) column name of additional markers to be plotted (depending on a 0/1
+#'   labeling)
+#' @param marker_style a list where col, pch and cex for markers are specified
 #' @param nfacet_col number of columns used in facet.args argument ncol
 #' @param mfrow number of rows used in par()
 #' @param mar margins used in par()
-#' @param ... ...
+#' @param ... other arguments passed to the tinyplot call
+#'
+#' @examples
+#' library(trackframe)
+#' plot_coords_by_time(path_trackframe)
+#'
+#' path_trackframe$change_points <- 0
+#' path_trackframe$change_points[c(5 , 112, 205, 400, 700)] <- 1
+#' plot_coords_by_time(path_trackframe, marker = "change_points")
 #'
 #' @export
-plot_time_path <- function(
+plot_coords_by_time <- function(
   x,
-  change_point_id = NULL,
-  change_point_col = "blue",
-  change_point_pch = 4,
-  change_point_cex = 1,
+  marker = NULL,
+  marker_style = list(col = "blue", pch = 4, cex = 1),
   nfacet_col = NULL,
   mfrow = c(2, 1),
   mar = c(2, 2, 2, 1),
   ...
 ) {
+  assert_class(x, "trackframe")
+  assert_character(marker, null.ok = TRUE)
+  assert_list(marker_style)
+  assert_integerish(nfacet_col, null.ok = TRUE)
   # sort data by id and time
   if (is.null(attr(x, "id"))) {
     x <- x[order(time(x)), ]
@@ -349,20 +390,20 @@ plot_time_path <- function(
     mar = mar)
   do.call(tinyplot, c(list(form_x, data = x), control))
   # add change points
-  if (!is.null(change_point_id)) {
-    if (any(x[[change_point_id]] != 0)) {
-      tinyplot_add(data = x[x[[change_point_id]] != 0, ], type = "p",
-        cex = change_point_cex, pch = change_point_pch, col = change_point_col)
-      # NOTE: do we want to add cp numbers?
+  if (!is.null(marker)) {
+    if (any(x[[marker]] != 0)) {
+      marker_style_defaults <- list(col = "blue", pch = 4, cex = 1)
+      marker_style <- modifyList(marker_style_defaults, marker_style)
+      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
+        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
     }
   }
   do.call(tinyplot, c(list(form_y, data = x), control))
   # add change points
-  if (!is.null(change_point_id)) {
-    if (any(x[[change_point_id]] != 0)) {
-      tinyplot_add(data = x[x[[change_point_id]] != 0, ], type = "p",
-        cex = change_point_cex, pch = change_point_pch, col = change_point_col)
-      # NOTE: do we want to add cp numbers?
+  if (!is.null(marker)) {
+    if (any(x[[marker]] != 0)) {
+      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
+        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
     }
   }
 }

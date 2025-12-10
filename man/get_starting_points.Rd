@@ -10,10 +10,14 @@ get_starting_points(tf)
 \item{tf}{an object of class trackframe}
 }
 \value{
-a list with elements x0, y0 providing the x and y coordinates of th starting points all
-different tracks.
-Each element of the list is of length of the number of unique id's.
+a trackframe providing the x and y coordinates of th starting points all
+different tracks sorted by id (if available) and time.
 }
 \description{
 This function obtains starting points for all tracks of objects of class trackframe.
+}
+\examples{
+library(trackframe)
+get_starting_points(tf_mini)
+
 }

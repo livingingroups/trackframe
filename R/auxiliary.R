@@ -412,9 +412,12 @@ sort.trackframe <- function(x, decreasing = FALSE, ...) {
 #'
 #' @param tf an object of class trackframe
 #'
-#' @return a list with elements x0, y0 providing the x and y coordinates of th starting points all
-#' different tracks.
-#' Each element of the list is of length of the number of unique id's.
+#' @return a trackframe providing the x and y coordinates of th starting points all
+#' different tracks sorted by id (if available) and time.
+#'
+#' @examples
+#' library(trackframe)
+#' get_starting_points(tf_mini)
 #'
 #' @export
 get_starting_points <- function(tf) {
@@ -425,22 +428,24 @@ get_starting_points <- function(tf) {
   tf <- sort(tf)
   tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
   starting_points <- tf[!duplicated(tf[[id]]), ]
-  list(
-    x0 = setNames(starting_points[[x]], starting_points[[id]]),
-    y0 = setNames(starting_points[[y]], starting_points[[id]])
-  )
+  rownames(starting_points) <- starting_points[[id]]
+  # return(starting_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
+  return(starting_points)
 }
 
 #' Obtain direction points
 #'
-#' This function returns the second data point for each track.
-#' This can be useful for plotting direction indicators at the start of each track.
+#' This function obtains direction points (representing the second data point) for all tracks of
+#' objects of class trackframe.
 #'
 #' @param tf an object of class trackframe
 #'
-#' @return a list with elements x1, y1 providing the x and y coordinates of the direction points
-#' of all different tracks.
-#' Each element of the list is of length of the number of unique id's in the trackframe.
+#' @return a trackframe providing the x and y coordinates of the direction points
+#' of all different tracks sorted by id (if available) and time.
+#'
+#' @examples
+#' library(trackframe)
+#' get_direction_points(tf_mini)
 #'
 #' @export
 get_direction_points <- function(tf) {
@@ -452,8 +457,7 @@ get_direction_points <- function(tf) {
   tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
   tf <- tf[duplicated(tf[[id]]), ]
   direction_points <- tf[!duplicated(tf[[id]]), ]
-  list(
-    x1 = setNames(direction_points[[x]], direction_points[[id]]),
-    y1 = setNames(direction_points[[y]], direction_points[[id]])
-  )
+  rownames(direction_points) <- direction_points[[id]]
+  # return(direction_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
+  return(direction_points)
 }

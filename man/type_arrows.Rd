@@ -4,18 +4,7 @@
 \alias{type_arrows}
 \title{Add arrows to a plot}
 \usage{
-type_arrows(
-  x0,
-  y0,
-  x1,
-  y1,
-  length = 0.25,
-  angle = 30,
-  code = 2,
-  arrow_col = "black",
-  arrow_lty = par("lty"),
-  arrow_lwd = par("lwd")
-)
+type_arrows(x0, y0, x1, y1, length = 0.25, angle = 30, code = 2)
 }
 \arguments{
 \item{x0}{x0 in \code{\link[graphics]{arrows}}}
@@ -31,13 +20,28 @@ type_arrows(
 \item{angle}{angle in \code{\link[graphics]{arrows}}}
 
 \item{code}{code in \code{\link[graphics]{arrows}}}
-
-\item{arrow_col}{col in \code{\link[graphics]{arrows}}}
-
-\item{arrow_lty}{lty in \code{\link[graphics]{arrows}}}
-
-\item{arrow_lwd}{lwd in \code{\link[graphics]{arrows}}}
 }
 \description{
-This function adds an arrow to a current plot.
+This function adds arrows to the current (tinyplot) plot. Defines a type for tinyplots.
+}
+\examples{
+library(trackframe)
+library(tinyplot)
+
+df_mini
+tinyplot(x = df_mini$easting, y = df_mini$northing, type = "l")
+tinyplot_add(
+  type = type_arrows(
+    x0 = df_mini$easting[1],
+    y0 = df_mini$northing[1],
+    x1 = df_mini$easting[2],
+    y1 = df_mini$northing[2],
+    length = 0.5,
+    code = 2
+    ),
+  col = "blue",
+  lty = 2,
+  lwd = 2
+)
+
 }
