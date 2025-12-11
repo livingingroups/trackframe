@@ -63,10 +63,15 @@ plot(data)
 
 plot(data, direction = TRUE)
 
+# allow free y axis
+plot(data, facet.args = list("free" = TRUE))
+
 track_1 <- select_id(data, "track_1")
 plot(track_1)
 plot(track_1, direction = TRUE)
 
 plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
+
+
 
 }
