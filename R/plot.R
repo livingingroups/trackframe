@@ -51,7 +51,7 @@ set_facet_ncol <- function(n) {
 #' plot(data)
 #'
 #' plot(data, direction = TRUE)
-#' 
+#'
 #' # allow free y axis
 #' plot(data, facet.args = list("free" = TRUE))
 #'
@@ -60,8 +60,6 @@ set_facet_ncol <- function(n) {
 #' plot(track_1, direction = TRUE)
 #'
 #' plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
-#' 
-#'
 #'
 #' @export
 plot.trackframe <- function(
