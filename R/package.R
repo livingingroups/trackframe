@@ -1,13 +1,14 @@
-#' @import checkmate
+#' @import checkmate tinyplot
 #' @importFrom sf st_coordinates st_as_sf st_transform
-#' @importFrom stats runif time setNames
-#' @importFrom utils tail
+#' @importFrom stats runif time setNames as.formula
+#' @importFrom utils tail modifyList
 #' @importFrom methods as
 #' @importFrom data.table as.data.table
 #' @importFrom tibble as_tibble
 #' @importFrom zoo coredata
 #' @importFrom stringr str_split
 #' @importFrom digest digest
+#' @importFrom graphics arrows par
 
 NULL
 

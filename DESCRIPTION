@@ -1,7 +1,7 @@
 Package: trackframe
 Type: Package
 Title: trackframe
-Version: 0.1.3
+Version: 0.1.5
 Authors@R: c(
     person("Rainer", "Hirk", email = "Rainer.Hirk@quintik.at", role = "aut"),
     person("Florian", "Schwendinger", email = "Florian.Schwendinger@quintik.at", role = "aut"),
@@ -12,9 +12,10 @@ Description: Lightweight dataframes of animal movement data for simple multiform
 URL: https://github.com/livingingroups/travelpaths-devel
 BugReports: https://github.com/livingingroups/travelpaths-devel/issues
 License: GPL (>= 2)
-Imports: checkmate, sf, methods, data.table, tibble, zoo, stringr, logger, digest
+Imports: checkmate, sf, methods, data.table, tibble, zoo, stringr, logger, digest, tinyplot (>= 0.6.0)
 Depends: R (>= 4.1.0)
-Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack, withr
+Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack, withr,
+  tinysnapshot, rsvg, svglite, fontquiver
 Remotes: livingingroups/cocomo
 Encoding: UTF-8
 RoxygenNote: 7.3.3

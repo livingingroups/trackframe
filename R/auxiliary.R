@@ -383,3 +383,81 @@ id_hash <- function(data,
   }
   apply(data[, cols, with = FALSE], 1, digest)
 }
+
+
+#' Sorting of Trackframes
+#'
+#' Sort a trackframe into ascending or descending order. Sorts if available by track id and time
+#' columns of the trackframe. If no id column is available only sorted by time.
+#'
+#' @param x an object of class trackframe
+#' @param decreasing logical indicating if sort should be increasing or decreasing.
+#' @param ... additional arguments passed to order
+#'
+#' @return an object of class trackframe
+#' @export
+sort.trackframe <- function(x, decreasing = FALSE, ...) {
+  if (is.null(attr(x, "id"))) {
+    x <- x[order(time(x), decreasing = decreasing, ...), ]
+  } else {
+    x <- x[order(id(x), time(x), decreasing = decreasing, ...), ]
+  }
+  return(x)
+}
+
+
+#' Obtain starting points
+#'
+#' This function obtains starting points for all tracks of objects of class trackframe.
+#'
+#' @param tf an object of class trackframe
+#'
+#' @return a trackframe providing the x and y coordinates of th starting points all
+#' different tracks sorted by id (if available) and time.
+#'
+#' @examples
+#' library(trackframe)
+#' get_starting_points(tf_mini)
+#'
+#' @export
+get_starting_points <- function(tf) {
+  assert_class(tf, "trackframe")
+  x <- attr(tf, "easting")
+  y <- attr(tf, "northing")
+  id <- attr(tf, "id")
+  tf <- sort(tf)
+  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
+  starting_points <- tf[!duplicated(tf[[id]]), ]
+  rownames(starting_points) <- starting_points[[id]]
+  # return(starting_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
+  return(starting_points)
+}
+
+#' Obtain direction points
+#'
+#' This function obtains direction points (representing the second data point) for all tracks of
+#' objects of class trackframe.
+#'
+#' @param tf an object of class trackframe
+#'
+#' @return a trackframe providing the x and y coordinates of the direction points
+#' of all different tracks sorted by id (if available) and time.
+#'
+#' @examples
+#' library(trackframe)
+#' get_direction_points(tf_mini)
+#'
+#' @export
+get_direction_points <- function(tf) {
+  assert_class(tf, "trackframe")
+  x <- attr(tf, "easting")
+  y <- attr(tf, "northing")
+  id <- attr(tf, "id")
+  tf <- sort(tf)
+  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
+  tf <- tf[duplicated(tf[[id]]), ]
+  direction_points <- tf[!duplicated(tf[[id]]), ]
+  rownames(direction_points) <- direction_points[[id]]
+  # return(direction_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
+  return(direction_points)
+}

@@ -3,6 +3,16 @@ library(trackframe)
 
 data <- df_mini[c(4, 1, 3, 5, 2), ]
 
+data_tf <- as.trackframe(data, crs = NA)
+data_tf_sorted <- sort(data_tf)
+expect_equal(df_mini$time, data_tf_sorted$time)
+
+# with multiple ids
+set.seed(2025)
+tf_mini2 <- tf_mini[sample(1:11), ]
+tf_mini_sorted <- sort(tf_mini2)
+expect_equal(tf_mini$time, tf_mini_sorted$time)
+
 # test sorting + undo sorting in backtransform
 data_tf <- as.trackframe(data, crs = NA)
 data_b <- tf_backtransform(data_tf)
