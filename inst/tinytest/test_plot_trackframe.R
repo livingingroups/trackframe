@@ -68,3 +68,31 @@ f <- function() {
         "yellow", lwd = 4, length = 3), facet.args = list("free" = TRUE))
 }
 expect_snapshot_plot(f, label = "plot_data_tf_mini_marker_arrow_style2")
+
+
+# test facet = FALSE
+f <- function() {
+  plot(data, facet = FALSE)
+}
+expect_snapshot_plot(f, label = "plot_data_tf_mini_facetF")
+
+f <- function() {
+  plot(data, facet = FALSE, start_point = TRUE, end_point = TRUE)
+}
+expect_snapshot_plot(f, label = "plot_data_tf_mini_facetF_start_end")
+
+f <- function() {
+  plot(data, facet = FALSE, marker = "cp_id", marker_style = list(col = "yellow"))
+}
+expect_snapshot_plot(f, label = "plot_data_tf_mini_facetF_marker_style")
+
+f <- function() {
+  plot(data, facet = FALSE, start_point = TRUE, end_point = TRUE, direction = TRUE)
+}
+expect_snapshot_plot(f, label = "plot_data_tf_mini_facetF_start_end_dir")
+
+f <- function() {
+  plot(data, facet = FALSE, start_point = TRUE, end_point = TRUE, direction = TRUE,
+    direction_style = list(col = "yellow", lwd = 4, length = 3))
+}
+expect_snapshot_plot(f, label = "plot_data_tf_mini_facetF_start_end_dir_style")

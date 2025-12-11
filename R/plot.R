@@ -26,6 +26,8 @@ set_facet_ncol <- function(n) {
 #' @param direction logical indicator if the path direction should be added to the plot
 #' @param direction_style a list of length, code, col, lty, lwd of the arrow of the direction
 #' (argument passed to \code{\link[graphics]{arrows}}) specifying the style of the arrows
+#' @param facet logical if facets should be used (TRUE is default). If FALSE all lines are plotted
+#' in a single plot.
 #' @param nfacet_col number of columns used in facet.args argument ncol
 #' @param start_point logical if starting point of each track should be plotted
 #' @param start_point_style a list where col, pch and cex for starting points are specified
@@ -55,6 +57,9 @@ set_facet_ncol <- function(n) {
 #' # allow free y axis
 #' plot(data, facet.args = list("free" = TRUE))
 #'
+#' # without facets
+#' plot(data, facet = FALSE)
+#'
 #' track_1 <- select_id(data, "track_1")
 #' plot(track_1)
 #' plot(track_1, direction = TRUE)
@@ -66,6 +71,7 @@ plot.trackframe <- function(
   x,
   direction = FALSE,
   direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
+  facet = TRUE,
   nfacet_col = NULL,
   start_point = FALSE,
   start_point_style = list(col = "green", pch = 0, cex = 1),
@@ -78,6 +84,7 @@ plot.trackframe <- function(
   assert_class(x, "trackframe")
   assert_logical(direction)
   assert_list(direction_style)
+  assert_logical(facet)
   assert_integerish(nfacet_col, null.ok = TRUE)
   assert_logical(start_point)
   assert_list(start_point_style)
@@ -104,13 +111,20 @@ plot.trackframe <- function(
   if (n_id > 1) {
     form <- as.formula(paste(y_col, "~", x_col, "|", id_col))
     default_options <- list(
-      facet = "by",
       type = "l",
-      facet.args = list("free" = FALSE, ncol = nfacet_col),
       grid = TRUE,
       main = "Paths"
     )
-    arrows_facet <- "by"
+    if (facet) {
+      default_options <- c(default_options,
+        facet = "by",
+        facet.args = list("free" = FALSE, ncol = nfacet_col)
+      )
+      arrows_facet <- "by"
+    } else {
+      arrows_facet <- id_col
+    }
+
   } else {
     form <- as.formula(paste(y_col, "~", x_col))
     default_options <- list(type = "l", grid = TRUE, main = "")

@@ -8,6 +8,7 @@
   x,
   direction = FALSE,
   direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
+  facet = TRUE,
   nfacet_col = NULL,
   start_point = FALSE,
   start_point_style = list(col = "green", pch = 0, cex = 1),
@@ -25,6 +26,9 @@
 
 \item{direction_style}{a list of length, code, col, lty, lwd of the arrow of the direction
 (argument passed to \code{\link[graphics]{arrows}}) specifying the style of the arrows}
+
+\item{facet}{logical if facets should be used (TRUE is default). If FALSE all lines are plotted
+in a single plot.}
 
 \item{nfacet_col}{number of columns used in facet.args argument ncol}
 
@@ -66,12 +70,13 @@ plot(data, direction = TRUE)
 # allow free y axis
 plot(data, facet.args = list("free" = TRUE))
 
+# without facets
+plot(data, facet = FALSE)
+
 track_1 <- select_id(data, "track_1")
 plot(track_1)
 plot(track_1, direction = TRUE)
 
 plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
-
-
 
 }
