@@ -51,12 +51,17 @@ set_facet_ncol <- function(n) {
 #' plot(data)
 #'
 #' plot(data, direction = TRUE)
+#' 
+#' # allow free y axis
+#' plot(data, facet.args = list("free" = TRUE))
 #'
 #' track_1 <- select_id(data, "track_1")
 #' plot(track_1)
 #' plot(track_1, direction = TRUE)
 #'
 #' plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
+#' 
+#'
 #'
 #' @export
 plot.trackframe <- function(
@@ -103,7 +108,7 @@ plot.trackframe <- function(
     default_options <- list(
       facet = "by",
       type = "l",
-      facet.args = list("free" = TRUE, ncol = nfacet_col),
+      facet.args = list("free" = FALSE, ncol = nfacet_col),
       grid = TRUE,
       main = "Paths"
     )
@@ -366,7 +371,7 @@ plot_coords_by_time <- function(
     default_options <- list(
       facet = "by",
       type = "l",
-      facet.args = list("free" = TRUE, ncol = nfacet_col),
+      facet.args = list("free" = FALSE, ncol = nfacet_col),
       grid = TRUE,
       main = "Paths"
     )
