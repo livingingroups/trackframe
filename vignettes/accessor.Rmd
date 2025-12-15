@@ -1,0 +1,144 @@
+---
+author: "Brock"
+date: "2025-11-17"
+output: rmarkdown::html_vignette
+title: Accessing and Modifying Key Columns
+vignette: >
+  %\VignetteIndexEntry{Accessing and Modifying Key Columns}
+  %\VignetteEngine{knitr::knitr}
+editor_options:
+  chunk_output_type: console
+---
+
+# Accessing and Modifying Key Columns
+
+## Setup
+
+Starting with our df_mini, let's rename columns to truly custom names.
+```{r}
+df <- trackframe::df_mini
+
+df
+```
+
+```{r}
+library(trackframe)
+
+colnames(df) <- c('when', 'up', 'right', 'who')
+tf <- as.trackframe(
+  df,
+  time_col = 'when',
+  easting_col = 'right',
+  northing_col = 'up',
+  id_col = 'who',
+  crs = NA
+)
+tf
+```
+
+## Accessing key contents
+
+Without changing our funky column names, we can access the key columns in a generic way:
+
+```{r}
+easting(tf)
+northing(tf)
+time(tf)
+id(tf)
+```
+
+## Modifying key columns
+
+We can also update the contents of columns using these same functions:
+
+```{r}
+time(tf) <- time(tf) + as.difftime(1, unit = 'days')
+tf$when # sucessfully updated
+```
+
+
+## Accessing key column names
+
+If we need to access the column names, we can do that with the *_col functions.
+
+```{r}
+time_col(tf)
+easting_col(tf)
+northing_col(tf)
+id_col(tf)
+```
+
+or with the `tf_colnames` function. Note this will just return the names of key columns,
+not any other columns that happen to be in the trackframe. The vector returned by tf_colnames also
+itself has names indicating which key column is which.
+
+```{r}
+tf$why <- "just because"
+
+colnames(tf)
+tf_colnames(tf)
+```
+
+## Modifying key column names
+
+`tf_colnames()` and the individual `*_col()` functions can be used to change the
+column names as well.
+
+```{r}
+id_col(tf) <- "track_id"
+
+tf_colnames(tf) # updated
+
+
+tf_colnames(tf)[["time"]] <- "timestamp"
+tf_colnames(tf) # updated
+```
+
+## Changing which are key columns
+
+What if you want to change which column within the data frame is identified as a key column.
+That can be done by rerunning `as.trackframe` with a new column name. For example:
+
+```{r}
+# create new columns that we want to be the new coordinates
+tf$up_10x <- 10 * tf$up
+tf$right_10x <- 10 * tf$right
+
+# up/right and up_10x/right_10x are both part of the trackframe
+colnames(tf)
+
+# still same as original
+min(easting(tf))
+min(northing(tf))
+
+tf_colnames(tf) # also unchanged
+
+# update which columns are used as key columns
+
+tf <- as.trackframe(tf, easting = "right_10x", northing = "up_10x", crs = NA)
+
+# Now the easting and northing values are coming from the *_10x columns
+min(easting(tf))
+min(northing(tf))
+
+# likewise, tf_colnames is updated
+tf_colnames(tf)
+
+# up and right (1x) columns are still there.
+# They are just not identified as the easting and northing columns
+colnames(tf)
+```
+
+## Accessing and updating crs
+
+`crs()` can be used to access and update crs. `crs_type()` can 
+
+```{r}
+crs(tf)
+crs_type(tf)
+```
+```{r}
+crs(tf) <- "EPSG:32632"
+crs(tf)
+crs_type(tf)
+```

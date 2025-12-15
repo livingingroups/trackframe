@@ -233,58 +233,42 @@ tf <- as.trackframe(df,
 ```
 
 
-```{r}
-# Extract the values in the time_col
-time(tf)
-```
-
-```{r}
-# Extract the values in the easting_col
-easting(tf)
-```
-
-```{r}
-# Extract the values in the northing_col
-northing(tf)
-```
-
-```{r}
-# Extract the values in the id_col
-id(tf)
-```
-
-<!-- [ONCE THESE FUNCTIONS ARE IMPLEMENTED, remove the 4 code blocks above, and activate the 4 code blocks below.]
-
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE}
 # Extract the values in the time_col
 time(tf)
 
 # Replace the second value in the time_col
-#time(tf)[2] <- as.POSIXct("2025-11-17 14:08:00 CET")
+time(tf)[2] <- as.POSIXct("2025-11-17 14:08:00 CET")
+
+tf
 ```
 
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE}
 # Extract the values in the easting_col
 easting(tf)
 
 # Replace all values in the easting_col with a new vector
-# easting(tf) <- runif(25, 0, 10)
+easting(tf) <- runif(25, 0, 10)
+
+tf
 ```
 
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE}
 # Extract the values in the northing_col
 northing(tf)
 
 # Replace every values in the northing_col with a 5
-#northing(tf) <- 5
+northing(tf) <- 5
+
+tf
 ```
 
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE}
 # Extract the values in the id_col
 id(tf)
 
 # Replace the values in the id_col based on a conditional
-# id(tf) <- ifelse(id(tf) == 1, "Bob", "Other")
+id(tf) <- ifelse(id(tf) == 1, "Bob", "Other")
 
 tf
 ```
@@ -315,14 +299,10 @@ tf_split[[1]]
 tf_split[["Bob"]]
 ```
 
-<!-- FIXME: Insert explainer for [#89](https://github.com/livingingroups/travelpaths-devel/issues/89) and [#91](https://github.com/livingingroups/travelpaths-devel/issues/91), once they've been implemented.
-
-
-"easting_col" gets / sets the attribute
-"easting" gets / sets the corresponding values in the dataframe
-
-Not yet fully implemented. Return to this once they are.
--->
+- *_col (e.g. "easting_col") gets / sets the key column's column name. In the "set" case,
+  it updates the designated column's name. It does not change which column is designated as a key column.
+- "easting"/"northing"/etc. gets / sets the corresponding values in the dataframe
+- `as.trackframe` can be re-run to change which columns are treated as key columns
 
 
 ## Transform from a `trackframe`

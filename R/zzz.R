@@ -64,3 +64,5 @@ log_info <- function(
   ))
   logger::log_formatter(logger::formatter_sprintf, namespace = "trackframe")
 }
+
+key_cols <- c("easting", "northing", "time", "id")

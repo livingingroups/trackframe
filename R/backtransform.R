@@ -1,3 +1,17 @@
+backtransform_id <- function(unique_id, group_names) {
+  id_list <- lapply(
+    str_split(unique_id, pattern = "<;>"),
+    function(x) {
+      id_i <- setNames(as.list(x), group_names)
+      class(id_i) <- "s_group"
+      id_i
+    })
+  class(id_list) <- "c_grouping"
+  attr(id_list, "active_group") <- group_names
+  attr(id_list, "sort_index") <- as.factor(sapply(id_list, paste, collapse = "_"))
+  id_list
+}
+
 #' Backtransform
 #'
 #' @param tf an object of class `trackframe`
@@ -104,11 +118,6 @@ tf_as_xyt <- function(x, ...) { #coredata.trackframe
   class(x) <- setdiff(class(x), "trackframe")
   x
 }
-
-
-#' @export
-#' @rdname coredata
-coredata.trackframe <- tf_as_xyt
 
 #' Convert a Track Frame to Simple Features (sf) Object
 #'

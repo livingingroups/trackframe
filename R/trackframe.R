@@ -446,59 +446,56 @@ as.trackframe.sftrack <- function(
 
 #' @export
 #' @rdname as_trackframe
-as.trackframe.trackframe <- function(data, ...) {
-  # time_col = NULL,
-  # easting_col = NULL,
-  # northing_col = NULL,
-  # id_col = NULL,
-  # sort = TRUE,
-  # coerce_to = "base",
-  argg <- list(...)
-  if (length(argg) > 0) warning("... arguments are ignored in as.trackframe.trackframe()")
-  # FIXME: what do we expect here?
-  # FIXME: add transformation_info
-  # if (!is.null(time_col)) {
-  #   checkmate::assert_string(time_col)
-  #   checkmate::assert_choice(time_col, colnames(data))
-  #   attr(data, "time") <- time_col
-  # }
-  # if (!is.null(easting_col)) {
-  #   checkmate::assert_choice(easting_col, colnames(data))
-  #   checkmate::assert_string(easting_col)
-  #   attr(data, "easting") <- easting_col
-  # }
-  # if (!is.null(northing_col)) {
-  #   checkmate::assert_choice(northing_col, colnames(data))
-  #   checkmate::assert_string(northing_col)
-  #   attr(data, "northing") <- northing_col
-  # }
-  # if (!is.null(id_col)) {
-  #   checkmate::assert_choice(id_col, colnames(data))
-  #   checkmate::assert_string(id_col)
-  #   attr(data, "id_col") <- id_col
-  # }
-  #
-  # # #coerce_to
-  # # if (is.null(coerce_to)) {
-  # # } else if (coerce_to == "base") {
-  # #   data <- as.data.frame(data)
-  # # } else if (coerce_to == "data.table") {
-  # #   data <- as.data.table(data)
-  # # } else if (coerce_to == "tibble") {
-  # #   data <- as_tibble(data)
-  # # }
-  #
-  # if (isTRUE(sort)) {
-  #   if (is.null(attr(data, "id"))) {
-  #     data <- data[order(time(data)), ]
-  #   } else {
-  #     data <- data[order(id(data), time(data)), ]
-  #   }
-  # }
-  data
+as.trackframe.trackframe <- function(data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  sort = TRUE,
+  coerce_to = NULL,
+  crs = NULL,
+  ...
+) {
+  args_in <- list(
+    easting_col = easting_col,
+    northing_col = northing_col,
+    time_col = time_col,
+    id_col = id_col,
+    sort = sort,
+    coerce_to = coerce_to,
+    crs = crs
+  )
+  if (
+    (!is.null(easting_col) || !is.null(easting_col)) &&
+      is.null(crs)
+  ) warning(
+    "trackframe coordinates are being updated without updating crs.",
+    "Potential mismatch between coordinates and reference system."
+  )
+  data_state_in <- list(
+    easting_col = attr(data, "easting"),
+    northing_col = attr(data, "northing"),
+    time_col = attr(data, "time"),
+    id_col = attr(data, "id"),
+
+    # tf_state[["sort"]] setting doesn't do anything
+    # default is to sort unless user specifically
+    # puts sort = FALSE.
+    sort = NULL,
+    crs = attr(data, "crs")
+  )
+  args_out <- lapply(names(args_in), \(key) {
+    # the user has set an arg away from null,
+    # pass that forward to update the trackframe
+    # otherwise, pass in current value so no change occurs
+    args_in[[key]] %||% data_state_in[[key]]
+  })
+  names(args_out) <- names(args_in)
+  do.call(as.trackframe.data.frame, c(
+    list(data),
+    args_out
+  ))
 }
-
-
 
 
 is.trackframe <- function(x) {

@@ -80,7 +80,17 @@ as.trackframe(
   ...
 )
 
-\method{as.trackframe}{trackframe}(data, ...)
+\method{as.trackframe}{trackframe}(
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  sort = TRUE,
+  coerce_to = NULL,
+  crs = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object

@@ -95,21 +95,21 @@ plot.trackframe <- function(
   # sort data by id and time
   x <- sort(x)
 
-  x_col <- attr(x, "easting")
-  y_col <- attr(x, "northing")
-  id_col <- attr(x, "id")
+  x_col <- easting_col(x)
+  y_col <- northing_col(x)
+  i_col <- id_col(x)
 
-  if (is.null(id_col)) {
-    id_col <- "id_int"
-    attr(x, "id") <- id_col
-    x$id_int <- "id_1"
+  if (is.null(i_col)) {
+    i_col <- "id_int"
+    x[[i_col]] <- "id_1"
+    as.trackframe(x, id_col = i_col)
   }
 
   n_id <- length(unique(id(x)))
   nfacet_col <- nfacet_col %||% set_facet_ncol(n_id)
 
   if (n_id > 1) {
-    form <- as.formula(paste(y_col, "~", x_col, "|", id_col))
+    form <- as.formula(paste(y_col, "~", x_col, "|", i_col))
     default_options <- list(
       type = "l",
       grid = TRUE,
@@ -122,13 +122,13 @@ plot.trackframe <- function(
       )
       arrows_facet <- "by"
     } else {
-      arrows_facet <- id_col
+      arrows_facet <- i_col
     }
 
   } else {
     form <- as.formula(paste(y_col, "~", x_col))
     default_options <- list(type = "l", grid = TRUE, main = "")
-    arrows_facet <- id_col
+    arrows_facet <- i_col
   }
 
   # delete restricted elements
@@ -148,7 +148,7 @@ plot.trackframe <- function(
   if (isTRUE(start_point)) {
     start_point_style_defaults <- list(col = "green", pch = 0, cex = 1)
     start_point_style <- modifyList(start_point_style_defaults, start_point_style)
-    tinyplot_add(data = x[!duplicated(x[[id_col]]), ], type = "p",
+    tinyplot_add(data = x[!duplicated(x[[i_col]]), ], type = "p",
       cex = start_point_style[["cex"]], pch = start_point_style[["pch"]],
       col = start_point_style[["col"]])
   }
@@ -156,7 +156,7 @@ plot.trackframe <- function(
   if (isTRUE(end_point)) {
     end_point_style_defaults <- list(col = "red", pch = 1, cex = 1)
     end_point_style <- modifyList(end_point_style_defaults, end_point_style)
-    tinyplot_add(data = x[!duplicated(x[[id_col]], fromLast = TRUE), ],
+    tinyplot_add(data = x[!duplicated(x[[i_col]], fromLast = TRUE), ],
       type = "p", cex = end_point_style[["cex"]], pch = end_point_style[["pch"]],
       col = end_point_style[["col"]])
   }
@@ -354,22 +354,18 @@ plot_coords_by_time <- function(
   assert_list(marker_style)
   assert_integerish(nfacet_col, null.ok = TRUE)
   # sort data by id and time
-  if (is.null(attr(x, "id"))) {
-    x <- x[order(time(x)), ]
-  } else {
-    x <- x[order(id(x), time(x)), ]
+  x <- sort(x)
+  x_col <- easting_col(x)
+  y_col <- northing_col(x)
+  t_col <- time_col(x)
+  i_col <- id_col(x)
+
+  if (is.null(i_col)) {
+    i_col <- "id_int"
+    x[[i_col]] <- "id_1"
+    as.trackframe(x, id_col = i_col)
   }
 
-  x_col <- attr(x, "easting")
-  y_col <- attr(x, "northing")
-  time_col <- attr(x, "time")
-  id_col <- attr(x, "id")
-
-  if (is.null(id_col)) {
-    id_col <- "id_int"
-    attr(x, "id") <- id_col
-    x$id_int <- "id_1"
-  }
 
   n_id <- length(unique(id(x)))
 
@@ -378,8 +374,8 @@ plot_coords_by_time <- function(
   nfacet_col <- nfacet_col %||% set_facet_ncol(n_id)
 
   if (n_id > 1) {
-    form_x <- as.formula(paste(x_col, "~", time_col, "|", id_col))
-    form_y <- as.formula(paste(y_col, "~", time_col, "|", id_col))
+    form_x <- as.formula(paste(x_col, "~", t_col, "|", i_col))
+    form_y <- as.formula(paste(y_col, "~", t_col, "|", i_col))
     default_options <- list(
       facet = "by",
       type = "l",
@@ -388,8 +384,8 @@ plot_coords_by_time <- function(
       main = "Paths"
     )
   } else {
-    form_x <- as.formula(paste(x_col, "~", time_col))
-    form_y <- as.formula(paste(y_col, "~", time_col))
+    form_x <- as.formula(paste(x_col, "~", t_col))
+    form_y <- as.formula(paste(y_col, "~", t_col))
     default_options <- list(type = "l", grid = TRUE, main = unique(id(x)))
   }
 

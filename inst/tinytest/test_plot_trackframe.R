@@ -21,14 +21,15 @@ expect_snapshot_plot(f, label = "plot_data_tf_mini_direction")
 
 expect_error(plot_coords_by_time(data))
 
-f <- function() plot_coords_by_time(data[data$id == "track_1", ])
-expect_snapshot_plot(f, label = "plot_coords_by_time_track_1")
+withr::with_timezone("UTC", {
+  f <- function() plot_coords_by_time(data[data$id == "track_1", ])
+  expect_snapshot_plot(f, label = "plot_coords_by_time_track_1")
 
-
-data$cp_id <- 0
-data$cp_id[c(2, 4, 9)] <- 1
-f <- function() plot_coords_by_time(data[data$id == "track_1", ], marker = "cp_id")
-expect_snapshot_plot(f, label = "plot_coords_by_time_track_1_marker")
+  data$cp_id <- 0
+  data$cp_id[c(2, 4, 9)] <- 1
+  f <- function() plot_coords_by_time(data[data$id == "track_1", ], marker = "cp_id")
+  expect_snapshot_plot(f, label = "plot_coords_by_time_track_1_marker")
+})
 
 f <- function() plot(data, marker = "cp_id", facet.args = list("free" = TRUE))
 expect_snapshot_plot(f, label = "plot_data_tf_mini_marker")
