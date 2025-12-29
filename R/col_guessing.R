@@ -63,7 +63,7 @@ warn_if_guess_ambiguous <- function(data, guesses) {
     if (length(guesses_col) > 1) {
       if (
         !all(duplicated(t(data[,
-          colnames(data) %in% guesses_col,
+          colnames(data) %in% guesses_col, # nolint https://github.com/r-lib/lintr/issues/2960
           with = FALSE
         ]))[-1])
       ) {

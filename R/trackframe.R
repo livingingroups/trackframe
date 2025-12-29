@@ -357,7 +357,8 @@ as.trackframe.move2 <- function(
   if (!is.null(time_col)) {
     log_debug(
       paste(
-        "move2 input so using implicitly configured time column %s rather that time_col argument %s",
+        "move2 input so using implicitly configured time column %s",
+        "rather that time_col argument %s"
       ),
       time_index,
       dput(time_col)
