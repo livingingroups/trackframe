@@ -1,6 +1,6 @@
 library(tinytest)
 
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
+"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
   base::`[.data.frame`(x, i, j, drop = drop)
 }
 
@@ -95,11 +95,18 @@ for (row_idx in seq_len(nrow(scenarios))) {
   expect_inherits(tf, "data.frame")
   expect_inherits(tf, "trackframe")
   for (class_to_check in names(class_ids)) {
-    if (class_to_check == if (is.na(to)) from else to)
-      for (class_id in class_ids[[class_to_check]]) expect_inherits(tf, class_id)
-    else
-      for (class_id in class_ids[[class_to_check]]) expect_false(inherits(tf, class_id))
+    if (class_to_check == if (is.na(to)) from else to) {
+      for (class_id in class_ids[[class_to_check]]) {
+        expect_inherits(tf, class_id)
+      }
+    } else {
+      for (class_id in class_ids[[class_to_check]]) {
+        expect_false(inherits(tf, class_id))
+      }
+    }
   }
 
-  for (col in c("x", "y", "t", "animal_id")) expect_equal(tf[[col]], tf_df[[col]])
+  for (col in c("x", "y", "t", "animal_id")) {
+    expect_equal(tf[[col]], tf_df[[col]])
+  }
 }

@@ -5,10 +5,15 @@ backtransform_id <- function(unique_id, group_names) {
       id_i <- setNames(as.list(x), group_names)
       class(id_i) <- "s_group"
       id_i
-    })
+    }
+  )
   class(id_list) <- "c_grouping"
   attr(id_list, "active_group") <- group_names
-  attr(id_list, "sort_index") <- as.factor(sapply(id_list, paste, collapse = "_"))
+  attr(id_list, "sort_index") <- as.factor(sapply(
+    id_list,
+    paste,
+    collapse = "_"
+  ))
   id_list
 }
 
@@ -52,24 +57,26 @@ tf_backtransform <- function(tf) {
     tf_bt <- tf_as_move2(tf)
   } else if ("sftrack" %in% class_old) {
     tf_bt <- tf_as_sftrack(tf)
-  } else if (class_old[1] %in%  c("data.frame", "data.table", "tbl_df", "tbl")) {
+  } else if (class_old[1] %in% c("data.frame", "data.table", "tbl_df", "tbl")) {
     if (attr(tf, "easting") != transformation_info$coord_names[1]) {
       tf[, attr(tf, "easting")] <- NULL
     }
     if (attr(tf, "northing") != transformation_info$coord_names[2]) {
       tf[, attr(tf, "northing")] <- NULL
     }
-    if (class_old[1] ==  "data.frame") {
+    if (class_old[1] == "data.frame") {
       tf_bt <- as.data.frame(tf)
-    } else if (class_old[1] ==  "data.table") {
+    } else if (class_old[1] == "data.table") {
       tf_bt <- as.data.table(tf)
     } else if (class_old[1] %in% c("tbl_df", "tbl")) {
       tf_bt <- as_tibble(tf)
     }
     transformation_info$attributes$row.names <- attr(tf_bt, "row.names")
     attributes(tf_bt) <- transformation_info$attributes
-  } else if (class_old ==  "matrix") {
-    stop("backtransformation not supported for class matrix. Use ?coredata instead.")
+  } else if (class_old == "matrix") {
+    stop(
+      "backtransformation not supported for class matrix. Use ?coredata instead."
+    )
   } else {
     stop(sprintf(
       "backtransformation not supported for class(es) %s. Use ?coredata instead.",
@@ -84,10 +91,14 @@ tf_backtransform <- function(tf) {
         idx <- match(transformation_info[["id_hash_orig"]], id_hash_tf)
         tf_bt <- tf_bt[idx, ]
       } else {
-        warning("Rows of trackframe were reordered in between. Reordering is not possible.")
+        warning(
+          "Rows of trackframe were reordered in between. Reordering is not possible."
+        )
       }
     } else {
-      warning("Rows of trackframe were deleted in between. Reordering is not possible.")
+      warning(
+        "Rows of trackframe were deleted in between. Reordering is not possible."
+      )
     }
   }
   return(tf_bt)
@@ -106,13 +117,19 @@ tf_backtransform <- function(tf) {
 #' @examples
 #' tf_as_xyt(tf_mini)
 #' @export
-tf_as_xyt <- function(x, ...) { #coredata.trackframe
+tf_as_xyt <- function(x, ...) {
+  #coredata.trackframe
   #FIXME: check what we want to do in coredata
   assert_class(x, "trackframe")
   if (is.null(attr(x, "id"))) {
     cols <- c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))
   } else {
-    cols <- c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"), attr(x, "id"))
+    cols <- c(
+      attr(x, "easting"),
+      attr(x, "northing"),
+      attr(x, "time"),
+      attr(x, "id")
+    )
   }
   x <- x[, cols, with = FALSE]
   class(x) <- setdiff(class(x), "trackframe")
@@ -140,7 +157,13 @@ tf_as_sf <- function(tf, ...) {
   assert_class(tf, "trackframe")
   tf_crs <- crs(tf)
   coords <- c(attr(tf, "easting"), attr(tf, "northing"))
-  new_sf <- sf::st_as_sf(x = tf, crs = tf_crs, coords = coords, na.fail = FALSE, ...)
+  new_sf <- sf::st_as_sf(
+    x = tf,
+    crs = tf_crs,
+    coords = coords,
+    na.fail = FALSE,
+    ...
+  )
   class(new_sf) <- setdiff(class(new_sf), "trackframe")
   new_sf
 }

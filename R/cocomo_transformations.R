@@ -30,8 +30,15 @@
 #' cocomo <- tf_as_cocomo(tf_mini)
 #' cocomo_as_tf(cocomo$xs, cocomo$ys, cocomo$t, cocomo$ids)
 cocomo_as_tf <- function(
-  xs, ys, t, ids, crs = NA, na_omit = TRUE,
-  sort = TRUE, coerce_to = "base", verbose = FALSE
+  xs,
+  ys,
+  t,
+  ids,
+  crs = NA,
+  na_omit = TRUE,
+  sort = TRUE,
+  coerce_to = "base",
+  verbose = FALSE
 ) {
   assert_matrix(xs)
   assert_matrix(ys)
@@ -61,9 +68,15 @@ cocomo_as_tf <- function(
     rownames(data) <- NULL
   }
   as.trackframe(
-    data, time_col = "time", easting_col = "easting",
-    northing_col = "northing", id_col = "id", crs = crs,
-    sort = sort, coerce_to = coerce_to, verbose = verbose
+    data,
+    time_col = "time",
+    easting_col = "easting",
+    northing_col = "northing",
+    id_col = "id",
+    crs = crs,
+    sort = sort,
+    coerce_to = coerce_to,
+    verbose = verbose
   )
 }
 

@@ -14,9 +14,16 @@ id_list <- make_c_grouping(
 )
 
 expected_outcome <- rep(c("a<;>b", "a<;>", "<;>b", "<;>", "a_b<;>a/c"), 2)
-expect_equal(trackframe:::make_unique_id(id_list), expected_outcome, check.attributes = FALSE)
 expect_equal(
-  trackframe:::backtransform_id(expected_outcome, group_names = c("id", "id_2")),
+  trackframe:::make_unique_id(id_list),
+  expected_outcome,
+  check.attributes = FALSE
+)
+expect_equal(
+  trackframe:::backtransform_id(
+    expected_outcome,
+    group_names = c("id", "id_2")
+  ),
   id_list
 )
 
@@ -36,10 +43,14 @@ test_multiple_ids <- function(coerce_to) {
     crs = projected_crs
   )
 
-  my_sftrack_ids <- trackframe:::make_unique_id(my_sftrack[[attr(my_sftrack, "group_col")]])
+  my_sftrack_ids <- trackframe:::make_unique_id(my_sftrack[[attr(
+    my_sftrack,
+    "group_col"
+  )]])
   expect_equal(
     my_sftrack_ids,
-    paste(df$id_1, df$id_2, sep = "<;>"), check.attributes = FALSE
+    paste(df$id_1, df$id_2, sep = "<;>"),
+    check.attributes = FALSE
   )
   expect_equal(
     attr(my_sftrack_ids, "group_names"),
@@ -93,6 +104,8 @@ test_multiple_ids <- function(coerce_to) {
 
 # Run all tests
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
-  if (is.na(coerce_to)) coerce_to <- NULL
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
   test_multiple_ids(coerce_to)
 })

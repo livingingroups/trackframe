@@ -9,10 +9,18 @@
 #' @export
 set_facet_ncol <- function(n) {
   assert_integerish(n)
-  if (n < 4) return(as.integer(n))
-  if (n == 4) return(2L)
-  if (n %% 4 == 0) return(4L)
-  if (n %% 3  == 0) return(3L)
+  if (n < 4) {
+    return(as.integer(n))
+  }
+  if (n == 4) {
+    return(2L)
+  }
+  if (n %% 4 == 0) {
+    return(4L)
+  }
+  if (n %% 3 == 0) {
+    return(3L)
+  }
   return(2L)
 }
 
@@ -70,7 +78,13 @@ set_facet_ncol <- function(n) {
 plot.trackframe <- function(
   x,
   direction = FALSE,
-  direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
+  direction_style = list(
+    length = 0.1,
+    code = 2,
+    col = "black",
+    lty = 3,
+    lwd = 1
+  ),
   facet = TRUE,
   nfacet_col = NULL,
   start_point = FALSE,
@@ -116,7 +130,8 @@ plot.trackframe <- function(
       main = "Paths"
     )
     if (facet) {
-      default_options <- c(default_options,
+      default_options <- c(
+        default_options,
         facet = "by",
         facet.args = list("free" = FALSE, ncol = nfacet_col)
       )
@@ -124,7 +139,6 @@ plot.trackframe <- function(
     } else {
       arrows_facet <- i_col
     }
-
   } else {
     form <- as.formula(paste(y_col, "~", x_col))
     default_options <- list(type = "l", grid = TRUE, main = "")
@@ -147,18 +161,29 @@ plot.trackframe <- function(
   # add starting point
   if (isTRUE(start_point)) {
     start_point_style_defaults <- list(col = "green", pch = 0, cex = 1)
-    start_point_style <- modifyList(start_point_style_defaults, start_point_style)
-    tinyplot_add(data = x[!duplicated(x[[i_col]]), ], type = "p",
-      cex = start_point_style[["cex"]], pch = start_point_style[["pch"]],
-      col = start_point_style[["col"]])
+    start_point_style <- modifyList(
+      start_point_style_defaults,
+      start_point_style
+    )
+    tinyplot_add(
+      data = x[!duplicated(x[[i_col]]), ],
+      type = "p",
+      cex = start_point_style[["cex"]],
+      pch = start_point_style[["pch"]],
+      col = start_point_style[["col"]]
+    )
   }
   # add end point
   if (isTRUE(end_point)) {
     end_point_style_defaults <- list(col = "red", pch = 1, cex = 1)
     end_point_style <- modifyList(end_point_style_defaults, end_point_style)
-    tinyplot_add(data = x[!duplicated(x[[i_col]], fromLast = TRUE), ],
-      type = "p", cex = end_point_style[["cex"]], pch = end_point_style[["pch"]],
-      col = end_point_style[["col"]])
+    tinyplot_add(
+      data = x[!duplicated(x[[i_col]], fromLast = TRUE), ],
+      type = "p",
+      cex = end_point_style[["cex"]],
+      pch = end_point_style[["pch"]],
+      col = end_point_style[["col"]]
+    )
   }
 
   # add change points
@@ -166,8 +191,13 @@ plot.trackframe <- function(
     if (any(x[[marker]] != 0)) {
       marker_style_defaults <- list(col = "blue", pch = 4, cex = 1)
       marker_style <- modifyList(marker_style_defaults, marker_style)
-      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
-        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
+      tinyplot_add(
+        data = x[x[[marker]] != 0, ],
+        type = "p",
+        cex = marker_style[["cex"]],
+        pch = marker_style[["pch"]],
+        col = marker_style[["col"]]
+      )
     }
   }
 
@@ -180,7 +210,13 @@ plot.trackframe <- function(
     }
     # needed to match ids to ensure correct ordering in id's
     uids <- unique(id(x))
-    direction_style_defaults <- list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1)
+    direction_style_defaults <- list(
+      length = 0.1,
+      code = 2,
+      col = "black",
+      lty = 3,
+      lwd = 1
+    )
     direction_style <- modifyList(direction_style_defaults, direction_style)
     tinyplot_add(
       type = type_arrows(
@@ -263,7 +299,11 @@ type_arrows <- function(
       facet_by,
       ...
     ) {
-      type_info <- list(ul_lty = par("lty"), ul_lwd = par("lwd"), ul_col = "black")
+      type_info <- list(
+        ul_lty = par("lty"),
+        ul_lwd = par("lwd"),
+        ul_col = "black"
+      )
       grp_aes <- type_info[["ul_col"]] == 1 ||
         type_info[["ul_lty"]] == ngrps ||
         type_info[["ul_lwd"]] == ngrps
@@ -366,10 +406,11 @@ plot_coords_by_time <- function(
     as.trackframe(x, id_col = i_col)
   }
 
-
   n_id <- length(unique(id(x)))
 
-  if (n_id > 1) stop("Only implemented for a single ID.")
+  if (n_id > 1) {
+    stop("Only implemented for a single ID.")
+  }
 
   nfacet_col <- nfacet_col %||% set_facet_ncol(n_id)
 
@@ -399,24 +440,33 @@ plot_coords_by_time <- function(
     ))
   }
   control <- modifyList(default_options, args[!names(args) %in% restricted])
-  par(mfrow = mfrow,
-    mar = mar)
+  par(mfrow = mfrow, mar = mar)
   do.call(tinyplot, c(list(form_x, data = x), control))
   # add change points
   if (!is.null(marker)) {
     if (any(x[[marker]] != 0)) {
       marker_style_defaults <- list(col = "blue", pch = 4, cex = 1)
       marker_style <- modifyList(marker_style_defaults, marker_style)
-      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
-        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
+      tinyplot_add(
+        data = x[x[[marker]] != 0, ],
+        type = "p",
+        cex = marker_style[["cex"]],
+        pch = marker_style[["pch"]],
+        col = marker_style[["col"]]
+      )
     }
   }
   do.call(tinyplot, c(list(form_y, data = x), control))
   # add change points
   if (!is.null(marker)) {
     if (any(x[[marker]] != 0)) {
-      tinyplot_add(data = x[x[[marker]] != 0, ], type = "p",
-        cex = marker_style[["cex"]], pch = marker_style[["pch"]], col = marker_style[["col"]])
+      tinyplot_add(
+        data = x[x[[marker]] != 0, ],
+        type = "p",
+        cex = marker_style[["cex"]],
+        pch = marker_style[["pch"]],
+        col = marker_style[["col"]]
+      )
     }
   }
 }

@@ -1,4 +1,3 @@
-
 df <- df_mini
 names(df) <- c('oclock', 'up', 'right', 'who')
 tf <- as.trackframe(

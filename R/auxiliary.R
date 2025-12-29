@@ -58,7 +58,9 @@ select_id <- function(tf, id) {
 #' class(tf_split)
 #' @export
 split_by_id <- function(tf) {
-  if (is.null(id(tf))) stop("No id specified for trackframe.")
+  if (is.null(id(tf))) {
+    stop("No id specified for trackframe.")
+  }
   tf_split <- split(tf, id(tf))
   class(tf_split) <- "list_of_trackframes"
   tf_split
@@ -92,11 +94,20 @@ guess_all_cols <- function(
   id_col_candidates = tf_options("id_col")
 ) {
   time_guess <- guess_a_col(col_names, time_col_candidates, id = "time")
-  easting_guess <- guess_a_col(col_names, easting_col_candidates, id = "easting")
-  northing_guess <- guess_a_col(col_names, northing_col_candidates, id = "northing")
+  easting_guess <- guess_a_col(
+    col_names,
+    easting_col_candidates,
+    id = "easting"
+  )
+  northing_guess <- guess_a_col(
+    col_names,
+    northing_col_candidates,
+    id = "northing"
+  )
   id_guess <- id_col_candidates[id_col_candidates %in% col_names]
-  if (length(id_guess) == 0) id_guess <- NA
-
+  if (length(id_guess) == 0) {
+    id_guess <- NA
+  }
 
   return(list(
     "time_col" = time_guess,
@@ -104,7 +115,6 @@ guess_all_cols <- function(
     "northing_col" = northing_guess,
     "id_col" = id_guess
   ))
-
 }
 
 guess_a_col <- function(col_names, candidates, id) {
@@ -120,7 +130,12 @@ warn_if_guess_ambiguous <- function(data, guesses) {
     guesses_col <- guesses[[guessable_col]]
     chosen_guess <- guesses_col[1]
     if (length(guesses_col) > 1) {
-      if (!all(duplicated(t(data[, colnames(data) %in% guesses_col, with = FALSE]))[-1])) {
+      if (
+        !all(duplicated(t(data[,
+          colnames(data) %in% guesses_col,
+          with = FALSE
+        ]))[-1])
+      ) {
         warning(sprintf(
           "multiple possible columns found. %s chosen as %s",
           chosen_guess,
@@ -175,10 +190,15 @@ backtransform_id <- function(unique_id, group_names) {
       id_i <- setNames(as.list(x), group_names)
       class(id_i) <- "s_group"
       id_i
-    })
+    }
+  )
   class(id_list) <- "c_grouping"
   attr(id_list, "active_group") <- group_names
-  attr(id_list, "sort_index") <- as.factor(sapply(id_list, paste, collapse = "_"))
+  attr(id_list, "sort_index") <- as.factor(sapply(
+    id_list,
+    paste,
+    collapse = "_"
+  ))
   id_list
 }
 
@@ -188,9 +208,11 @@ if (getRversion() <= "4.4.0") {
   }
 }
 
-id_hash <- function(data,
+id_hash <- function(
+  data,
   time_col = attr(data, "time"),
-  id_col = attr(data, "id")) {
+  id_col = attr(data, "id")
+) {
   if (is.null(id_col)) {
     cols <- time_col
   } else {

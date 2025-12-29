@@ -25,11 +25,20 @@ guess_all_cols <- function(
   id_col_candidates = tf_options("id_col")
 ) {
   time_guess <- guess_a_col(col_names, time_col_candidates, id = "time")
-  easting_guess <- guess_a_col(col_names, easting_col_candidates, id = "easting")
-  northing_guess <- guess_a_col(col_names, northing_col_candidates, id = "northing")
+  easting_guess <- guess_a_col(
+    col_names,
+    easting_col_candidates,
+    id = "easting"
+  )
+  northing_guess <- guess_a_col(
+    col_names,
+    northing_col_candidates,
+    id = "northing"
+  )
   id_guess <- id_col_candidates[id_col_candidates %in% col_names]
-  if (length(id_guess) == 0) id_guess <- NA
-
+  if (length(id_guess) == 0) {
+    id_guess <- NA
+  }
 
   return(list(
     "time_col" = time_guess,
@@ -37,7 +46,6 @@ guess_all_cols <- function(
     "northing_col" = northing_guess,
     "id_col" = id_guess
   ))
-
 }
 
 guess_a_col <- function(col_names, candidates, id) {
@@ -53,7 +61,12 @@ warn_if_guess_ambiguous <- function(data, guesses) {
     guesses_col <- guesses[[guessable_col]]
     chosen_guess <- guesses_col[1]
     if (length(guesses_col) > 1) {
-      if (!all(duplicated(t(data[, colnames(data) %in% guesses_col, with = FALSE]))[-1])) {
+      if (
+        !all(duplicated(t(data[,
+          colnames(data) %in% guesses_col,
+          with = FALSE
+        ]))[-1])
+      ) {
         warning(sprintf(
           "multiple possible columns found. %s chosen as %s",
           chosen_guess,

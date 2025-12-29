@@ -30,8 +30,12 @@ idr <- sample(seq_len(NROW(paths_data_frame)))
 paths_data_frame_r <- paths_data_frame[idr, ]
 paths_tf <- as.trackframe(paths_data_frame_r, crs = NA)
 
-expect_false(all(paths_data_frame_r[, c(1, 4)] ==  paths_tf[, c(1, 4)]))
-expect_equal(paths_data_frame_r[order(idr), c(1, 4)], paths_tf[, c(1, 4)], check.attributes = FALSE)
+expect_false(all(paths_data_frame_r[, c(1, 4)] == paths_tf[, c(1, 4)]))
+expect_equal(
+  paths_data_frame_r[order(idr), c(1, 4)],
+  paths_tf[, c(1, 4)],
+  check.attributes = FALSE
+)
 
 paths_tf_b <- tf_backtransform(paths_tf)
 expect_equal(paths_tf_b, paths_data_frame_r)
@@ -53,9 +57,14 @@ idr <- sample(seq_len(NROW(paths_sftrack)))
 paths_sftrack_r <- paths_sftrack[idr, ]
 paths_tf <- as.trackframe(paths_sftrack_r)
 
-expect_false(all(as.data.frame(paths_sftrack_r)[, c(1, 4)] ==  paths_tf[, c(1, 4)]))
-expect_equal(as.data.frame(paths_sftrack_r)[order(idr), c(1, 4)], paths_tf[, c(1, 4)],
-  check.attributes = FALSE)
+expect_false(all(
+  as.data.frame(paths_sftrack_r)[, c(1, 4)] == paths_tf[, c(1, 4)]
+))
+expect_equal(
+  as.data.frame(paths_sftrack_r)[order(idr), c(1, 4)],
+  paths_tf[, c(1, 4)],
+  check.attributes = FALSE
+)
 
 paths_tf_b <- tf_backtransform(paths_tf)
 # expect_equal(paths_tf_b, paths_sftrack_r) # NOTE: possible crs mismatch if data is not created
@@ -79,9 +88,14 @@ idr <- sample(seq_len(NROW(paths_move2)))
 paths_move2_r <- paths_move2[idr, ]
 paths_tf <- as.trackframe(paths_move2_r)
 
-expect_false(all(as.data.frame(paths_move2_r)[, c(1, 2)] ==  paths_tf[, c(1, 2)]))
-expect_equal(as.data.frame(paths_move2_r)[order(idr), c(1, 2)], paths_tf[, c(1, 2)],
-  check.attributes = FALSE)
+expect_false(all(
+  as.data.frame(paths_move2_r)[, c(1, 2)] == paths_tf[, c(1, 2)]
+))
+expect_equal(
+  as.data.frame(paths_move2_r)[order(idr), c(1, 2)],
+  paths_tf[, c(1, 2)],
+  check.attributes = FALSE
+)
 
 paths_tf_b <- tf_backtransform(paths_tf)
 expect_equal(paths_tf_b, paths_move2_r, check.attributes = FALSE)

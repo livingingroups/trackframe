@@ -1,4 +1,3 @@
-
 #' Get and set column names of Trackframe Key columns
 #'
 #' Key columns meaning: easting, northing, time, and (opt) id column

@@ -1,20 +1,31 @@
 derive_crs_type <- function(crs) {
-  if (is.null(crs)) stop(
-    "Missing argument: crs\n",
-    "Coordinate reference system must be explicit. ",
-    "For unspecified, non-georeferenced, cartesian coordinate  set crs = NA"
-  )
+  if (is.null(crs)) {
+    stop(
+      "Missing argument: crs\n",
+      "Coordinate reference system must be explicit. ",
+      "For unspecified, non-georeferenced, cartesian coordinate  set crs = NA"
+    )
+  }
   is_longlat <- sf::st_is_longlat(crs)
-  crs_type <- if (is.na(is_longlat)) "nongeoreferenced" else
-    if (is_longlat) "geographic" else "projected"
-  if (crs_type == "geographic") stop(
-    "Expected projected coordinates, got geographic coordinates. ",
-    "Please project into an appropriate crs."
-  )
-  if (is.na(crs)) log_debug(
-    "crs provided for non georeferenced data.",
-    "Appropriate for custom (non epsg) cartesian coordinate system."
-  )
+  crs_type <- if (is.na(is_longlat)) {
+    "nongeoreferenced"
+  } else if (is_longlat) {
+    "geographic"
+  } else {
+    "projected"
+  }
+  if (crs_type == "geographic") {
+    stop(
+      "Expected projected coordinates, got geographic coordinates. ",
+      "Please project into an appropriate crs."
+    )
+  }
+  if (is.na(crs)) {
+    log_debug(
+      "crs provided for non georeferenced data.",
+      "Appropriate for custom (non epsg) cartesian coordinate system."
+    )
+  }
   crs_type
 }
 
@@ -45,10 +56,15 @@ trackframe <- function(
 ) {
   df <- data.frame(data) #FIXME: does not work for tibble + data.table
   as.trackframe(
-    df, time_col = time_col, easting_col = easting_col,
-    northing_col = northing_col, id_col = id_col,
-    crs = crs, sort = sort,
-    coerce_to = coerce_to, ...
+    df,
+    time_col = time_col,
+    easting_col = easting_col,
+    northing_col = northing_col,
+    id_col = id_col,
+    crs = crs,
+    sort = sort,
+    coerce_to = coerce_to,
+    ...
   )
 }
 
@@ -170,14 +186,20 @@ as.trackframe.data.frame <- function(
   attributes_input <- attributes(data)
 
   # coerce_to
-  assert_choice(coerce_to, choices = c("base", "data.table", "tibble"), null.ok = TRUE)
-  if (is.null(coerce_to)) {
-  } else if (coerce_to == "base") {
-    if (inherits(data, "data.table") || inherits(data, "tbl") || inherits(data, "tbl_df")) {
+  assert_choice(
+    coerce_to,
+    choices = c("base", "data.table", "tibble"),
+    null.ok = TRUE
+  )
+  if (is.null(coerce_to)) {} else if (coerce_to == "base") {
+    if (
+      inherits(data, "data.table") ||
+        inherits(data, "tbl") ||
+        inherits(data, "tbl_df")
+    ) {
       log_debug("- data coerced by as.data.frame(data)")
       data <- as.data.frame(data)
     }
-
   } else if (coerce_to == "data.table") {
     if (!inherits(data, "data.table")) {
       log_debug("- data coerced by as.data.table(data)")
@@ -186,7 +208,8 @@ as.trackframe.data.frame <- function(
   } else if (coerce_to == "tibble") {
     if (!inherits(data, "tbl") || !inherits(data, "tbl_df")) {
       log_debug("- data coerced by as_tibble(data)")
-      if (!is.null(data$sft_group)) {#data$sft_group <- NULL #FIXME: same transformation as for id
+      if (!is.null(data$sft_group)) {
+        #data$sft_group <- NULL #FIXME: same transformation as for id
         data$sft_group <- make_unique_id(data$sft_group)
       }
       data <- as_tibble(data)
@@ -210,16 +233,18 @@ as.trackframe.data.frame <- function(
   assert_numeric(data[[time_col]])
 
   easting_col <- guesses[["easting_col"]][1]
-  assert_choice(easting_col, colnames(data),  null.ok = FALSE)
+  assert_choice(easting_col, colnames(data), null.ok = FALSE)
   assert_character(easting_col, len = 1, null.ok = FALSE)
 
   northing_col <- guesses[["northing_col"]][1]
-  assert_choice(northing_col, colnames(data),  null.ok = FALSE)
+  assert_choice(northing_col, colnames(data), null.ok = FALSE)
   assert_character(northing_col, len = 1, null.ok = FALSE)
 
   id_col <- guesses[["id_col"]][1]
-  if (is.na(id_col)) id_col <- NULL
-  assert_choice(id_col, colnames(data),  null.ok = TRUE)
+  if (is.na(id_col)) {
+    id_col <- NULL
+  }
+  assert_choice(id_col, colnames(data), null.ok = TRUE)
   assert_character(id_col, len = 1, null.ok = TRUE)
 
   assert_numeric(data[[easting_col]])
@@ -288,12 +313,16 @@ as.trackframe.matrix <- function(
   ...
 ) {
   as.trackframe(
-    as.data.frame(data), time_col = time_col,
-    easting_col = easting_col, northing_col = northing_col,
+    as.data.frame(data),
+    time_col = time_col,
+    easting_col = easting_col,
+    northing_col = northing_col,
     id_col = id_col,
     sort = sort,
     crs = crs,
-    coerce_to = coerce_to, ...)
+    coerce_to = coerce_to,
+    ...
+  )
 }
 
 
@@ -325,24 +354,31 @@ as.trackframe.move2 <- function(
   time_index <- attr(data, "time_column")
 
   # FIXME: add similar messages about ignoring time_col, easting_col, northing_col, etc.
-  if (! is.null(time_col))  log_debug(
-    paste(
-      "move2 input so using implicitly configured time column %s rather that time_col argument %s",
-    ),
-    time_index, dput(time_col)
-  ) else log_debug(
-    paste(
-      "move2 input so using implicitly configured time column %s",
-    ),
-    time_index
-  )
+  if (!is.null(time_col)) {
+    log_debug(
+      paste(
+        "move2 input so using implicitly configured time column %s rather that time_col argument %s",
+      ),
+      time_index,
+      dput(time_col)
+    )
+  } else {
+    log_debug(
+      paste(
+        "move2 input so using implicitly configured time column %s",
+      ),
+      time_index
+    )
+  }
   log_debug("Use move2::mt_set_time_column to adjust time column.")
 
   # move2: The `track_id_column` attribute should be a <character> of length 1
   id_col <- attr(data, "track_id_column")
   transformation_info <- attributes(data)
   # todo": better message
-  if ('crs' %in% names(list(...))) stop("crs provided as arg for sf arg. this val will be ignored")
+  if ('crs' %in% names(list(...))) {
+    stop("crs provided as arg for sf arg. this val will be ignored")
+  }
   crs <- sf::st_crs(data)$input
   transformation_info$crs_code <- crs
 
@@ -359,9 +395,15 @@ as.trackframe.move2 <- function(
   attr(data, "row.names") <- data_attr[["row.names"]]
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(
-    data, time_col = time_index, easting_col = "easting",
-    northing_col = "northing", id_col = id_col,
-    sort = sort, coerce_to = coerce_to, crs = crs, ...
+    data,
+    time_col = time_index,
+    easting_col = "easting",
+    northing_col = "northing",
+    id_col = id_col,
+    sort = sort,
+    coerce_to = coerce_to,
+    crs = crs,
+    ...
   )
 }
 
@@ -394,9 +436,13 @@ as.trackframe.sftrack <- function(
   }
   if (is.null(id_col)) {
     id_col <- "id"
-    if (inherits(data[[attr(data, "group_col")]], "c_grouping"))
+    if (inherits(data[[attr(data, "group_col")]], "c_grouping")) {
       data[["id"]] <- make_unique_id(data[[attr(data, "group_col")]])
-    attr(data, "group_names") <- attr(data[[attr(data, "group_col")]], "active_group")
+    }
+    attr(data, "group_names") <- attr(
+      data[[attr(data, "group_col")]],
+      "active_group"
+    )
   }
   transformation_info <- attributes(data)
   crs <- sf::st_crs(data)$input
@@ -412,10 +458,14 @@ as.trackframe.sftrack <- function(
   } else {
     if (length(easting_col) == 1) {
       lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
-      if (easting_col %in% lon_names) easting_col <- "easting"
+      if (easting_col %in% lon_names) {
+        easting_col <- "easting"
+      }
       data[[easting_col]] <- x_y[, 1] #FIXME: how to check if transformation makes sense?
     } else {
-      stop("easting col not identified. Please provide further information on easting_col.")
+      stop(
+        "easting col not identified. Please provide further information on easting_col."
+      )
     }
   }
 
@@ -425,10 +475,14 @@ as.trackframe.sftrack <- function(
   } else {
     if (length(northing_col) == 1) {
       lat_names <- c("lat", "latitude") #FIXME: move to options?
-      if (northing_col %in% lat_names) northing_col <- "northing"
+      if (northing_col %in% lat_names) {
+        northing_col <- "northing"
+      }
       data[[northing_col]] <- x_y[, 2] #FIXME: how to check if transformation makes sense?
     } else {
-      stop("northing col not identified. Please provide further information on northing_col")
+      stop(
+        "northing col not identified. Please provide further information on northing_col"
+      )
     }
   }
 
@@ -437,16 +491,23 @@ as.trackframe.sftrack <- function(
   attr(data, "row.names") <- data_attr[["row.names"]]
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(
-    data, time_col = time_index, easting_col = easting_col,
-    northing_col = northing_col, id_col = id_col,
-    sort = sort, coerce_to = coerce_to, crs = crs, ...
+    data,
+    time_col = time_index,
+    easting_col = easting_col,
+    northing_col = northing_col,
+    id_col = id_col,
+    sort = sort,
+    coerce_to = coerce_to,
+    crs = crs,
+    ...
   )
 }
 
 
 #' @export
 #' @rdname as_trackframe
-as.trackframe.trackframe <- function(data,
+as.trackframe.trackframe <- function(
+  data,
   time_col = NULL,
   easting_col = NULL,
   northing_col = NULL,
@@ -468,10 +529,12 @@ as.trackframe.trackframe <- function(data,
   if (
     (!is.null(easting_col) || !is.null(easting_col)) &&
       is.null(crs)
-  ) warning(
-    "trackframe coordinates are being updated without updating crs.",
-    "Potential mismatch between coordinates and reference system."
-  )
+  ) {
+    warning(
+      "trackframe coordinates are being updated without updating crs.",
+      "Potential mismatch between coordinates and reference system."
+    )
+  }
   data_state_in <- list(
     easting_col = attr(data, "easting"),
     northing_col = attr(data, "northing"),
@@ -491,10 +554,13 @@ as.trackframe.trackframe <- function(data,
     args_in[[key]] %||% data_state_in[[key]]
   })
   names(args_out) <- names(args_in)
-  do.call(as.trackframe.data.frame, c(
-    list(data),
-    args_out
-  ))
+  do.call(
+    as.trackframe.data.frame,
+    c(
+      list(data),
+      args_out
+    )
+  )
 }
 
 

@@ -8,24 +8,26 @@
 #' @param unsorted.ok Is a trackframe not in order([id], timestamp) allowed? Default: TRUE
 #' @rdname check_trackframe
 check_trackframe <- checkTrackframe <- function(x, ..., unsorted.ok = TRUE) {
-  if (! is.trackframe(x)) return(
-    sprintf("%s is not a trackframe. It has classes: %s", vname(x), class(x))
-  )
-  if (! (df_check <- checkmate::check_data_frame(x, ...))) return(df_check)
+  if (!is.trackframe(x)) {
+    return(
+      sprintf("%s is not a trackframe. It has classes: %s", vname(x), class(x))
+    )
+  }
+  if (!(df_check <- checkmate::check_data_frame(x, ...))) {
+    return(df_check)
+  }
 
-  if (! unsorted.ok) {
+  if (!unsorted.ok) {
     # not using accessors here to avoid circular dependency
     track_id <- attr(x, "id")
     len <- nrow(x)
     if (is.null(track_id)) {
       return(all(
-        order(x[[attr(x, 'time')]]) ==
-          seq_len(len)
+        order(x[[attr(x, 'time')]]) == seq_len(len)
       ))
     }
     return(all(
-      order(x[[track_id]], x[[attr(x, 'time')]]) ==
-        seq_len(len)
+      order(x[[track_id]], x[[attr(x, 'time')]]) == seq_len(len)
     ))
   }
   return(TRUE)
@@ -41,8 +43,9 @@ assert_trackframe <- assertTrackframe <- function(
   .var.name = checkmate::vname(x),
   add = NULL
 ) {
-  if (missing(x))
+  if (missing(x)) {
     stop(sprintf("argument \"%s\" is missing, with no default", .var.name))
+  }
   res <- check_trackframe(x, ..., unsorted.ok = unsorted.ok)
   checkmate::makeAssertion(x, res, .var.name, add)
 }
@@ -54,13 +57,14 @@ expect_trackframe <- expectTrackframe <- function(
   info = NULL,
   label = vname(x)
 ) {
-  if (missing(x))
+  if (missing(x)) {
     stop(sprintf("Argument '%s' is missing", label))
+  }
   res <- check_trackframe(x, ..., unsorted.ok = unsorted.ok)
   makeExpectation(x, res, info, label)
 }
 
-test_trackframe <- testTrackframe <- function (x, ..., unsorted.ok = TRUE) {
+test_trackframe <- testTrackframe <- function(x, ..., unsorted.ok = TRUE) {
   isTRUE(check_trackframe(x, ..., unsorted.ok = unsorted.ok))
 }
 

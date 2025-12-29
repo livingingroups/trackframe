@@ -1,7 +1,7 @@
 library(tinytest)
 library(trackframe)
 
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
+"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
   base::`[.data.frame`(x, i, j, drop = drop)
 }
 
@@ -13,7 +13,8 @@ test_sort <- function(coerce_to) {
   df2_ordered <- df2[order(df2$id, df2$time), ]
   expect_equal(
     as.data.frame(tf_df[, c("id", "time")]),
-    df2_ordered[, c("id", "time")], check.attributes = FALSE
+    df2_ordered[, c("id", "time")],
+    check.attributes = FALSE
   )
 }
 
@@ -24,7 +25,9 @@ test_sort <- function(coerce_to) {
 # coerce_to = "tibble"
 # coerce_to = NA
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
-  if (is.na(coerce_to)) coerce_to <- NULL
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
   test_sort(coerce_to)
 })
 

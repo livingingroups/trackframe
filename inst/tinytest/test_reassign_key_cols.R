@@ -27,7 +27,9 @@ expect_equal(
 )
 
 # update which columns are used as key columns
-expect_silent(tf <- as.trackframe(tf, easting = "right_10x", northing = "up_10x", crs = NA))
+expect_silent(
+  tf <- as.trackframe(tf, easting = "right_10x", northing = "up_10x", crs = NA)
+)
 
 # still all columns are there
 expect_true(all(c('up', 'up_10x', 'right', 'right_10x') %in% colnames(tf)))

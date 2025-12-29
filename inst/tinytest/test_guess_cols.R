@@ -1,7 +1,7 @@
 library(tinytest)
 library(trackframe)
 
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
+"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
   base::`[.data.frame`(x, i, j, drop = drop)
 }
 
@@ -46,7 +46,6 @@ test_guess_all_cols <- function() {
   expect_equal(guesses$northing_col, c("northing_col"))
   expect_equal(guesses$id_col, NA)
   expect_silent(trackframe:::warn_if_guess_ambiguous(data, guesses))
-
 
   data <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -134,7 +133,11 @@ test_guess_all_cols <- function() {
   expect_error(as.trackframe(data = data, crs = NA))
 
   # FIXME should this be recognized?
-  expect_silent(as.trackframe(data = data, easting_col = "easting_col2", crs = NA))
+  expect_silent(as.trackframe(
+    data = data,
+    easting_col = "easting_col2",
+    crs = NA
+  ))
 
   expect_error(guess_all_cols(col_names = colnames(data)))
   guesses <- guess_all_cols(

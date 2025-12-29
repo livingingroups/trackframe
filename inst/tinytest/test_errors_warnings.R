@@ -1,7 +1,7 @@
 library(tinytest)
 library(trackframe)
 
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...)  {
+"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
   base::`[.data.frame`(x, i, j, drop = drop)
 }
 
@@ -15,8 +15,12 @@ test_errors <- function(coerce_to = coerce_to) {
     id = 1:5
   )
   expect_error(trackframe(
-    data = df, time_col = "time_col", easting_col = "easting_col",
-    northing_col = "northing_col", id_col = "id", coerce_to = coerce_to,
+    data = df,
+    time_col = "time_col",
+    easting_col = "easting_col",
+    northing_col = "northing_col",
+    id_col = "id",
+    coerce_to = coerce_to,
     crs = NA
   ))
   expect_error(trackframe(data = df, coerce_to = coerce_to, crs = NA))
@@ -200,7 +204,9 @@ test_warnings <- function(coerce_to = "base") {
 # coerce_to = "tibble"
 # coerce_to = NA
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
-  if (is.na(coerce_to)) coerce_to <- NULL
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
   test_errors(coerce_to)
   test_warnings(coerce_to)
 })

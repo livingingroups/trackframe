@@ -32,7 +32,7 @@ crs <- function(tf) {
 
   # assignment
   attr(tf, "crs") <- value
-  attr(tf, "crs_type") <-  crs_type
+  attr(tf, "crs_type") <- crs_type
   tf
 }
 

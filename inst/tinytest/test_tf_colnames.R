@@ -54,7 +54,10 @@ expect_equal(
     id = "ind_id"
   )
 )
-expect_equal(colnames(tf), c("time", "northing", "easting", "ind_id", "new_id_col"))
+expect_equal(
+  colnames(tf),
+  c("time", "northing", "easting", "ind_id", "new_id_col")
+)
 
 tf <- as.trackframe(tf, id_col = 'new_id_col')
 
@@ -67,7 +70,10 @@ expect_equal(
     id = "new_id_col"
   )
 )
-expect_equal(colnames(tf), c("time", "northing", "easting", "ind_id", "new_id_col"))
+expect_equal(
+  colnames(tf),
+  c("time", "northing", "easting", "ind_id", "new_id_col")
+)
 
 tf_colnames(tf) <- c(
   easting = "eep",

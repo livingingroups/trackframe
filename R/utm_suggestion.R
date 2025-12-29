@@ -7,7 +7,10 @@ assert_latlon <- function(lat, lon, emsg = NULL) {
 
 crs_lat_lon_order <- function(crs, value = FALSE) {
   wtk <- unlist(strsplit(crs[["wkt"]], "\\s+"))
-  idx <- c(grep("latitude", wtk, fixed = TRUE), grep("longitude", wtk, fixed = TRUE))
+  idx <- c(
+    grep("latitude", wtk, fixed = TRUE),
+    grep("longitude", wtk, fixed = TRUE)
+  )
   if (length(idx) != 2L) {
     return(NULL)
   }
@@ -64,7 +67,7 @@ calculate_utm_zone_crs.numeric <- function(lat, lon = NULL) {
   # Special zones for Svalbard
   cond_lat <- lat >= 72.0 & lat < 84.0
 
-  cond_31 <- cond_lat & lon >= 0.0 & lon <  9.0
+  cond_31 <- cond_lat & lon >= 0.0 & lon < 9.0
   zone_number[cond_31] <- 31
 
   cond_33 <- cond_lat & lon >= 9.0 & lon < 21.0

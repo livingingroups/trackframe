@@ -7,7 +7,7 @@ set.seed(2025)
 old_test_cocomo <- function(coerce_to = "base") {
   # sim_travel_paths is producing some bad stuff
   tf <- as.trackframe(trackframe::tf_mini)
-  cocomo <-  tf_as_cocomo(tf)
+  cocomo <- tf_as_cocomo(tf)
   tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids) #, coerce_to = coerce_to)
   cn <- c("time", "easting", "northing", "id")
   expect_equal(tf[, cn], tf2[, cn])
@@ -17,9 +17,12 @@ test_cocomo <- function(coerce_to = "base") {
   # this is a bit fragile to changes in cocomo package
   # ideally cocomo package should export its test data
   xs <- ys <- NULL
-  source(system.file(
-    "tinytest/helper-group_heading_test_data.R",
-    package = "cocomo"), local = TRUE
+  source(
+    system.file(
+      "tinytest/helper-group_heading_test_data.R",
+      package = "cocomo"
+    ),
+    local = TRUE
   )
   id_code <- vapply(
     seq_len(dim(xs)[1]),
@@ -54,7 +57,9 @@ test_cocomo <- function(coerce_to = "base") {
 }
 
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
-  if (is.na(coerce_to)) coerce_to <- NULL
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
   old_test_cocomo(coerce_to)
   test_cocomo(coerce_to)
 })

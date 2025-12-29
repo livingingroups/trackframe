@@ -18,15 +18,18 @@
 tf_options <- local({
   options <- list()
   function(option, value) {
-    if (missing(option)) return(options)
-    if (missing(value))
+    if (missing(option)) {
+      return(options)
+    }
+    if (missing(value)) {
       options[[option]]
-    else
+    } else {
       options[[option]] <<- value
+    }
   }
 })
 
-log_debug  <- function(
+log_debug <- function(
   ...,
   namespace = NA_character_,
   .logcall = sys.call(),
@@ -49,19 +52,55 @@ log_info <- function(
 }
 
 .onLoad <- function(libname, pkgname) {
-  tf_options("time_col", c(
-    "t", "timestamp", "time", "time_index", "time_col", "time_column", "tindex", "datetime"
-  ))
-  tf_options("easting_col", c(
-    "easting", "east", "utm.easting", "easting_col", "easting_column", "x", "utm.x"
-  ))
-  tf_options("northing_col", c(
-    "northing", "north", "utm.northing", "northing_col", "northing_column", "y", "utm.y"
-  ))
-  tf_options("id_col", c(
-    "animal_id", "track_id", "trackid", "trackid_col", "trackid_column", "id",
-    "individual_local_identifier"
-  ))
+  tf_options(
+    "time_col",
+    c(
+      "t",
+      "timestamp",
+      "time",
+      "time_index",
+      "time_col",
+      "time_column",
+      "tindex",
+      "datetime"
+    )
+  )
+  tf_options(
+    "easting_col",
+    c(
+      "easting",
+      "east",
+      "utm.easting",
+      "easting_col",
+      "easting_column",
+      "x",
+      "utm.x"
+    )
+  )
+  tf_options(
+    "northing_col",
+    c(
+      "northing",
+      "north",
+      "utm.northing",
+      "northing_col",
+      "northing_column",
+      "y",
+      "utm.y"
+    )
+  )
+  tf_options(
+    "id_col",
+    c(
+      "animal_id",
+      "track_id",
+      "trackid",
+      "trackid_col",
+      "trackid_column",
+      "id",
+      "individual_local_identifier"
+    )
+  )
   logger::log_formatter(logger::formatter_sprintf, namespace = "trackframe")
 }
 
