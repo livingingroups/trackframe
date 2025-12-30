@@ -67,9 +67,8 @@ expect_equal(
 )
 
 paths_tf_b <- tf_backtransform(paths_tf)
-# expect_equal(paths_tf_b, paths_sftrack_r) # NOTE: possible crs mismatch if data is not created
-#   with same version of GDAL
-# expect_equal(st_crs(paths_tf_b), st_crs(paths_sftrack_r))
+# NOTE: possible st_crs()$wkt mismatch if data is not created with same version of GDAL
+expect_equal(sf::st_crs(paths_tf_b)$input, sf::st_crs(paths_sftrack_r)$input)
 expect_equal(paths_tf_b, paths_sftrack_r, check.attributes = FALSE)
 
 # delete rows

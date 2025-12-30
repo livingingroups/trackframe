@@ -105,7 +105,8 @@ test_warnings <- function(coerce_to = "base") {
   # no crs
   set.seed(2025)
   tf <- trackframe::tf_mini
-  df <- tf_as_xyt(tf) #sim_travel_paths(2,3, format = "data.frame")
+
+  df <- tf_as_xyt(tf)
 
   df <- data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
@@ -199,10 +200,6 @@ test_warnings <- function(coerce_to = "base") {
 }
 
 # Run all tests
-# coerce_to = "base"
-# coerce_to = "data.table"
-# coerce_to = "tibble"
-# coerce_to = NA
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) {
     coerce_to <- NULL

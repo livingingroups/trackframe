@@ -147,7 +147,7 @@ plot.trackframe <- function(
 
   # delete restricted elements
   restricted <- c("y", "data")
-  args <- list(...) # args = list()
+  args <- list(...)
   if (any(names(args) %in% restricted)) {
     warning(sprintf(
       "argument %s is restricted as formula and data are extracted from the trackframe itself and
@@ -432,7 +432,7 @@ plot_coords_by_time <- function(
 
   # delete restricted elements
   restricted <- c("x", "y", "data")
-  args <- list(...) # args = list()
+  args <- list(...)
   if (any(names(args) %in% restricted)) {
     warning(sprintf(
       "argument %s is restricted and therefore ignored",

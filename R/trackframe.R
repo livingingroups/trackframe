@@ -291,8 +291,6 @@ as.trackframe.data.frame <- function(
   }
 
   # # set units
-  # units(data[[attr(data, "easting")]]) <- "m"
-  # units(data[[attr(data, "northing")]]) <- "m"
   return(data)
 }
 

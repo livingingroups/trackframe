@@ -69,6 +69,7 @@ crs(albatross_tf)
 If you don't already know the EPSG code for the UTM zone that your data are in, you can use trackframe's `suggest_utm_crs` function to find out. (Alternatively, or additionally, you can find or verify the UTM zone at <https://epsg.io/>).
 
 ```{r, eval=FALSE, include = FALSE}
+# nolint start
 # Get EPSG code for likely UTM zone
 # suggest_utm_crs(albatross_move2)
 
@@ -80,6 +81,7 @@ albatross_tf <- albatross_move2 |>
 
 # Extract the input crs EPSG code from the tf object's transformation_info
 crs(albatross_tf)
+# nolint end
 ```
 -->
 

@@ -46,11 +46,10 @@ average_speed_group_no_tf <- function(data) {
   if ("sf" %in% class(data)) {
     # sf objects have a consistent way of providing coordinates
     # we need to project them into euclidean space
-
-    # coords <- sf::st_coordinates(sf::st_transform(data, 3857))
     stopifnot(!sf::st_is_longlat(sf::st_crs(data)))
     coords <- sf::st_coordinates(data)
     coords[is.nan(coords)] <- NA
+
     # sftrack and move2 have different ways of encoding
     # the track_id/animal_id so we need to account for both
     if ("sftrack" %in% class(data)) {

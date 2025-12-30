@@ -13,7 +13,7 @@ expect_error({
   as.trackframe(df_mini, crs = geographic_crs)
 })
 
-# projected -> succeed
+# yes projected -> succeed
 expect_silent({
   tf <- as.trackframe(df_mini, crs = projected_crs)
 })
