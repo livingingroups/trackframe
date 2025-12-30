@@ -457,8 +457,8 @@ as.trackframe.sftrack <- function(
     if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
       warning(sprintf(
         c(
-          "Column %s configured as %s,",
-          "but existing data does not match sf coordinates.",
+          "Column %s configured as %s, ",
+          "but existing data does not match sf coordinates. ",
           "Overwriting."
         ),
         col_name,

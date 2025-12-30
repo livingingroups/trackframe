@@ -40,7 +40,11 @@ expect_equal(crs_type(tf), "projected")
 ## sftrack
 sftrack_geographic <- sf::st_transform(sftrack_mini, geographic_crs)
 expect_error({
-  tf <- as.trackframe(sftrack_geographic)
+  tf <- as.trackframe(
+    sftrack_geographic,
+    easting_col = "lon",
+    northing_col = "lat"
+  )
 })
 expect_silent({
   tf <- as.trackframe(sftrack_mini)
