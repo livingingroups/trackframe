@@ -349,7 +349,6 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-
   time_index <- attr(data, "time_column")
 
   # FIXME: add similar messages about ignoring time_col, easting_col, northing_col, etc.

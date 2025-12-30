@@ -195,7 +195,7 @@ test_as_trackframe <- function(coerce_to = "base") {
     raccoon_vanilla_sf,
     suggest_utm_crs(raccoon_vanilla_sf)
   )
-  # FIXME: this case should work
+  # When issue #139 is complete, should be switched to expect_silent
   expect_error(as.trackframe(raccoon_vanilla_sf))
 }
 
