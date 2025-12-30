@@ -259,14 +259,16 @@ sort.trackframe <- function(x, decreasing = FALSE, ...) {
 #' @export
 get_starting_points <- function(tf) {
   assert_class(tf, "trackframe")
-  x <- attr(tf, "easting")
-  y <- attr(tf, "northing")
-  id <- attr(tf, "id")
   tf <- sort(tf)
-  tf <- tf[!duplicated(tf[, c(x, y, id)]), ]
-  starting_points <- tf[!duplicated(tf[[id]]), ]
-  rownames(starting_points) <- starting_points[[id]]
-  # return(starting_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
+  tf <- tf[
+    !duplicated(tf[, c(
+      easting_col(tf),
+      northing_col(tf),
+      id_col(tf)
+    )]),
+  ]
+  starting_points <- tf[!duplicated(id(tf)), ]
+  rownames(starting_points) <- id(starting_points)
   return(starting_points)
 }
 
@@ -295,6 +297,5 @@ get_direction_points <- function(tf) {
   tf <- tf[duplicated(tf[[id]]), ]
   direction_points <- tf[!duplicated(tf[[id]]), ]
   rownames(direction_points) <- direction_points[[id]]
-  # return(direction_points[, c(attr(tf, "time"), x, y, id)]) # FIXME: once subsetting works for tf
   return(direction_points)
 }
