@@ -72,8 +72,9 @@ test_cocomo <- function(coerce_to = "base") {
   expect_error(cocomo_as_tf(xs, t, ids = ids))
   expect_error(cocomo_as_tf(xs, t = t, ids = ids))
 
-  # tf3 <- cocomo_as_tf(xs, ys, t = t)
-  # expect_equal(tf1, tf3)
+  tf3 <- cocomo_as_tf(xs[order(id_code), ], ys[order(id_code), ], t = t)
+  id_idx <- which(colnames(tf1) == "id")
+  expect_equivalent(tf1[, -id_idx], tf3[, -id_idx])
 }
 
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
