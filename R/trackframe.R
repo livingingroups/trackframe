@@ -450,41 +450,29 @@ as.trackframe.sftrack <- function(
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  if (is.null(easting_col)) {
-    easting_col <- "easting"
-    data[["easting"]] <- x_y[, 1]
-  } else {
-    if (length(easting_col) == 1) {
-      lon_names <- c("lon", "long", "longitude") #FIXME: move to options?
-      if (easting_col %in% lon_names) {
-        easting_col <- "easting"
-      }
-      data[[easting_col]] <- x_y[, 1] #FIXME: how to check if transformation makes sense?
-    } else {
-      stop(
-        "easting col not identified. Please provide further information on easting_col."
-      )
-    }
-  }
+  easting_col <- (easting_col %||% "easting")[1]
+  northing_col <- (northing_col %||% "northing")[1]
 
-  if (is.null(northing_col)) {
-    northing_col <- "northing"
-    data[["northing"]] <- x_y[, 2]
-  } else {
-    if (length(northing_col) == 1) {
-      lat_names <- c("lat", "latitude") #FIXME: move to options?
-      if (northing_col %in% lat_names) {
-        northing_col <- "northing"
-      }
-      data[[northing_col]] <- x_y[, 2] #FIXME: how to check if transformation makes sense?
-    } else {
-      stop(
-        "northing col not identified. Please provide further information on northing_col"
-      )
+  update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
+    if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
+      warning(sprintf(
+        c(
+          "Column %s configured as %s,",
+          "but existing data does not match sf coordinates.",
+          "Overwriting."
+        ),
+        col_name,
+        arg_name
+      ))
     }
+    df[[col_name]] <- value
+    df
   }
+  data <- data |>
+    update_warn_if_overwriting("easting_col", easting_col, x_y[, 1]) |>
+    update_warn_if_overwriting("northing_col", northing_col, x_y[, 2]) |>
+    as.data.frame()
 
-  data <- as.data.frame(data)
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
     data$sft_group <- make_unique_id(data$sft_group)
   }
