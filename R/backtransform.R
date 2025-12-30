@@ -222,10 +222,7 @@ tf_as_move2 <- function(tf) {
   if (inherits(mt_as_move2, "try-error")) {
     stop("package 'move2' is required for this function. Please install it.")
   }
-  # TODO: Should we drop NA?
-  tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)), ]
   sf_df <- tf_as_sf(tf = tf)
-  # FIXME: We want to create an move2 object without importing it.
   mt_as_move2(
     sf_df,
     time_column = attr(tf, "time"),
