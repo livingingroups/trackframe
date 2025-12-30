@@ -1,16 +1,30 @@
 library(tinytest)
 library(trackframe)
 
+"[.data.frame" <- trackframe:::`[.data.frame`
+
 set.seed(2025)
 
 #cocomo
 old_test_cocomo <- function(coerce_to = "base") {
-  # sim_travel_paths is producing some bad stuff
-  tf <- as.trackframe(trackframe::tf_mini)
+  tf <- as.trackframe(trackframe::df_mini, coerce_to = coerce_to, crs = NA)
   cocomo <- tf_as_cocomo(tf)
-  tf2 <- cocomo_as_tf(cocomo$x, cocomo$y, cocomo$t, cocomo$ids) #, coerce_to = coerce_to)
-  cn <- c("time", "easting", "northing", "id")
-  expect_equal(tf[, cn], tf2[, cn])
+  tf2 <- cocomo_as_tf(
+    cocomo$x,
+    cocomo$y,
+    cocomo$t,
+    cocomo$ids,
+    coerce_to = coerce_to
+  )
+
+  # not testing backtransformation here
+  attributes(tf)[["transformation_info"]] <- NULL
+  attributes(tf2)[["transformation_info"]] <- NULL
+
+  expect_equal(
+    tf[, c("time", "easting", "northing", "id")],
+    tf2[, c("time", "easting", "northing", "id")]
+  )
 }
 
 test_cocomo <- function(coerce_to = "base") {
@@ -33,7 +47,13 @@ test_cocomo <- function(coerce_to = "base") {
   t <- seq_len(dim(xs)[2])
   tf1 <- cocomo_as_tf(xs, ys, t = t, ids = ids)
   cocomo2 <- tf_as_cocomo(tf1)
-  tf2 <- cocomo_as_tf(cocomo2$xs, cocomo2$ys, cocomo2$t, cocomo2$ids) #, coerce_to = coerce_to)
+  tf2 <- cocomo_as_tf(
+    cocomo2$xs,
+    cocomo2$ys,
+    cocomo2$t,
+    cocomo2$ids,
+    coerce_to = coerce_to
+  )
   expect_equivalent(
     cocomo2,
     list(
