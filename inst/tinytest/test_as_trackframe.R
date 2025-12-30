@@ -204,7 +204,7 @@ test_sort <- function(coerce_to) {
   df <- tf_as_xyt(trackframe::tf_mini)
   set.seed(2025)
   df2 <- df[sample(6), ]
-  tf_df <- as.trackframe(df2, coerce_to = coerce_to)
+  tf_df <- as.trackframe(df2, coerce_to = coerce_to, crs = NA)
   df2_ordered <- df2[order(df2$id, df2$time), ]
   expect_equal(
     as.data.frame(tf_df[, c("id", "time")]),
@@ -215,11 +215,14 @@ test_sort <- function(coerce_to) {
 
 
 test_incompatible_sf <- function() {
+  sf_df <- capture.output(sf::st_read(system.file(
+    "shape/nc.shp",
+    package = "sf"
+  )))
   expect_error(
-    as.trackframe(sf::st_read(system.file("shape/nc.shp", package = "sf")))
+    as.trackframe(sf_df)
   )
 }
-
 
 # Run all tests
 # coerce_to = "base"
@@ -231,4 +234,7 @@ lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
     coerce_to <- NULL
   }
   test_as_trackframe(coerce_to)
+  test_sort(coerce_to)
 })
+
+test_incompatible_sf()
