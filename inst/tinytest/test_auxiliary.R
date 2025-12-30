@@ -20,10 +20,6 @@ test_sort <- function(coerce_to) {
 
 
 # Run all tests
-# coerce_to = "base"
-# coerce_to = "data.table"
-# coerce_to = "tibble"
-# coerce_to = NA
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) {
     coerce_to <- NULL

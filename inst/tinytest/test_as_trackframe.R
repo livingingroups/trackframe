@@ -1,9 +1,7 @@
 library(tinytest)
 library(trackframe)
 
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
-  base::`[.data.frame`(x, i, j, drop = drop)
-}
+"[.data.frame" <- trackframe:::`[.data.frame`
 
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
@@ -159,7 +157,6 @@ test_as_trackframe <- function(coerce_to = "base") {
   library("sftrack")
   # Make tracks from raw data
   data("raccoon", package = "sftrack")
-  #raccoon <- read.csv(system.file("extdata/raccoon_data.csv", package="sftrack"))
   raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
   raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
   coords <- c("longitude", "latitude")
@@ -198,7 +195,20 @@ test_as_trackframe <- function(coerce_to = "base") {
   raccoon_sftrack <- raccoon_sftrack[
     order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp),
   ]
-  # expect_equal(id(sftrack_tf), sapply(my_sftrack[[attr(my_sftrack, "group_col")]], deparse))
+
+  expected_id <- do.call(
+    rbind,
+    raccoon_sftrack[[attr(
+      raccoon_sftrack,
+      "group_col"
+    )]]
+  )
+  expected_id <- paste(expected_id[, 1], expected_id[, 2], sep = "<;>")
+
+  expect_equal(
+    id(raccoon_tf),
+    expected_id
+  )
   expect_equal(
     id(raccoon_tf),
     trackframe:::make_unique_id(raccoon_sftrack[[attr(
@@ -261,10 +271,6 @@ test_incompatible_sf <- function() {
 }
 
 # Run all tests
-# coerce_to = "base"
-# coerce_to = "data.table"
-# coerce_to = "tibble"
-# coerce_to = NA
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) {
     coerce_to <- NULL
