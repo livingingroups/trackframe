@@ -2,7 +2,6 @@ source("plot_testing_helpers.R")
 using("tinysnapshot")
 
 # run to create plots (delete plots if new plots should be created)
-# tinytest::run_test_file("inst/tinytest/test_plot_trackframe.R")
 
 library(trackframe)
 library(tinytest)
