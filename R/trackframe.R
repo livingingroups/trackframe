@@ -54,9 +54,11 @@ trackframe <- function(
   crs = NULL,
   ...
 ) {
-  df <- data.frame(data) #FIXME: does not work for tibble + data.table
+  if (!"data.frame" %in% class(data)) {
+    data <- data.frame(data)
+  }
   as.trackframe(
-    df,
+    data,
     time_col = time_col,
     easting_col = easting_col,
     northing_col = northing_col,

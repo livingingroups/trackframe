@@ -5,14 +5,48 @@ library(trackframe)
   base::`[.data.frame`(x, i, j, drop = drop)
 }
 
-test_as_trackframe <- function(coerce_to = "base") {
-  #dataframe
-  df <- data.frame(
+expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
+  tf_classes <- c("trackframe", "data.frame")
+  tf_subclasses <- c("data.table", "tbl", "tbl_df")
+  expected_idx <- list(
+    "base" = c(FALSE, FALSE, FALSE),
+    "data.table" = c(TRUE, FALSE, FALSE),
+    "tibble" = c(FALSE, TRUE, TRUE),
+    "NULL" = tf_subclasses %in% from_class
+  )[[coerce_to %||% "NULL"]]
+
+  expect_true(all(tf_classes %in% actual_tf_class))
+
+  expect_equal(
+    tf_subclasses %in% actual_tf_class,
+    expected_idx,
+    info = "Expect presence/absence of tf subclasses is as expected"
+  )
+  expect_true(
+    all(
+      actual_tf_class %in%
+        c(
+          from_class,
+          tf_classes,
+          tf_subclasses
+        )
+    ),
+    info = "Expect all classes come from either source obj or known tf (sub)classes"
+  )
+}
+
+test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
+  # dataframe
+  df <- list(
+    "base" = data.frame,
+    "data.table" = data.table::as.data.table,
+    "tibble" = dplyr::as_tibble
+  )[[from]](data.frame(
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10),
     id = 1:5
-  )
+  ))
   tf <- trackframe(
     data = df,
     time_col = "time_col",
@@ -36,7 +70,8 @@ test_as_trackframe <- function(coerce_to = "base") {
   expect_equal(tf, tf3)
   tf4 <- as.trackframe(data = df, coerce_to = coerce_to, crs = NA)
   expect_equal(tf, tf4)
-  expect_inherits(tf, "trackframe")
+
+  expect_tf_class(class(tf), class(df), coerce_to)
   expect_equal(dim(df), dim(tf))
   expect_error(trackframe(
     df,
@@ -52,8 +87,9 @@ test_as_trackframe <- function(coerce_to = "base") {
   expect_equal(id(tf), df$id)
   expect_equal(time(tf), df$time_col)
   expect_inherits(time(tf), "POSIXct")
+}
 
-  #dataframe
+test_as_trackframe <- function(coerce_to = "base") {
   matrix_input <- as.matrix(data.frame(
     time_col = 1:5,
     easting_col = runif(5, 0, 10),
@@ -71,7 +107,7 @@ test_as_trackframe <- function(coerce_to = "base") {
     crs = NA
   )
   expect_inherits(tf, "trackframe")
-  expect_equal(dim(df), dim(tf))
+  expect_equal(dim(matrix_input), dim(tf))
   expect_equal(easting(tf), matrix_input[, "easting_col"])
   expect_equal(northing(tf), matrix_input[, "northing_col"])
   expect_equal(id(tf), matrix_input[, "id"])
@@ -233,6 +269,9 @@ lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
   if (is.na(coerce_to)) {
     coerce_to <- NULL
   }
+  lapply(c("base", "data.table", "tibble"), function(from) {
+    test_as_trackframe_data_frame(from = from, coerce_to = coerce_to)
+  })
   test_as_trackframe(coerce_to)
   test_sort(coerce_to)
 })
