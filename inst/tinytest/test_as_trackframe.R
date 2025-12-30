@@ -49,10 +49,6 @@ test_as_trackframe <- function(coerce_to = "base") {
   ))
   expect_equal(easting(tf), df$easting_col)
   expect_equal(northing(tf), df$northing_col)
-  # expect_equal(units(easting(tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(easting(tf)), df$easting_col) #FIXME: if decide to use units
-  # expect_equal(units(northing(tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(northing(tf)), df$northing_col) #FIXME: if decide to use units
   expect_equal(id(tf), df$id)
   expect_equal(time(tf), df$time_col)
   expect_inherits(time(tf), "POSIXct")
@@ -78,10 +74,6 @@ test_as_trackframe <- function(coerce_to = "base") {
   expect_equal(dim(df), dim(tf))
   expect_equal(easting(tf), matrix_input[, "easting_col"])
   expect_equal(northing(tf), matrix_input[, "northing_col"])
-  # expect_equal(units(easting(tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(easting(tf)), matrix_input[, "easting_col"]) #FIXME: if decide to use units #nolint
-  # expect_equal(units(northing(tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(northing(tf)), matrix_input[, "northing_col"]) #FIXME: if decide to use units #nolint
   expect_equal(id(tf), matrix_input[, "id"])
   expect_equal(time(tf), matrix_input[, "time_col"])
 
@@ -101,10 +93,6 @@ test_as_trackframe <- function(coerce_to = "base") {
   )]])
   expect_equal(easting(albatross_tf), x_y[, 1])
   expect_equal(northing(albatross_tf), x_y[, 2])
-  # expect_equal(units(easting(albatross_tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(easting(albatross_tf)), x_y[,1]) #FIXME: if decide to use units
-  # expect_equal(units(northing(albatross_tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(northing(albatross_tf)), x_y[,2]) #FIXME: if decide to use units
   expect_equal(
     id(albatross_tf),
     albatross_move2[[attr(albatross_move2, "track_id_column")]]
@@ -171,10 +159,6 @@ test_as_trackframe <- function(coerce_to = "base") {
   x_y[is.nan(x_y)] <- NA
   expect_equal(easting(raccoon_tf), x_y[, 1])
   expect_equal(northing(raccoon_tf), x_y[, 2])
-  # expect_equal(units(easting(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(easting(sftrack_tf)), x_y[,1]) #FIXME: if decide to use units
-  # expect_equal(units(northing(sftrack_tf))$numerator, "m") #FIXME: if decide to use units
-  # expect_equal(units::drop_units(northing(sftrack_tf)), x_y[,2]) #FIXME: if decide to use units
   raccoon_sftrack <- raccoon_sftrack[
     order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp),
   ]

@@ -132,7 +132,6 @@ test_guess_all_cols <- function() {
   )
   expect_error(as.trackframe(data = data, crs = NA))
 
-  # FIXME should this be recognized?
   expect_silent(as.trackframe(
     data = data,
     easting_col = "easting_col2",

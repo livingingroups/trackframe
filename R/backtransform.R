@@ -118,8 +118,6 @@ tf_backtransform <- function(tf) {
 #' tf_as_xyt(tf_mini)
 #' @export
 tf_as_xyt <- function(x, ...) {
-  #coredata.trackframe
-  #FIXME: check what we want to do in coredata
   assert_class(x, "trackframe")
   if (is.null(attr(x, "id"))) {
     cols <- c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))

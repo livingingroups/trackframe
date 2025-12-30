@@ -178,7 +178,7 @@ as.trackframe.data.frame <- function(
   northing_col = tf_options("northing_col"),
   id_col = tf_options("id_col"),
   sort = TRUE,
-  coerce_to = "base", #FIXME: or "data.frame"?
+  coerce_to = "base",
   crs = NULL,
   ...
 ) {
@@ -349,7 +349,6 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  #FIXME: transform to sftrack and call as.trackframe.sftrack
 
   time_index <- attr(data, "time_column")
 
