@@ -31,7 +31,7 @@ expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
           tf_subclasses
         )
     ),
-    info = "Expect all classes come from either source obj or known tf (sub)classes"
+    info = "Expect all classes come from either input or known tf (sub)classes"
   )
 }
 
