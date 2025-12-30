@@ -210,10 +210,6 @@ as.trackframe.data.frame <- function(
   } else if (coerce_to == "tibble") {
     if (!inherits(data, "tbl") || !inherits(data, "tbl_df")) {
       log_debug("- data coerced by as_tibble(data)")
-      if (!is.null(data$sft_group)) {
-        #data$sft_group <- NULL #FIXME: same transformation as for id
-        data$sft_group <- make_unique_id(data$sft_group)
-      }
       data <- as_tibble(data)
     }
   }
@@ -489,6 +485,10 @@ as.trackframe.sftrack <- function(
 
   # FIXME: as.data.frame?
   class(data) <- c("data.frame")
+  if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
+    data$sft_group <- make_unique_id(data$sft_group)
+  }
+
   attr(data, "row.names") <- data_attr[["row.names"]]
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(
