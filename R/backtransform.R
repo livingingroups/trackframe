@@ -85,7 +85,9 @@ tf_backtransform <- function(tf) {
   }
   if (!is.null(transformation_info[["id_hash_orig"]])) {
     # check if tf was manipulated after first transformation
-    if (length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])) {
+    if (
+      length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])
+    ) {
       if (all(id_hash_tf == transformation_info[["id_hash_ordered"]])) {
         id_hash_tf <- id_hash(tf) # needed as as_sftrack might change the order
         idx <- match(transformation_info[["id_hash_orig"]], id_hash_tf)
@@ -178,8 +180,6 @@ tf_as_sftrack <- function(tf) {
   if (inherits(as_sftrack, "try-error")) {
     stop("package 'sftrack' is required for this function. Please install it.")
   }
-  # # FIXME: Should we drop NA?
-  # tf <- tf[!is.na(easting(tf)) & !is.na(northing(tf)),]
 
   sft_group <- as.list(do.call(
     rbind.data.frame,
