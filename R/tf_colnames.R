@@ -37,12 +37,3 @@ tf_colnames <- function(tf) {
   }
   tf
 }
-
-# FIXME: should we try making a names method that automatically updates the attributes?
-# "names.trackframe<-" <- function(x, value) {
-#   is_key_col <- names(x) %in% tf_colnames(x)
-#   new_key_col_names <- value[is_key_col[seq_len(length(value))]]
-#   names(new_key_col_names) <- names(tf_colnames(x))[tf_colnames(x) %in% names(x)]
-#   tf_colnames(x) <- new_key_col_names
-#   base::names(x) <- value
-# }
