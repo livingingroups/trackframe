@@ -372,7 +372,7 @@ as.trackframe.move2 <- function(
   # move2: The `track_id_column` attribute should be a <character> of length 1
   id_col <- attr(data, "track_id_column")
   transformation_info <- attributes(data)
-  # todo": better message
+  # FIXME: better message
   if ('crs' %in% names(list(...))) {
     stop("crs provided as arg for sf arg. this val will be ignored")
   }
@@ -441,6 +441,10 @@ as.trackframe.sftrack <- function(
       "active_group"
     )
   }
+  # FIXME: better message
+  if ('crs' %in% names(list(...))) {
+    stop("crs provided as arg for sf arg. this val will be ignored")
+  }
   transformation_info <- attributes(data)
   crs <- sf::st_crs(data)$input
   data_attr <- attributes(data)
@@ -483,8 +487,7 @@ as.trackframe.sftrack <- function(
     }
   }
 
-  # FIXME: as.data.frame?
-  class(data) <- c("data.frame")
+  data <- as.data.frame(data)
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
     data$sft_group <- make_unique_id(data$sft_group)
   }
