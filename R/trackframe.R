@@ -349,7 +349,6 @@ as.trackframe.move2 <- function(
 ) {
   time_index <- attr(data, "time_column")
 
-  # FIXME: add similar messages about ignoring time_col, easting_col, northing_col, etc.
   if (!is.null(time_col)) {
     log_debug(
       paste(
@@ -372,7 +371,6 @@ as.trackframe.move2 <- function(
   # move2: The `track_id_column` attribute should be a <character> of length 1
   id_col <- attr(data, "track_id_column")
   transformation_info <- attributes(data)
-  # FIXME: better message
   if ('crs' %in% names(list(...))) {
     stop("crs provided as arg for sf arg. this val will be ignored")
   }
@@ -441,7 +439,6 @@ as.trackframe.sftrack <- function(
       "active_group"
     )
   }
-  # FIXME: better message
   if ('crs' %in% names(list(...))) {
     stop("crs provided as arg for sf arg. this val will be ignored")
   }
