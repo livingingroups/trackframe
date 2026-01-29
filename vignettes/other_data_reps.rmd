@@ -55,10 +55,13 @@ So, this cocomo dataset is a `list` that contains 4 objects: the first is a `mat
 
 We can then use a function from the `cocomo` package on the objects in this cocomo dataset, for example:
 
-```{r}
+```{r, eval = FALSE}
 # Install cocomo package
 library(devtools)
 install_github('livingingroups/cocomo')
+```
+
+```{r}
 library(cocomo)
 
 # Get the group centroid at each time step
