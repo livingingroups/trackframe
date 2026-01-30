@@ -47,6 +47,9 @@ labeling)}
 
 \item{...}{other arguments used in \code{\link[tinyplot]{tinyplot}}}
 }
+\value{
+No return value, called for side effect of producing a plot.
+}
 \description{
 Plots coordinates of objects of class \code{\link[trackframe]{trackframe}} based on
 \code{\link[tinyplot]{tinyplot}} functionality.
@@ -78,5 +81,4 @@ plot(track_1)
 plot(track_1, direction = TRUE)
 
 plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
-
 }

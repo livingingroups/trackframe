@@ -176,7 +176,7 @@ test_as_trackframe <- function(coerce_to = "base") {
     error = error,
     crs = crs
   ) |>
-    sf::st_transform(suggest_utm_crs(raccoon$latitude, raccoon$longitude))
+    sf::st_transform(suggest_utm_zone_crs(raccoon$latitude, raccoon$longitude))
 
   raccoon_tf <- as.trackframe(raccoon_sftrack, coerce_to = coerce_to)
   expect_inherits(raccoon_tf, "trackframe")
@@ -239,7 +239,7 @@ test_as_trackframe <- function(coerce_to = "base") {
   )
   raccoon_vanilla_sf <- sf::st_transform(
     raccoon_vanilla_sf,
-    suggest_utm_crs(raccoon_vanilla_sf)
+    suggest_utm_zone_crs(raccoon_vanilla_sf)
   )
   # When issue #139 is complete, should be switched to expect_silent
   expect_error(as.trackframe(raccoon_vanilla_sf))

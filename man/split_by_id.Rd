@@ -15,7 +15,7 @@ an object of class `list_of_trackframes` containing a \code{trackframe}
 in each list element.
 }
 \description{
-This function splits a trackframe into a list of trackframes by the id.
+This function splits a \code{trackframe} object into a list of trackframes by the id.
 }
 \examples{
 tf_split <- split_by_id(tf_mini)

@@ -113,7 +113,7 @@ attributes(albatross_tf)[1:6]
 str(albatross_tf)
 ```
 
-<!-- You can use the `suggest_utm_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data.
+<!-- You can use the `suggest_utm_zone_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data.
 
 [ONCE THIS IS IMPLEMENTED, remove code block above, and activate code block below.]
 
@@ -124,7 +124,7 @@ library(move2)
 albatross_move2 <- mt_read(mt_example())
 albatross_move2_proj <- albatross_move2[
   !sf::st_is_empty(albatross_move2),
-] |> sf::st_transform(suggest_utm_crs(albatross_move2))
+] |> sf::st_transform(suggest_utm_zone_crs(albatross_move2))
 
 # Convert to trackframe, key columns and crs will be identified using metadata of the
 # input move2 object
@@ -172,7 +172,7 @@ class(sftrack_tf)
 attributes(sftrack_tf)[1:6]
 ```
 
-<!-- You can use the `suggest_utm_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data. 
+<!-- You can use the `suggest_utm_zone_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data. 
 
 [ONCE THIS IS IMPLEMENTED, remove code block above, and activate code block below.]
 
@@ -196,7 +196,7 @@ my_sftrack <- as_sftrack(
   time = time,
   error = error,
   crs = crs
-) |> sf::st_transform(suggest_utm_crs(raccoon$latitude, raccoon$longitude))
+) |> sf::st_transform(suggest_utm_zone_crs(raccoon$latitude, raccoon$longitude))
 
 # Convert to trackframe, key columns and crs will be identified using metadata of the
 # input sftrack object

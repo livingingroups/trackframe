@@ -1,5 +1,6 @@
 
 travelpaths_*.tar.gz
+air.toml
 Taskfile.yml
 CONTRIBUTING.md
 ^.*-Ex\.R$
@@ -11,9 +12,11 @@ CONTRIBUTING.md
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+.lintr
 .pkgcheck
 .vscode
 .pkgcheck
 codemeta.json
 internal-release-checklist.md
 ^doc$
+man-roxygen

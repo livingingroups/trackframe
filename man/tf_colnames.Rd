@@ -40,6 +40,11 @@ tf_colnames(tf) <- value
 named character vector with names `easting`, `northing`, `time`, and (opt) `id`.
 `X_col()` functions take a single string}
 }
+\value{
+X_col returns a character object representing the column name.
+tf_colnames returns a named character vector of length 4 indicating the
+column names of each of the key columns.
+}
 \description{
 Key columns meaning: easting, northing, time, and (opt) id column
 All 3-4 key column names can be accessed or set with `tf_colnames()`.

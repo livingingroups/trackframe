@@ -1,10 +1,12 @@
 #' Set cols of facet
 #'
-#' Set cols of facet
-#'
 #' Calculates the desired number of columns for trackframe plots using tinyplot engine.
 #'
 #' @param n an integer value (corresponding to the number of different ids)
+#' @return numeric
+#'
+#' @examples
+#' set_facet_ncol(12)
 #'
 #' @export
 set_facet_ncol <- function(n) {
@@ -73,6 +75,7 @@ set_facet_ncol <- function(n) {
 #' plot(track_1, direction = TRUE)
 #'
 #' plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
+#' @return No return value, called for side effect of producing a plot.
 #'
 #' @export
 plot.trackframe <- function(
@@ -247,6 +250,7 @@ plot.trackframe <- function(
 #' @param length length in \code{\link[graphics]{arrows}}
 #' @param angle angle in \code{\link[graphics]{arrows}}
 #' @param code code in \code{\link[graphics]{arrows}}
+#' @return a tinyplot_type containing corresponding draw function
 #'
 #' @examples
 #' library(trackframe)
@@ -370,6 +374,7 @@ type_arrows <- function(
 #' @param mfrow number of rows used in par()
 #' @param mar margins used in par()
 #' @param ... other arguments passed to the tinyplot call
+#' @return No return value, called for side effect of producing a plot.
 #'
 #' @examples
 #' library(trackframe)
@@ -469,4 +474,5 @@ plot_coords_by_time <- function(
       )
     }
   }
+  NULL
 }

@@ -10,6 +10,9 @@
 #' @seealso tf_coords, as.trackframe, tf_id, tf_time
 #' @export
 #' @param tf a trackframe
+#' @return X_col returns a character object representing the column name.
+#' tf_colnames returns a named character vector of length 4 indicating the
+#' column names of each of the key columns.
 #' @examples
 #' tf_colnames(tf_mini)
 #' @rdname tf_colnames

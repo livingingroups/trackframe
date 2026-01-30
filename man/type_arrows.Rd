@@ -21,6 +21,9 @@ type_arrows(x0, y0, x1, y1, length = 0.25, angle = 30, code = 2)
 
 \item{code}{code in \code{\link[graphics]{arrows}}}
 }
+\value{
+a tinyplot_type containing corresponding draw function
+}
 \description{
 This function adds arrows to the current (tinyplot) plot. Defines a type for tinyplots.
 }

@@ -30,6 +30,9 @@ labeling)}
 
 \item{...}{other arguments passed to the tinyplot call}
 }
+\value{
+No return value, called for side effect of producing a plot.
+}
 \description{
 This functions plots x-coordinates as well as y-coordinates over time in separate plots.
 }

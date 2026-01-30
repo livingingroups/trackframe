@@ -66,12 +66,12 @@ crs(albatross_tf)
 
 [ONCE THIS IS IMPLEMENTED, remove code block above, replace with text and code block below.]
 
-If you don't already know the EPSG code for the UTM zone that your data are in, you can use trackframe's `suggest_utm_crs` function to find out. (Alternatively, or additionally, you can find or verify the UTM zone at <https://epsg.io/>).
+If you don't already know the EPSG code for the UTM zone that your data are in, you can use trackframe's `suggest_utm_zone_crs` function to find out. (Alternatively, or additionally, you can find or verify the UTM zone at <https://epsg.io/>).
 
 ```{r, eval=FALSE, include = FALSE}
 # nolint start
 # Get EPSG code for likely UTM zone
-# suggest_utm_crs(albatross_move2)
+# suggest_utm_zone_crs(albatross_move2)
 
 # Project the coordinates into the appropriate UTM zone (in this case,
 # UTM zone 38S, or EPSG: 32738), and then convert to trackframe object

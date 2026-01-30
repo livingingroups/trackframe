@@ -2,10 +2,26 @@
 
 # nolint start: object_name_linter
 
+convertCamelCase <- function(x) {
+  tolower(gsub(
+    "((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))",
+    "_\\1",
+    x,
+    perl = TRUE
+  ))
+}
+
 #' Checkmate style check if x is a trackframe object
+#' @templateVar fn trackframe
 #' @param x Object to check
 #' @param ... arguments passed to checkmate::check_data_frame
 #' @param unsorted.ok Is a trackframe not in order([id], timestamp) allowed? Default: TRUE
+#' @template checker
+#' @examples
+#' check_trackframe(tf_mini)
+#' expect_trackframe(tf_mini)
+#' assert_trackframe(tf_mini)
+#' @export
 #' @rdname check_trackframe
 check_trackframe <- checkTrackframe <- function(x, ..., unsorted.ok = TRUE) {
   if (!is.trackframe(x)) {
@@ -36,6 +52,9 @@ check_trackframe <- checkTrackframe <- function(x, ..., unsorted.ok = TRUE) {
 # edited version of output of checkmate::makeXFunction
 # editing to workaround mllg/checkmate#281
 
+#' @export
+#' @template assert
+#' @rdname check_trackframe
 assert_trackframe <- assertTrackframe <- function(
   x,
   ...,
@@ -50,6 +69,9 @@ assert_trackframe <- assertTrackframe <- function(
   checkmate::makeAssertion(x, res, .var.name, add)
 }
 
+#' @export
+#' @template expect
+#' @rdname check_trackframe
 expect_trackframe <- expectTrackframe <- function(
   x,
   ...,

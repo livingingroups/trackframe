@@ -132,7 +132,7 @@ sftrack_raccoon <- sftrack::as_sftrack(
 
 sftrack_raccoon_proj <- sf::st_transform(
   sftrack_raccoon,
-  trackframe::suggest_utm_crs(sftrack_raccoon)
+  trackframe::suggest_utm_zone_crs(sftrack_raccoon)
 )
 
 stopifnot(all.equal(
@@ -145,7 +145,7 @@ move2_albatross <- move2::mt_read(move2::mt_example())
 
 move2_albatross_proj <- sf::st_transform(
   move2_albatross,
-  trackframe::suggest_utm_crs(move2_albatross)
+  trackframe::suggest_utm_zone_crs(move2_albatross)
 )
 
 stopifnot(all.equal(

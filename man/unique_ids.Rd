@@ -15,10 +15,11 @@ A vector of unique track IDs extracted from the \code{trackframe}.
 }
 \description{
 This function retrieves the unique track IDs from a \code{trackframe} object.
-The \code{trackframe} should be a data frame-like structure with an attribute
-specifying the column containing track IDs.
 }
 \examples{
 unique_ids(tf_mini)
 
+}
+\seealso{
+[as.trackframe()]
 }

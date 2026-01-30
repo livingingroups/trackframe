@@ -8,7 +8,7 @@ cocomo_as_tf(
   xs,
   ys,
   t,
-  ids,
+  ids = data.frame(id_code = seq_len(NROW(xs))),
   crs = NA,
   na_omit = TRUE,
   sort = TRUE,
