@@ -10,7 +10,7 @@ vignette: >
 
 # Quickstart Guide
 
-This vignette demonstrates the main functions of trackframe and how to get started using this package. For a full description of the benefits of using trackframe over other approaches, see [Why trackframe?](comparison.html)
+This vignette demonstrates the main functions of trackframe and how to get started using this package. For a full description of the benefits of using trackframe over other approaches, see `vignette("why_trackframe")`
 
 ## Load Package
 
@@ -20,7 +20,7 @@ library(trackframe)
 
 ## Create a `trackframe`
 
-It's quite simple to convert common animal track data representations into `trackframe` objects. When creating a `trackframe` object from another data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options. For details about the process and specifications of identifying the key columns, see [Identifying the Key Columns](identifying_columns.html).
+It's quite simple to convert common animal track data representations into `trackframe` objects. When creating a `trackframe` object from another data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options. For details about the process and specifications of identifying the key columns, see `vignette("identifying_columns")`.
 
 `as.trackframe` also sorts the data that it is given, firsb by the values in the `id_col` and then by the values in the `time_col`. To prevent this default sorting, you can set `sort = FALSE` in the `as.trackframe` function.
 
@@ -92,7 +92,7 @@ tf_args_unsorted
 
 ### ...from a `move2` object
 
-When applying `as.trackframe` to a move2 object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see [Compatible Coordinate Systems](crs.html).
+When applying `as.trackframe` to a move2 object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see `vignette("crs")`.
 
 ```{r}
 library(move2)
@@ -141,7 +141,7 @@ str(albatross_tf)
 
 ### ...from an `sftrack` object
 
-As with `move2` objects, when applying `as.trackframe` to an `sftrack` object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see [Compatible Coordinate Systems](crs.html).
+As with `move2` objects, when applying `as.trackframe` to an `sftrack` object, key columns are identified using the metadata of the input object. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see `vignette("crs")`.
 
 ```{r}
 library(sftrack)
@@ -378,7 +378,7 @@ Add an example of a regular sf object... at least an sf POINT dataframe, maybe a
 
 The following example shows how to use `trackframe` to create a function that can take any representation of animal track data as input, and will add a "step length" column to the data.
 
-Within the function, you can convert the data to a `trackframe` object, then apply the desired calculations, then convert the data back to its original representation. The trackframe approach requires far fewer, and simpler, lines of code than writing the function in such a way that it can recognize and accommodate each of multiple different data representations. Furthermore, because `trackframe` stores coordinate columns as plain numeric vectors, it's easy to write functions that employ basic geometry and math to perform calculations directly on the location coordinates values themselves. See [Why trackframe?](comparison.html) for more information on the design of the `trackframe` object.
+Within the function, you can convert the data to a `trackframe` object, then apply the desired calculations, then convert the data back to its original representation. The trackframe approach requires far fewer, and simpler, lines of code than writing the function in such a way that it can recognize and accommodate each of multiple different data representations. Furthermore, because `trackframe` stores coordinate columns as plain numeric vectors, it's easy to write functions that employ basic geometry and math to perform calculations directly on the location coordinates values themselves. See `vignette("why_trackframe")`. for more information on the design of the `trackframe` object.
 
 ```{r}
 # Function to add a step length column to a animal track data object

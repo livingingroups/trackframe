@@ -2,7 +2,9 @@
 
 ## Overview
 
-The trackframe package simplifies the process of supporting multiple common representations of animal track data as function inputs. Animal track data refers to any data that consists of a time series of coordinates that represent sequential locations of a moving entity. This package is intended for developers who want to write functions and packages that manipulate and analyze animal tracks, and that has easy integration with other R packages that are commonly used in this field (e.g., move2, sf, etc). Explore the benefits of trackframe over other packages here: [Why trackframe?](comparison.html)
+The trackframe package simplifies the process of supporting multiple common representations of animal track data as function inputs. Animal track data refers to any data that consists of a time series of coordinates that represent sequential locations of a moving entity. This package is intended for developers who want to write functions and packages that manipulate and analyze animal tracks, and that has easy integration with other R packages that are commonly used in this field (e.g., move2, sf, etc).
+
+Explore the benefits of trackframe here: `vignette("why_trackframe")`.
 
 ## Installation
 
@@ -16,26 +18,19 @@ library(trackframe)
 
 Refer to the following vignettes:
 
-<!--- We can update these links to be the actual web addresses once we know them... For now, I left referential because it should allow to click between them on local version (i think) --->
+-   **Advantages of trackframe** - `vignette("why_trackframe")`: Learn about the advantages of using trackframe over non-trackframe approaches to writing functions for manipulating and analyzing animal tracks.
 
--   [Why trackframe?](comparison.html): Learn about the advantages of using trackframe over non-trackframe approaches to writing functions for manipulating and analyzing animal tracks.
+-   **Quickstart guide** - `vignette("trackframe")`: Learn how to create `trackframe` objects, convert to and from other common representations of animal track data, and manipulate and subset columns of a `trackframe` object.
 
--   [Quickstart guide](trackframe.html): Learn how to create `trackframe` objects, convert to and from other common representations of animal track data, and manipulate and subset columns of a `trackframe` object.
+-   **Identifying the Key Columns** - `vignette("identifying_columns")`: Learn about how `as.trackframe` identifies the columns representing time, coordinates, and animal id, and how you can configure or override the sources it uses.
 
--   [Identifying the Key Columns](identifying_columns.html): Learn about how `as.trackframe` identifies the columns representing time, coordinates, and animal id, and how you can configure or override the sources it uses.
-
--   [Compatible Coordinate Systems](crs.html): Learn about the coordinate systems that are compatible with trackframe, and how to set the crs of a `trackframe` object.
+-   **Compatible Coordinate Systems** - `vignette("crs")`: Learn about the coordinate systems that are compatible with trackframe, and how to set the crs of a `trackframe` object.
 
 ## Features
 
-The **trackframe** package provides the `trackframe` object as well as simple universal methods to convert to and from other common animal track data representations, including `move2`, `sftrack`, `data.frame`, and `matrix` object formats. 
-`trackframe` objects store one location per row, with columns for `easting`, `northing`, `time`, and `id`. 
-Coordinates are stored in UTM easting/northing format with a given [EPSG](https://epsg.io/) zone. 
-Relevant information about all columns are set and stored as attributes. 
-All columns can be easily accessed by accessor functions, and the `trackframe` itself is manipulatable in the same way as any other dataframe object. 
-The **trackframe** package also provides simple functions for extracting relevant columns, regardless of what the use has named them.
+The **trackframe** package provides the `trackframe` object as well as simple universal methods to convert to and from other common animal track data representations, including `move2`, `sftrack`, `data.frame`, and `matrix` object formats. `trackframe` objects store one location per row, with columns for `easting`, `northing`, `time`, and `id`. Coordinates are stored in UTM easting/northing format with a given [EPSG](https://epsg.io/) zone. Relevant information about all columns are set and stored as attributes. All columns can be easily accessed by accessor functions, and the `trackframe` itself is manipulatable in the same way as any other dataframe object. The **trackframe** package also provides simple functions for extracting relevant columns, regardless of what the use has named them.
 
-For more details about advantages of using trackframe over non-trackframe approaches to writing functions for manipulating and analyzing animal tracks, see [Why trackframe?](comparison.html)
+For more details about advantages of using trackframe over non-trackframe approaches to writing functions for manipulating and analyzing animal tracks, see `vignette("why_trackframe")`.
 
 ### Example
 
@@ -101,4 +96,4 @@ sapply(
 )
 ```
 
-Trackframe thus simplifies the development of functions and packages that manipulate and analyze animal tracks, enabling the accommodation of multiple representations of animal track data. For a more detailed comparison of trackframe and non-trackframe methods, see [Why trackframe?](comparison.html)
+Trackframe thus simplifies the development of functions and packages that manipulate and analyze animal tracks, enabling the accommodation of multiple representations of animal track data. For a more detailed comparison of trackframe and non-trackframe methods, see `vignette("why_trackframe")`

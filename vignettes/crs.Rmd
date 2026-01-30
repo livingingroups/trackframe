@@ -12,7 +12,7 @@ editor_options:
 
 # Compatible Coordinate Systems
 
-Trackframe only supports Cartesian (or Eucliean) coordinate systems, i.e., systems in which coordinates describe locations on a flat plane using perpendicular northing (y) and easting (x) axes, and units represent consistent physical distances in all directions.
+Trackframe only supports Cartesian (or Euclidean) coordinate systems, i.e., systems in which coordinates describe locations on a flat plane using perpendicular northing (y) and easting (x) axes, and units represent consistent physical distances in all directions.
 
 As long as the coordinates are Cartesian, trackframe supports both: georeferenced data, wherein the coordinates explicitly represent locations on the Earth's surface; and non-georeferenced data, wherein the coordinates do not explicitly or necessarily represent locations on the Earth's surface.
 
