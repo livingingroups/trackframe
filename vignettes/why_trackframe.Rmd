@@ -22,7 +22,6 @@ The trackframe package is designed to be complementary to more full featured geo
 * Key columns, namely the x (easting) and y (northing) coordinates of each point, as well as the timestamp (date & time) and unique animal id, are stored as attributes and can be easily accessed by `easting()`, `northing()`, `time()`, and `id()`, regardless of the columns' actual names.
 * Coordinates are always stored as projected UTM easting/northing (for georeferenced data) or as x/y values on a Cartesian plane (for non georeferenced data, e.g., simulation data).
 * Coordinates are stored in simple numeric columns, allowing the user to perform vectorized R operations directly on the coordinates themselves
-* Fast performance.
 * Trackframe's objects and functions integrate seamlessly with the travelpaths package.
 
 ## Example
@@ -141,16 +140,16 @@ stopifnot(all.equal(
 ))
 
 # move2
-move2_albatross <- move2::mt_read(move2::mt_example())
+move2_fisher <- move2::mt_read(move2::mt_example())
 
-move2_albatross_proj <- sf::st_transform(
-  move2_albatross,
-  trackframe::suggest_utm_zone_crs(move2_albatross)
+move2_fisher_proj <- sf::st_transform(
+  move2_fisher,
+  trackframe::suggest_utm_zone_crs(move2_fisher)
 )
 
 stopifnot(all.equal(
-  average_speed_group_tf(move2_albatross_proj),
-  average_speed_group_no_tf(move2_albatross_proj)
+  average_speed_group_tf(move2_fisher_proj),
+  average_speed_group_no_tf(move2_fisher_proj)
 ))
 ```
 

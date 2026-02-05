@@ -113,44 +113,44 @@ test_as_trackframe <- function(coerce_to = "base") {
 
   #move2
   library(move2)
-  albatross_move2 <- mt_read(mt_example()) |>
+  move2_ex <- mt_read(mt_example()) |>
     sf::st_transform(3857)
-  albatross_move2 <- albatross_move2[!sf::st_is_empty(albatross_move2), ]
-  albatross_tf <- as.trackframe(albatross_move2, coerce_to = coerce_to)
+  move2_ex <- move2_ex[!sf::st_is_empty(move2_ex), ]
+  move2_ex_tf <- as.trackframe(move2_ex, coerce_to = coerce_to)
 
-  expect_inherits(albatross_tf, "trackframe")
-  expect_equal(NROW(albatross_move2), NROW(albatross_tf))
+  expect_inherits(move2_ex_tf, "trackframe")
+  expect_equal(NROW(move2_ex), NROW(move2_ex_tf))
 
-  x_y <- sf::st_coordinates(albatross_move2[[attr(
-    albatross_move2,
+  x_y <- sf::st_coordinates(move2_ex[[attr(
+    move2_ex,
     "sf_column"
   )]])
-  expect_equal(easting(albatross_tf), x_y[, 1])
-  expect_equal(northing(albatross_tf), x_y[, 2])
+  expect_equal(easting(move2_ex_tf), x_y[, 1])
+  expect_equal(northing(move2_ex_tf), x_y[, 2])
   expect_equal(
-    id(albatross_tf),
-    albatross_move2[[attr(albatross_move2, "track_id_column")]]
+    id(move2_ex_tf),
+    move2_ex[[attr(move2_ex, "track_id_column")]]
   )
   expect_equal(
-    time(albatross_tf),
-    albatross_move2[[attr(albatross_move2, "time_column")]]
+    time(move2_ex_tf),
+    move2_ex[[attr(move2_ex, "time_column")]]
   )
   #backtransformation
-  albatross_move2_bt <- tf_as_move2(albatross_tf[
-    !is.na(northing(albatross_tf)),
+  move2_ex_bt <- tf_as_move2(move2_ex_tf[
+    !is.na(northing(move2_ex_tf)),
   ])
-  expect_equal(dim(albatross_move2), dim(albatross_move2_bt))
+  expect_equal(dim(move2_ex), dim(move2_ex_bt))
   expect_equal(
-    sf::st_coordinates(albatross_move2),
-    sf::st_coordinates(albatross_move2_bt)
+    sf::st_coordinates(move2_ex),
+    sf::st_coordinates(move2_ex_bt)
   )
   expect_equal(
-    attr(albatross_move2, "track_id_column"),
-    attr(albatross_move2_bt, "track_id_column")
+    attr(move2_ex, "track_id_column"),
+    attr(move2_ex_bt, "track_id_column")
   )
   expect_equal(
-    attr(albatross_move2, "time_column"),
-    attr(albatross_move2_bt, "time_column")
+    attr(move2_ex, "time_column"),
+    attr(move2_ex_bt, "time_column")
   )
 
   #sftrack

@@ -98,19 +98,19 @@ When applying `as.trackframe` to a move2 object, key columns are identified usin
 library(move2)
 
 # Load a move2 object using the move2 package, and project the coordinates to UTMs
-albatross_move2 <- mt_read(mt_example())
-albatross_move2_proj <- albatross_move2[
-  !sf::st_is_empty(albatross_move2),
+fisher_move2 <- mt_read(mt_example())
+fisher_move2_proj <- fisher_move2[
+  !sf::st_is_empty(fisher_move2),
 ] |> sf::st_transform(crs = 3857)
 
 # Convert to trackframe, key columns and crs will be identified using metadata of the
 # input move2 object
-albatross_tf <- as.trackframe(data = albatross_move2_proj)
+fisher_tf <- as.trackframe(data = fisher_move2_proj)
 
 # Check out the new trackframe object
-class(albatross_tf)
-attributes(albatross_tf)[1:6]
-str(albatross_tf)
+class(fisher_tf)
+attributes(fisher_tf)[1:6]
+str(fisher_tf)
 ```
 
 <!-- You can use the `suggest_utm_zone_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data.
@@ -121,20 +121,20 @@ str(albatross_tf)
 library(move2)
 
 # Load a move2 object using the move2 package, and project the coordinates to UTMs
-albatross_move2 <- mt_read(mt_example())
-albatross_move2_proj <- albatross_move2[
-  !sf::st_is_empty(albatross_move2),
-] |> sf::st_transform(suggest_utm_zone_crs(albatross_move2))
+fisher_move2 <- mt_read(mt_example())
+fisher_move2_proj <- fisher_move2[
+  !sf::st_is_empty(fisher_move2),
+] |> sf::st_transform(suggest_utm_zone_crs(fisher_move2))
 
 # Convert to trackframe, key columns and crs will be identified using metadata of the
 # input move2 object
-albatross_tf <- as.trackframe(data = albatross_move2_proj)
+fisher_tf <- as.trackframe(data = fisher_move2_proj)
 
 # Check out the new trackframe object
-class(albatross_tf)
-crs(albatross_tf)
-attributes(albatross_tf)
-str(albatross_tf)
+class(fisher_tf)
+crs(fisher_tf)
+attributes(fisher_tf)
+str(fisher_tf)
 ```
 
 -->
@@ -339,15 +339,15 @@ Note that `df1_recovered` (the dataframe created by `tf_as_xyt`) is sorted in as
 
 ```{r}
 # First approach (ignoring that this object was originally a move2 obj)
-ap1_recovered_move2 <- tf_as_move2(albatross_tf)
+ap1_recovered_move2 <- tf_as_move2(fisher_tf)
 
 # Second approach (backtransforming this object to its original representation, i.e., a move2 obj)
-ap2_recovered_move2 <- tf_backtransform(albatross_tf)
+ap2_recovered_move2 <- tf_backtransform(fisher_tf)
 
 # Compare with each other and original object
 head(ap1_recovered_move2)
 head(ap2_recovered_move2)
-head(albatross_move2_proj)
+head(fisher_move2_proj)
 ```
 
 ### ... to an `sftrack` object
@@ -398,14 +398,14 @@ add_step_length_col <- function(x) {
 }
 
 # apply the function to a projected move2 object
-albatross_move2_proj2 <- add_step_length_col(albatross_move2_proj)
+fisher_move2_proj2 <- add_step_length_col(fisher_move2_proj)
 
 # take a look at it
-head(albatross_move2_proj2)
-tail(albatross_move2_proj)
+head(fisher_move2_proj2)
+tail(fisher_move2_proj)
 
 # look at rows where the animal id changes
-albatross_move2_proj2[1345:1355, c("timestamp", "individual-local-identifier", "step_length")]
+fisher_move2_proj2[1345:1355, c("timestamp", "individual-local-identifier", "step_length")]
 ```
 
 Without changing the function at all, we can apply `add_step_length_col` to another animal track data representation, such as an `sftrack` object.

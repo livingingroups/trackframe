@@ -34,17 +34,17 @@ Take this example, using a `move2` object:
 library(move2)
 
 # Load a move2 object using the move2 package
-albatross_move2 <- mt_read(mt_example())
+fisher_move2 <- mt_read(mt_example())
 
 # Check the coordinate reference system
-sf::st_crs(albatross_move2)
+sf::st_crs(fisher_move2)
 ```
 
 The objects coordinate reference system is WGS 84 (i.e., `crs = 4326` or `EPSG:4326`), i.e., the standard decimal latitude-longitude. These are, thus, not Cartesian coordinates. If we attempt to directly convert this object to a `trackframe` object, it will fail...
 
 ```{r, eval = TRUE, error = TRUE}
 # Convert to trackframe (ERROR since non-Cartesian coordinates)
-albatross_tf <- as.trackframe(data = albatross_move2)
+fisher_tf <- as.trackframe(data = fisher_move2)
 ```
 
 Note the instruction in the error message: "Please project into an appropriate crs."
@@ -54,12 +54,12 @@ There are several packages and approaches for projecting georeferenced data. In 
 ```{r, eval=TRUE}
 # Project the coordinates into the appropriate UTM zone (in this case,
 # UTM zone 38S, or EPSG: 32738), and then convert to trackframe object
-albatross_tf <- albatross_move2 |>
+fisher_tf <- fisher_move2 |>
   sf::st_transform(crs = 32738) |>
   as.trackframe()
 
 # Extract the input crs EPSG code from the tf object's transformation_info
-crs(albatross_tf)
+crs(fisher_tf)
 ```
 
 <!--
@@ -71,16 +71,16 @@ If you don't already know the EPSG code for the UTM zone that your data are in, 
 ```{r, eval=FALSE, include = FALSE}
 # nolint start
 # Get EPSG code for likely UTM zone
-# suggest_utm_zone_crs(albatross_move2)
+# suggest_utm_zone_crs(fisher_move2)
 
 # Project the coordinates into the appropriate UTM zone (in this case,
 # UTM zone 38S, or EPSG: 32738), and then convert to trackframe object
-albatross_tf <- albatross_move2 |>
+fisher_tf <- fisher_move2 |>
   sf::st_transform(crs = 32738) |>
   as.trackframe()
 
 # Extract the input crs EPSG code from the tf object's transformation_info
-crs(albatross_tf)
+crs(fisher_tf)
 # nolint end
 ```
 -->
