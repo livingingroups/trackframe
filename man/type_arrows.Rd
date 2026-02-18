@@ -4,22 +4,12 @@
 \alias{type_arrows}
 \title{Add arrows to a plot}
 \usage{
-type_arrows(x0, y0, x1, y1, length = 0.25, angle = 30, code = 2)
+type_arrows(...)
 }
 \arguments{
-\item{x0}{x0 in \code{\link[graphics]{arrows}}}
-
-\item{y0}{y0 in \code{\link[graphics]{arrows}}}
-
-\item{x1}{x1 in \code{\link[graphics]{arrows}}}
-
-\item{y1}{y1 in \code{\link[graphics]{arrows}}}
-
-\item{length}{length in \code{\link[graphics]{arrows}}}
-
-\item{angle}{angle in \code{\link[graphics]{arrows}}}
-
-\item{code}{code in \code{\link[graphics]{arrows}}}
+\item{...}{arguments passed to [graphics::arrows]
+for example `length`, `angle`, `code`
+length in \code{\link[graphics]{arrows}}}
 }
 \value{
 a tinyplot_type containing corresponding draw function
@@ -34,11 +24,11 @@ library(tinyplot)
 df_mini
 tinyplot(x = df_mini$easting, y = df_mini$northing, type = "l")
 tinyplot_add(
+  xmin = df_mini$easting[1],
+  ymin = df_mini$northing[1],
+  xmax = df_mini$easting[2],
+  ymax = df_mini$northing[2],
   type = type_arrows(
-    x0 = df_mini$easting[1],
-    y0 = df_mini$northing[1],
-    x1 = df_mini$easting[2],
-    y1 = df_mini$northing[2],
     length = 0.5,
     code = 2
     ),

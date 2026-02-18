@@ -138,14 +138,10 @@ plot.trackframe <- function(
         facet = "by",
         facet.args = list("free" = FALSE, ncol = nfacet_col)
       )
-      arrows_facet <- "by"
-    } else {
-      arrows_facet <- i_col
     }
   } else {
     form <- as.formula(paste(y_col, "~", x_col))
     default_options <- list(type = "l", grid = TRUE, main = "")
-    arrows_facet <- i_col
   }
 
   # delete restricted elements
@@ -221,19 +217,25 @@ plot.trackframe <- function(
       lwd = 1
     )
     direction_style <- modifyList(direction_style_defaults, direction_style)
-    tinyplot_add(
+    tinyplot(
+      xmin = easting(starting_points)[match(uids, id(starting_points))],
+      ymin = northing(starting_points)[match(uids, id(starting_points))],
+      xmax = easting(direction_points)[match(uids, id(direction_points))],
+      ymax = northing(direction_points)[match(uids, id(direction_points))],
       type = type_arrows(
-        x0 = easting(starting_points)[match(uids, id(starting_points))],
-        y0 = northing(starting_points)[match(uids, id(starting_points))],
-        x1 = easting(direction_points)[match(uids, id(direction_points))],
-        y1 = northing(direction_points)[match(uids, id(direction_points))],
         length = direction_style[["length"]],
         code = direction_style[["code"]]
       ),
       col = direction_style[["col"]],
       lty = direction_style[["lty"]],
       lwd = direction_style[["lwd"]],
-      facet = arrows_facet
+      facet = if (facet) {
+        id(starting_points)[match(uids, id(starting_points))]
+      } else {
+        "id"
+      },
+      facet.args = control$facet.args,
+      add = TRUE
     )
   }
 }
@@ -243,13 +245,9 @@ plot.trackframe <- function(
 #'
 #' This function adds arrows to the current (tinyplot) plot. Defines a type for tinyplots.
 #'
-#' @param x0 x0 in \code{\link[graphics]{arrows}}
-#' @param y0 y0 in \code{\link[graphics]{arrows}}
-#' @param x1 x1 in \code{\link[graphics]{arrows}}
-#' @param y1 y1 in \code{\link[graphics]{arrows}}
-#' @param length length in \code{\link[graphics]{arrows}}
-#' @param angle angle in \code{\link[graphics]{arrows}}
-#' @param code code in \code{\link[graphics]{arrows}}
+#' @param ... arguments passed to [graphics::arrows]
+#' for example `length`, `angle`, `code`
+#' length in \code{\link[graphics]{arrows}}
 #' @return a tinyplot_type containing corresponding draw function
 #'
 #' @examples
@@ -259,11 +257,11 @@ plot.trackframe <- function(
 #' df_mini
 #' tinyplot(x = df_mini$easting, y = df_mini$northing, type = "l")
 #' tinyplot_add(
+#'   xmin = df_mini$easting[1],
+#'   ymin = df_mini$northing[1],
+#'   xmax = df_mini$easting[2],
+#'   ymax = df_mini$northing[2],
 #'   type = type_arrows(
-#'     x0 = df_mini$easting[1],
-#'     y0 = df_mini$northing[1],
-#'     x1 = df_mini$easting[2],
-#'     y1 = df_mini$northing[2],
 #'     length = 0.5,
 #'     code = 2
 #'     ),
@@ -273,90 +271,30 @@ plot.trackframe <- function(
 #' )
 #'
 #' @export
-type_arrows <- function(
-  x0,
-  y0,
-  x1,
-  y1,
-  length = 0.25,
-  angle = 30,
-  code = 2
-) {
-  assert_numeric(x0)
-  assert_numeric(y0, len = length(x0))
-  assert_numeric(x1, len = length(x0))
-  assert_numeric(y1, len = length(x0))
-  assert_numeric(length, len = 1)
-  assert_numeric(angle, len = 1)
-  assert_integerish(angle, len = 1)
-  draw_arrows <- function() {
-    fun <- function(
-      ifacet,
-      iby,
-      data_facet,
-      icol,
-      ilty,
-      ilwd,
-      ngrps,
-      nfacets,
-      by_continuous,
-      facet_by,
-      ...
-    ) {
-      type_info <- list(
-        ul_lty = par("lty"),
-        ul_lwd = par("lwd"),
-        ul_col = "black"
+#' @export
+type_arrows <- function(...) {
+  arrow_par <- list(...)
+  out <- list(
+    draw = function(ixmin, iymin, ixmax, iymax, ilty, ilwd, icol, ...) {
+      do.call(
+        arrows,
+        c(
+          list(
+            x0 = ixmin,
+            y0 = iymin,
+            x1 = ixmax,
+            y1 = iymax,
+            lty = ilty,
+            lwd = ilwd,
+            col = icol
+          ),
+          arrow_par
+        )
       )
-      grp_aes <- type_info[["ul_col"]] == 1 ||
-        type_info[["ul_lty"]] == ngrps ||
-        type_info[["ul_lwd"]] == ngrps
-      if (length(x0) != 1) {
-        if (!length(x0) %in% c(ngrps, nfacets, ngrps * nfacets)) {
-          msg <- "Length of 'x0' must be 1, or equal to the number of facets or number of groups 
-          (or product thereof)."
-          stop(msg, call. = FALSE)
-        }
-        if (!facet_by && length(x0) == nfacets) {
-          x0 <- x0[ifacet]
-          y0 <- y0[ifacet]
-          x1 <- x1[ifacet]
-          y1 <- y1[ifacet]
-          if (!grp_aes && type_info[["ul_col"]] != ngrps) {
-            icol <- 1
-          } else if (by_continuous) {
-            icol <- 1
-          }
-        } else if (!by_continuous && length(x0) == ngrps * nfacets) {
-          x0 <- x0[ifacet * ngrps - c(ngrps - iby)]
-          y0 <- y0[ifacet * ngrps - c(ngrps - iby)]
-          x1 <- x1[ifacet * ngrps - c(ngrps - iby)]
-          y1 <- y1[ifacet * ngrps - c(ngrps - iby)]
-        } else if (!by_continuous) {
-          x0 <- x0[iby]
-          y0 <- y0[iby]
-          x1 <- x1[iby]
-          y1 <- y1[iby]
-        }
-      } else if (!grp_aes) {
-        icol <- 1
-      }
-      arrows(
-        x0 = x0,
-        y0 = y0,
-        x1 = x1,
-        y1 = y1,
-        length = length,
-        angle = angle,
-        code = code,
-        col = icol,
-        lty = ilty,
-        lwd = ilwd
-      )
-    }
-    return(fun)
-  }
-  out <- list(draw = draw_arrows(), data = NULL, name = "l")
+    },
+    data = NULL,
+    name = "segments"
+  )
   class(out) <- "tinyplot_type"
   return(out)
 }
