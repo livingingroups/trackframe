@@ -15,7 +15,7 @@ License: GPL (>= 2)
 Imports: checkmate, sf, methods, data.table, tibble, zoo, stringr, logger, digest, tinyplot (>= 0.6.0)
 Depends: R (>= 4.1.0)
 Suggests: cocomo, tinytest, knitr, microbenchmark, markdown, units, move2, sftrack, withr,
-  tinysnapshot, rsvg, svglite, fontquiver, testthat
+  tinysnapshot, rsvg, svglite, fontquiver, testthat, covr
 Remotes: livingingroups/cocomo
 Encoding: UTF-8
 RoxygenNote: 7.3.3

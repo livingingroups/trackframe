@@ -13,3 +13,16 @@ options(
 
 # reset theme in every file
 tinytheme()
+
+using("tinysnapshot")
+expect_snapshot_plot <- function(
+  current,
+  label,
+  ...
+) {
+  if (covr::in_covr()) {
+    current()
+  } else {
+    tinysnapshot::expect_snapshot_plot(current, label, ...)
+  }
+}

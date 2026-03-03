@@ -1,11 +1,6 @@
 source("plot_testing_helpers.R")
 using("tinysnapshot")
 
-# run to create plots (delete plots if new plots should be created)
-
-library(trackframe)
-library(tinytest)
-
 data("tf_mini", package = "trackframe")
 data <- tf_mini
 
