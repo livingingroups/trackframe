@@ -1,10 +1,12 @@
 #' Extract Unique IDs from a Track Frame
 #'
-#' This function retrieves the unique track IDs from a \code{trackframe} object.
+#' This function retrieves the unique track IDs from a `trackframe` object.
+#' The `trackframe` should be a data frame-like structure with an attribute
+#' specifying the column containing track IDs.
 #'
-#' @param tf A \code{trackframe} object containing the tracking data.
+#' @param tf A `trackframe` object containing the tracking data.
 #'           Must have an attribute indicating the track ID column (`id`).
-#' @return A vector of unique track IDs extracted from the \code{trackframe}.
+#' @return A vector of unique track IDs extracted from the `trackframe`.
 #'
 #' @seealso [as.trackframe()]
 #'
@@ -22,11 +24,11 @@ unique_ids <- function(tf) {
 #' This function filters a \code{trackframe} object to include only tracks with the specified ID(s).
 #' It supports selecting a single ID or multiple IDs simultaneously.
 #'
-#' @param tf A \code{trackframe} object containing the tracking data.
+#' @param tf A `trackframe` object containing the tracking data.
 #'   Must have an attribute indicating the track ID column.
 #' @param id A character or vector of characters representing the track ID(s) to select.
 #'
-#' @return A filtered \code{trackframe} containing only the specified track(s).
+#' @return A filtered `trackframe` containing only the specified track(s).
 #'
 #' @examples
 #' single_track <- select_id(tf_mini, "track_1")
@@ -47,10 +49,10 @@ select_id <- function(tf, id) {
 #'
 #' This function splits a \code{trackframe} object into a list of trackframes by the id.
 #'
-#' @param tf A \code{trackframe} object containing the tracking data.
+#' @param tf A `trackframe` object containing the tracking data.
 #'   Must have an attribute indicating the track ID column.
 #'
-#' @return an object of class `list_of_trackframes` containing a \code{trackframe}
+#' @return an object of class `list_of_trackframes` containing a `trackframe`
 #' in each list element.
 #'
 #' @examples

@@ -14,7 +14,7 @@ time(x) <- value
 }
 \arguments{
 \item{x}{A \code{trackframe} object containing the tracking data.
-Must have an attribute indicating the time column (`time`).}
+Must have an attribute indicating the time column (\code{time}).}
 
 \item{...}{...}
 

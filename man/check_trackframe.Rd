@@ -23,40 +23,40 @@ expect_trackframe(x, ..., unsorted.ok = TRUE, info = NULL, label = vname(x))
 
 \item{...}{arguments passed to checkmate::check_data_frame}
 
-\item{unsorted.ok}{Is a trackframe not in order([id], timestamp) allowed? Default: TRUE}
+\item{unsorted.ok}{Is a trackframe not in order(\link{id}, timestamp) allowed? Default: TRUE}
 
-\item{.var.name}{[\code{character(1)}]\cr
+\item{.var.name}{\code{character(1)}\cr
 Name of the checked object to print in assertions. Defaults to
 the heuristic implemented in \code{\link[checkmate]{vname}}.}
 
-\item{add}{[\code{checkmate::AssertCollection}]\cr
+\item{add}{\code{checkmate::AssertCollection}\cr
 Collection to store assertion messages. See \code{\link[checkmate]{AssertCollection}}.}
 
-\item{info}{[\code{character(1)}]\cr
+\item{info}{\code{character(1)}\cr
 Extra information to be included in the message for the testthat reporter.
 See \code{\link[testthat]{expect_that}}.}
 
-\item{label}{[\code{character(1)}]\cr
+\item{label}{\code{character(1)}\cr
 Name of the checked object to print in messages. Defaults to
 the heuristic implemented in \code{\link[checkmate]{vname}}.}
 }
 \value{
 Depending on the function prefix:
- If the check is successful, the functions
- \code{asserttrackframe}/\code{assert_trackframe} return
- \code{x} invisibly, whereas
- \code{checktrackframe}/\code{check_trackframe} and
- \code{testtrackframe}/\code{test_trackframe} return
- \code{TRUE}.
- If the check is not successful,
- \code{asserttrackframe}/\code{assert_trackframe}
- throws an error message,
- \code{testtrackframe}/\code{test_trackframe}
- returns \code{FALSE},
- and \code{checktrackframe}/\code{check_trackframe}
- return a string with the error message.
- The function \code{expect_trackframe} always returns an
- \code{\link[testthat]{expectation}}.
+If the check is successful, the functions
+\code{asserttrackframe}/\code{assert_trackframe} return
+\code{x} invisibly, whereas
+\code{checktrackframe}/\code{check_trackframe} and
+\code{testtrackframe}/\code{test_trackframe} return
+\code{TRUE}.
+If the check is not successful,
+\code{asserttrackframe}/\code{assert_trackframe}
+throws an error message,
+\code{testtrackframe}/\code{test_trackframe}
+returns \code{FALSE},
+and \code{checktrackframe}/\code{check_trackframe}
+return a string with the error message.
+The function \code{expect_trackframe} always returns an
+\code{\link[testthat]{expectation}}.
 }
 \description{
 Checkmate style check if x is a trackframe object

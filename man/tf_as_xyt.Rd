@@ -7,7 +7,7 @@
 tf_as_xyt(x, ...)
 }
 \arguments{
-\item{x}{A `trackframe` object containing the tracking data.}
+\item{x}{A \code{trackframe} object containing the tracking data.}
 
 \item{...}{other arguments passed to coredata}
 }

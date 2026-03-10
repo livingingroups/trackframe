@@ -21,7 +21,7 @@ suggest_utm_zone_crs(lat, lon = NULL)
 crs corresponding to the utm zone that the most data points fall into
 }
 \description{
-Uses [calculate_utm_zone_crs] to determine the UTM zone
+Uses \link{calculate_utm_zone_crs} to determine the UTM zone
 for each datapoint. Returns the most common zone in the dataset.
 }
 \details{

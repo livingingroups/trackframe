@@ -22,7 +22,7 @@ library(trackframe)
 
 It's quite simple to convert common animal track data representations into `trackframe` objects. When creating a `trackframe` object from another data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options. For details about the process and specifications of identifying the key columns, see `vignette("identifying_columns")`.
 
-`as.trackframe` also sorts the data that it is given, firsb by the values in the `id_col` and then by the values in the `time_col`. To prevent this default sorting, you can set `sort = FALSE` in the `as.trackframe` function.
+`as.trackframe` also sorts the data that it is given, first by the values in the `id_col` and then by the values in the `time_col`. To prevent this default sorting, you can set `sort = FALSE` in the `as.trackframe` function.
 
 ### ...from a non-sf `data.frame`
 

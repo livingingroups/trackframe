@@ -11,7 +11,6 @@
 #' @importFrom graphics arrows par
 
 NULL
-
 #' Simulated Travel Path
 #'
 #' matrix created with travelpaths::sim_travel_path().

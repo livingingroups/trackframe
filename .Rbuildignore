@@ -2,6 +2,8 @@
 travelpaths_*.tar.gz
 air.toml
 Taskfile.yml
+.lintr
+air.toml
 CONTRIBUTING.md
 ^.*-Ex\.R$
 ^devel$

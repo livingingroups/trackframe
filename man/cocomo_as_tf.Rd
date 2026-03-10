@@ -43,8 +43,8 @@ and can include information on age, sex, dominance, etc}
 
 \item{sort}{logical, if data should be sorted according to id_col and time_col}
 
-\item{coerce_to}{the format trackframe is coerced to. `base`,
-`data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.}
+\item{coerce_to}{the format trackframe is coerced to. \code{base},
+\code{data.table} and \code{tibble} are supported. Default is \code{base} and coerces to a \code{data.frame}.}
 
 \item{verbose}{logical, default value is \code{TRUE}}
 }

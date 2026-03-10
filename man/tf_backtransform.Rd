@@ -7,10 +7,10 @@
 tf_backtransform(tf)
 }
 \arguments{
-\item{tf}{an object of class `trackframe`}
+\item{tf}{an object of class \code{trackframe}}
 }
 \value{
-an object which has been coerced to `trackframe`
+an object which has been coerced to \code{trackframe}
 }
 \description{
 Backtransform

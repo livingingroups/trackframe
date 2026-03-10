@@ -93,31 +93,43 @@ as.trackframe(
 )
 }
 \arguments{
-\item{data}{a \code{data.frame}, a \code{matrix}, an \code{sftrack} object or a \code{move2} object
-containing the tracking data.}
+\item{data}{a \code{data.frame}, \code{matrix}, \code{sftrack} object or \code{move2} object
+containing timestamped coordinates of one or multiple animals' locations.
+The object should have one row per location, and must contain at least a column for each of
+time, easting, and northing.}
 
-\item{time_col}{a character string or vector specifying the column name of the time column.}
+\item{time_col}{a character string or vector of strings specifying the name, or possible names, of the time
+column in \code{data}.
+If a vector is provided, the first element matching a column name of \code{data} is used.
+The data in the time column must be of class \code{POSIXct} or coercible to \code{POSIXct}.}
 
-\item{easting_col}{a character string or vector specifying the column name of the easting column.
-If a vector is provided, the first element matching a column name of `data`` is used.}
+\item{easting_col}{a character string or vector of strings specifying the name, or possible names, of the easting
+column in \code{data}.
+If a vector is provided, the first element matching a column name of \code{data} is used.
+The data in the easting column must be numeric.}
 
-\item{northing_col}{a character string or vector specifying the column name of
-the northing column.
-If a vector is provided, the first element matching a column name of `data`` is used.}
+\item{northing_col}{a character string or vector of strings specifying the name, or possible names, of the northing
+column in \code{data}.
+If a vector is provided, the first element matching a column name of \code{data} is used.
+The data in the northing column must be numeric.}
 
-\item{id_col}{optional character vector specifying identifier column names.
-If no column is specified,
-If a vector is provided, the first element matching a column name of `data`` is used.}
+\item{id_col}{an optional character string or vector of strings specifying the name, or possible names,
+of the id column (the column containing the individual identifier(s) of each track) in \code{data}.
+If a vector is provided, the first element matching a column name of \code{data} is used.
+The data in the id column can be numeric, character, or factor.}
 
-\item{sort}{logical, if data should be sorted by id_col and time_col.}
+\item{sort}{logical, if true (default), data will be sorted by id_col and then by time_col.}
 
 \item{coerce_to}{the type of dataframe that trackframe is coerced to.
-`base`, `data.table` and `tibble` are supported.
-Default is `base` and coerces to a `data.frame` without `data.table` or `tbl` classes.
-If NULL, the returned `trackframe` object takes the same dataframe type as `data` argument}
+\code{base}, \code{data.table} and \code{tibble} are supported.
+The default is \code{base}, which coerces to a \code{data.frame} without \code{data.table} or \code{tbl} classes.
+If NULL, the returned \code{trackframe} object takes the same dataframe type as the input \code{data}
+object.}
 
-\item{crs}{coordinate reference system code for of coordinates. Required for non-sf input.
-Use `NA` to denote non georeferenced cartesian coordinates.}
+\item{crs}{the numeric \href{https://epsg.io/}{EPSG coordinate reference system code} for the coordinates.
+This argument is required for non-sf input.
+Use \code{NA} to denote non-georeferenced coordinates.
+The coordinate reference system must be Cartesian.}
 
 \item{...}{Additional arguments (unused).}
 }
@@ -125,42 +137,47 @@ Use `NA` to denote non georeferenced cartesian coordinates.}
 A \code{trackframe} object with appropriate attributes set.
 }
 \description{
-This function converts an object into a \code{trackframe} object,
-checks that required columns exist and have valid data types.
-Coordinates must be provided in easting/northing.
-Coordinate system must be cartesian: either a projected coordinate system
-for georeferenced data or another cartesian coordinate system for non-
-georeferenced data (e.g. for captive or simulated data).
+This function converts an object into a \code{trackframe} object, and
+checks that the key columns exist and have valid data types.
+The coordinate system must be Cartesian: either a projected coordinate system
+for georeferenced data or another coordinate system in Euclidean space for non-georeferenced data
+(e.g., for captive or simulated data).
+}
+\details{
+When creating a \code{trackframe} object from another representation of animal track data,
+\code{as.trackframe} identifies the columns representing
+time (\code{time_col}), coordinates (\code{northing_col} & \code{easting_col}), and track id (\code{id_col}).
+It obtains this information from 3 potential sources: 1) information inherited from the input
+object (see below), 2) arguments supplied directly to \code{as.trackframe}, and/or 3) package-level
+options(see \link{tf_options}).
+
+If the input object is a \code{data.frame}, \code{data.table}, or \code{tibble},
+no information about the (\code{time_col}), coordinates (\code{northing_col} & \code{easting_col}),
+and track id (\code{id_col}) columns is inherited,
+all are identified from other sources
+(i.e., arguments supplied directly to the function, or package-level options).
+If the input object is an \code{sf} object (but not \code{sftrack} or \code{move2}),
+the \code{easting_col} and \code{northing_col} are identified from the input object's \code{geometry} column,
+and the \code{time_col} and \code{id_col} are identified from other sources.
+If the input object is an \code{sftrack} or \code{move2} object,
+then all 4 of the key columns are identified from the input object's attributes.
+See vignette \code{vignette("identifying-columns")} for details and examples.
+
+Trackframe only supports Cartesian coordinates, i.e., coordinates that define locations on a
+flat surface. Geographic coordinate systems, i.e., those that
+define locations on a three-dimensional spherical model of the Earth using latitude and
+longitude, are not supported by trackframe or by (most) functions using trackframe.
+If you try to pass a non-Cartesian georeferenced coordinate reference system to
+the \code{crs} argument, you will get an error. Data
+containing latitude-longitude coordinates must first be projected before the data is
+converted to a \code{trackframe} object.
+If you set \code{crs = NA} for non-georeferenced coordinates, the function will assume that these are
+Cartesian coordinates, though it has no way of checking or warning if not.
 }
 \examples{
 library(trackframe)
-df <- data.frame(
-  time_col = as.POSIXct(Sys.time() + 1:5),
-  easting_col = runif(5, 0, 10),
-  northing_col = runif(5, 0, 10),
-  id = 1:5
-)
-tf <- trackframe(df, time_col = "time_col", easting_col = "easting_col",
-  northing_col = "northing_col", id_col = "id", crs = NA)
 
-attributes(tf)
-df <- data.frame(
-  time_col = as.POSIXct(Sys.time() + 1:5),
-  easting_col = runif(5, 0, 10),
-  northing_col = runif(5, 0, 10),
-  id = 1:5
-)
-tf <- as.trackframe(df, time_col = "time_col", easting_col = "easting_col",
-                        northing_col = "northing_col", id_col = "id", crs = NA)
-class(tf)
-attributes(tf)
-easting(tf)
-northing(tf)
-time(tf)
-id(tf)
-
-as.trackframe(df_mini, crs = NA)
-
+# Create a dataframe
 set.seed(2025)
 df <- data.frame(
   x = rnorm(10),
@@ -169,45 +186,76 @@ df <- data.frame(
   animal_id = c(rep('a', 5), rep('b', 5))
 )
 
- # crs = NA indicates non georeferenced coordinates
- as.trackframe(
-  df,
-  time_col = "t",
-  easting_col = "x",
-  northing_col = "y",
-  id_col = "animal_id",
-  crs = NA
-)
- # with col guessing
- as.trackframe(df, coerce_to = "base", crs = NA)
+# Convert dataframe to trackframe, identify key columns by setting arguments
+tf <- trackframe(df,
+                 time_col = "t",
+                 easting_col = "x",
+                 northing_col = "y",
+                 id_col = "animal_id",
+                 crs = "EPSG:32632")
 
- tf_df <- as.trackframe(df, coerce_to = "base", crs = NA)
- tf_dt <- as.trackframe(df, coerce_to = "data.table", crs = NA)
- tf_tib <- as.trackframe(df, coerce_to = "tibble", crs = NA)
+class(tf)
+attributes(tf)
 
- tf_backtransform(tf_df)
- tf_backtransform(tf_dt)
- tf_backtransform(tf_tib)
+tf <- as.trackframe(df,
+                    time_col = "t",
+                    easting_col = "x",
+                    northing_col = "y",
+                    id_col = "animal_id",
+                    crs = "EPSG:32632")
 
- tf_df <- as.trackframe(df, coerce_to = "base", crs = "EPSG:32632")
- # Non cartesian/lat long crs e.g. "EPSG:4326" is not acceptable.
+# Convert dataframe to trackframe, identify key columns by having as.trackframe match column
+# names to tf_options
+tf <- as.trackframe(df_mini, crs = NA)
 
-# example for move2 objects
-library(move2)
-library(trackframe)
+# Convert dataframe to trackframe, identify key columns by having as.trackframe match column
+# names to multiple options given in arguments
+tf <- as.trackframe(df_mini,
+                    time_col = c("t", "time", "timestamp"),
+                    easting_col = c("x", "easting", "horiz"),
+                    northing_col = c("y", "northing", "vert"),
+                    id_col = c("animal", "id"),
+                    crs = NA)
 
-# column mapping and crs are implicit so do not need to be specified in args.
+# Convert dataframe to trackframe, identify key columns by setting arguments, also set
+# crs = NA to indicate non georeferenced coordinates
+tf <-  as.trackframe(df,
+                    time_col = "t",
+                    easting_col = "x",
+                    northing_col = "y",
+                    id_col = "animal_id",
+                    crs = NA)
+
+# Convert dataframe to trackframe, identify key columns by having as.trackframe match column
+# names to tf_options, set crs = NA to indicate non georeferenced coordinates, coerce output
+# to be:
+# ... a plain (base R) data.frame
+tf_df <- as.trackframe(df, coerce_to = "base", crs = NA)
+attributes(tf_df)$class
+# ... a data.table
+tf_dt <- as.trackframe(df, coerce_to = "data.table", crs = NA)
+attributes(tf_dt)$class
+# ... a tibble.
+tf_tib <- as.trackframe(df, coerce_to = "tibble", crs = NA)
+attributes(tf_tib)$class
+
+# Projected CRS, acceptable
+tf_df <- as.trackframe(df, coerce_to = "base", crs = "EPSG:32632")
+# Non Cartesian crs, e.g. "EPSG:4326", is not acceptable
+
+# Example for move2 objects
+
+# Key columns and crs are identified from the attributes of the move2 object
 tf <- as.trackframe(data = move2_mini)
 
-move2_dat2 <- tf_backtransform(tf)
-all.equal(move2_dat2, move2_mini)
 
-# example for sftrack objects
-library(sftrack)
-set.seed(2025)
+# Example for sftrack objects
+
+# Key columns and crs are identified from the attributes of the sftrack object
 tf <- as.trackframe(data = sftrack_mini)
-sftrack_dat2 <- tf_backtransform(tf)
-sftrack_dat2$id <- unlist(sftrack_dat2$sft_group)
-all.equal(sftrack_dat2, sftrack_mini)
 
+
+}
+\seealso{
+\link{tf_options}, \link{tf_backtransform}
 }

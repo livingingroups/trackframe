@@ -7,8 +7,8 @@
 type_arrows(...)
 }
 \arguments{
-\item{...}{arguments passed to [graphics::arrows]
-for example `length`, `angle`, `code`
+\item{...}{arguments passed to \link[graphics:arrows]{graphics::arrows}
+for example \code{length}, \code{angle}, \code{code}
 length in \code{\link[graphics]{arrows}}}
 }
 \value{

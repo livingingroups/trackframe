@@ -13,16 +13,16 @@ tf_as_sftrack(tf)
 tf_as_move2(tf)
 }
 \arguments{
-\item{tf}{A `trackframe` object containing the tracking data. Must have
-attributes specifying the easting and northing columns (`easting` and `northing`).}
+\item{tf}{A \code{trackframe} object containing the tracking data. Must have
+attributes specifying the easting and northing columns (\code{easting} and \code{northing}).}
 
-\item{...}{Additional arguments to be passed to `st_as_sf`.}
+\item{...}{Additional arguments to be passed to \code{st_as_sf}.}
 }
 \value{
-An sf object representing the spatial data contained in the `trackframe`.
+An sf object representing the spatial data contained in the \code{trackframe}.
 }
 \description{
-This function converts a `trackframe` object into a Simple Features (sf) object,
+This function converts a \code{trackframe} object into a Simple Features (sf) object,
 enabling spatial analysis and visualization. The easting and northing columns
 are used as coordinates for the sf object.
 }
