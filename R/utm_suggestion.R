@@ -39,21 +39,42 @@ st_coordinates_lat_lon <- function(x) {
 #' @param lon vector of longitudes (empty in case x is an sf object)
 #' @return vector of utm crs of the same length as input indicating
 #' which zone the data fall into
+#' @examples
+# nolint start
+# code for generating example lat-lon
+# dput(round(
+#   c(rep(47.6839936, 3), rep(38.5382322, 2)) +
+#     rnorm(5, sd = 1e-6),
+#   7
+# ))
+# dput(round(
+#   c(rep(9.175044, 3), rep(-121.7642874, 2)) +
+#     rnorm(5, sd = 1e-4),
+#   6
+# ))
+# nolint end
+#' trackframe::calculate_utm_zone_crs(
+#'   lat = c(47.6839952, 47.6839941, 47.6839939, 38.5382329, 38.5382306),
+#'   lon = c(9.175119, 9.17498, 9.175254, -121.764227, -121.764351)
+#' )
 #'
-#' @rdname calculate_utm_zone
+#' trackframe::calculate_utm_zone_crs(
+#'   trackframe::move2_mini
+#' )
+#' @rdname calculate_utm
 #' @export
 calculate_utm_zone_crs <- function(lat, lon = NULL) {
   UseMethod("calculate_utm_zone_crs")
 }
 
-#' @rdname calculate_utm_zone
+#' @rdname calculate_utm
 #' @export
 calculate_utm_zone_crs.sf <- function(lat, lon = NULL) {
   coords <- st_coordinates_lat_lon(lat)
   calculate_utm_zone_crs.numeric(coords[, 1], coords[, 2])
 }
 
-#' @rdname calculate_utm_zone
+#' @rdname calculate_utm
 #' @export
 calculate_utm_zone_crs.numeric <- function(lat, lon = NULL) {
   assert_latlon(lat, lon)
@@ -89,27 +110,43 @@ calculate_utm_zone_crs.numeric <- function(lat, lon = NULL) {
 
 #' Suggest a utm crs
 #'
+#' Uses [calculate_utm_zone_crs] to determine the UTM zone
+#' for each datapoint. Returns the most common zone in the dataset.
+#'
 #' @param lat vector of latitudes or an sf object
 #' @param lon vector of longitudes (empty in case x is an sf object)
 #' @return crs corresponding to the utm zone that the most data points fall into
+#' @examples
+#' suggest_utm_zone_crs(
+#'   lat = c(47.6839952, 47.6839941, 47.6839939, 38.5382329, 38.5382306),
+#'   lon = c(9.175119, 9.17498, 9.175254, -121.764227, -121.764351)
+#' )
 #'
-#' @details arbitrary in case of a tie
+#' suggest_utm_zone_crs(
+#'   trackframe::move2_mini
+#' )
+#'
+#' @details No weighting or averaging is done.
+#' Simply the zone that the most of points fall into.
+#' Arbitrary in case of a tie. Future versions may use
+#' a different (better) methodology to chose a zone
+#' when points fall into multiple zones.
 #' @rdname suggest_utm
 #' @export
-suggest_utm_crs <- function(lat, lon = NULL) {
-  UseMethod("suggest_utm_crs")
+suggest_utm_zone_crs <- function(lat, lon = NULL) {
+  UseMethod("suggest_utm_zone_crs")
 }
 
 #' @rdname suggest_utm
 #' @export
-suggest_utm_crs.sf <- function(lat, lon = NULL) {
+suggest_utm_zone_crs.sf <- function(lat, lon = NULL) {
   coords <- st_coordinates_lat_lon(lat)
-  suggest_utm_crs.numeric(coords[, 1], coords[, 2])
+  suggest_utm_zone_crs.numeric(coords[, 1], coords[, 2])
 }
 
 #' @rdname suggest_utm
 #' @export
-suggest_utm_crs.numeric <- function(lat, lon = NULL) {
+suggest_utm_zone_crs.numeric <- function(lat, lon = NULL) {
   assert_latlon(lat, lon)
   as.integer(tail(names(sort(table(calculate_utm_zone_crs(lat, lon)))), 1))
 }

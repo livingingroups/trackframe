@@ -16,15 +16,18 @@ editor_options:
 
 Starting with our df_mini, let's rename columns to truly custom names.
 ```{r}
+library(trackframe)
+
 df <- trackframe::df_mini
 
 df
-```
-
-```{r}
-library(trackframe)
 
 colnames(df) <- c('when', 'up', 'right', 'who')
+```
+
+Now let's convert this dataframe to a `trackframe` object, telling `as.trackframe` which columns are the key columns.
+```{r}
+
 tf <- as.trackframe(
   df,
   time_col = 'when',
@@ -68,8 +71,7 @@ northing_col(tf)
 id_col(tf)
 ```
 
-or with the `tf_colnames` function. Note this will just return the names of key columns,
-not any other columns that happen to be in the trackframe. The vector returned by tf_colnames also
+Alternatively, we can use the `tf_colnames` function. Note: this will just return the names of key columns, not any other columns in the trackframe. The vector returned by `tf_colnames` also
 itself has names indicating which key column is which.
 
 ```{r}

@@ -24,3 +24,13 @@ which zone the data fall into
 \description{
 Calculate which utm zones are appropreate for input data
 }
+\examples{
+trackframe::calculate_utm_zone_crs(
+  lat = c(47.6839952, 47.6839941, 47.6839939, 38.5382329, 38.5382306),
+  lon = c(9.175119, 9.17498, 9.175254, -121.764227, -121.764351)
+)
+
+trackframe::calculate_utm_zone_crs(
+  trackframe::move2_mini
+)
+}

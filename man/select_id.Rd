@@ -16,7 +16,7 @@ Must have an attribute indicating the track ID column.}
 A filtered \code{trackframe} containing only the specified track(s).
 }
 \description{
-This function filters a trackframe object to include only tracks with the specified ID(s).
+This function filters a \code{trackframe} object to include only tracks with the specified ID(s).
 It supports selecting a single ID or multiple IDs simultaneously.
 }
 \examples{

@@ -36,19 +36,24 @@ tf_colnames(tf) <- value
 \arguments{
 \item{tf}{a trackframe}
 
-\item{value}{new column names. `tf_colnames` takes a
-named character vector with names `easting`, `northing`, `time`, and (opt) `id`.
-`X_col()` functions take a single string}
+\item{value}{new column names. \code{tf_colnames} takes a
+named character vector with names \code{easting}, \code{northing}, \code{time}, and (opt) \code{id}.
+\code{X_col()} functions take a single string}
+}
+\value{
+X_col returns a character object representing the column name.
+tf_colnames returns a named character vector of length 4 indicating the
+column names of each of the key columns.
 }
 \description{
 Key columns meaning: easting, northing, time, and (opt) id column
-All 3-4 key column names can be accessed or set with `tf_colnames()`.
+All 3-4 key column names can be accessed or set with \code{tf_colnames()}.
 Each also has a dedicated functions to access or set the names of the key columns.
 Setting column names in this way will rename the currently configured key column
 in the trackframe. It does not change the values of the column.
 }
 \details{
-To identify a different (existing) column as a key column, use `as.trackframe`.
+To identify a different (existing) column as a key column, use \code{as.trackframe}.
 }
 \examples{
 time_col(tf_mini)

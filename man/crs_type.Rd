@@ -11,8 +11,8 @@ crs_type(tf)
 }
 \value{
 One of:
- \code{projected} e.g. utm
- \code{nongeoreferenced} designed for use in captive or simulated scenarios
+\code{projected} e.g. utm
+\code{nongeoreferenced} designed for use in captive or simulated scenarios
 }
 \description{
 This function retrieves the crs value from a \code{trackframe} object.

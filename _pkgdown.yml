@@ -1,4 +1,18 @@
 url: ~
 template:
   bootstrap: 5
+reference:
+- title: "Functions"
+  desc: >
+   All `trackframe` package functions.
+  contents: 
+  - -starts_with("path")
+  - -ends_with("mini")
+- title: "Datasets"
+  desc: >
+   Simulated datasets for testing trackframe.
+  contents: 
+  - starts_with("path")
+  - ends_with("mini")
 
+  

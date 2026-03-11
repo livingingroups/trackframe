@@ -17,7 +17,7 @@ northing(tf) <- value
 }
 \arguments{
 \item{tf}{A \code{trackframe} object containing the tracking data.
-Must have an attribute indicating the easting column (`easting`).}
+Must have an attribute indicating the easting column (\code{easting}).}
 
 \item{value}{numeric vector of new coordinate values}
 }

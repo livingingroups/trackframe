@@ -9,9 +9,13 @@ set_facet_ncol(n)
 \arguments{
 \item{n}{an integer value (corresponding to the number of different ids)}
 }
-\description{
-Set cols of facet
+\value{
+numeric
 }
-\details{
+\description{
 Calculates the desired number of columns for trackframe plots using tinyplot engine.
+}
+\examples{
+set_facet_ncol(12)
+
 }

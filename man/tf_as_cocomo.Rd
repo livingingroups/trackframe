@@ -2,23 +2,23 @@
 % Please edit documentation in R/cocomo_transformations.R
 \name{tf_as_cocomo}
 \alias{tf_as_cocomo}
-\title{Convert a \code{track\_frame} into the \code{cocomo} format}
+\title{Convert a \code{track_frame} into the \code{cocomo} format}
 \usage{
 tf_as_cocomo(tf)
 }
 \arguments{
-\item{tf}{an object inheriting from \code{track\_frame}.}
+\item{tf}{an object inheriting from \code{track_frame}.}
 }
 \value{
 A list with three components:
-  \item{x}{A matrix of x-coordinates (easting values). If tf has no id attribute,
-    this is a single-column matrix. If tf has ids, rows represent different tracks
-    and columns represent time points.}
-  \item{y}{A matrix of y-coordinates (northing values). Same structure as x matrix.}
-  \item{t}{A vector of time values, sorted in ascending order.}
+\item{x}{A matrix of x-coordinates (easting values). If tf has no id attribute,
+this is a single-column matrix. If tf has ids, rows represent different tracks
+and columns represent time points.}
+\item{y}{A matrix of y-coordinates (northing values). Same structure as x matrix.}
+\item{t}{A vector of time values, sorted in ascending order.}
 }
 \description{
-This function converts a \code{track\_frame} object into the cocomo format.
+This function converts a \code{track_frame} object into the cocomo format.
 }
 \examples{
 tf_as_cocomo(tf_mini)

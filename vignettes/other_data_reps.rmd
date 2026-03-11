@@ -1,0 +1,127 @@
+---
+author: "Alison Ashbury"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+title: Converting to and from a cocomo dataset
+vignette: >
+  %\VignetteIndexEntry{Converting between trackframe and other data representations}
+  %\VignetteEngine{knitr::knitr}
+editor_options:
+  chunk_output_type: console
+---
+
+<!-- # Converting between `trackframe` and other data representations
+
+Here, we show how to convert between some less common animal track data representations and `trackframe` objects using the `as.trackframe` function. For more common animal track data representations (including plain (base R) `data.frame`, `move2`, and `sftrack` objects), check out the [Quickstart vignette](trackframe.html).
+
+Right now, it's just cocomo, but i figure maybe we want to add here in the future? or should this just be cocomo? if so, easy to change, just let me know! -->
+
+# Converting to and from a `cocomo` dataset 
+
+The [`cocomo` R package](https://livingingroups.github.io/cocomo/) was developed in the [CoCoMo research group](https://www.ab.mpg.de/cocomo) at the Max Planck Institute of Animal Behavior. The package has many functions for the analysis of communication and movement of animal groups. 
+
+`cocomo` functions require that animal track data be stored in 4 separate objects: 2 `matrix` objects, one each representing the x and the y positions of all individuals, 1 `vector` of timestamps, and 1 `dataframe` containing ids and information about the individuals. We will refer to this dataset structure as a "cocomo dataset" throughout this vignette.
+
+## Convert a `trackframe` object to a cocomo dataset
+
+To transform a `trackframe` object into a cocomo dataset, use the `tf_as_cocomo` function. This function returns a single `list` that contains the 4 objects that make up a cocomo dataset of animal tracks.
+
+```{r}
+library(trackframe)
+
+# Create a trackframe object with the locations of 3 individuals,
+# each observed over 7 time intervals
+tf <- as.trackframe(
+  data.frame(
+    timestamp = rep(as.POSIXct(Sys.time() + 1:7), times = 3),
+    x = runif(21, 0, 10),
+    y = runif(21, 0, 10),
+    id = rep(1:3, each = 7)),
+  crs = NA)
+
+# Convert tf to a cocomo dataset
+cocomo_list <- tf_as_cocomo(tf)
+
+# Check out the cocomo dataset
+attributes(cocomo_list)
+str(cocomo_list)
+cocomo_list$xs
+cocomo_list$ys
+cocomo_list$t
+cocomo_list$ids
+```
+
+So, this cocomo dataset is a `list` that contains 4 objects: the first is a `matrix` of the x (easting) positions of every individual (rows) across all timestamps (columns); the second is a `matrix` of the y (northing) positions of every individual (rows) across all timestamps (columns), the third is a `vector` of the 7 timestamps, and the fourth is a `dataframe` of the 3 individuals' ids. 
+
+We can then use a function from the `cocomo` package on the objects in this cocomo dataset, for example:
+
+```{r, eval = FALSE}
+# Install cocomo package
+library(devtools)
+install_github('livingingroups/cocomo')
+```
+
+```{r}
+library(cocomo)
+
+# Get the group centroid at each time step
+get_group_centroid(xs = cocomo_list$xs,
+  ys = cocomo_list$ys)
+```
+
+## Convert a cocomo dataset to a `trackframe` object
+
+To convert a `cocomo` dataset to a `trackframe` object, we can use the dedicated `cocomo_as_tf` function, and specify exactly where to find the information for each of the key columns in the arguments.
+
+```{r}
+# Convert cocomo dataset to trackframe object
+tf2 <- cocomo_as_tf(
+  xs = cocomo_list$xs,
+  ys = cocomo_list$ys,
+  t = cocomo_list$t,
+  ids = cocomo_list$ids,
+  crs = NA)
+
+tf2
+class(tf2)
+attributes(tf2)[1:6]
+```
+
+<!--
+COME BACK TO THIS AFTER WE SORT OUT trackframe always having to have an id?
+  - if yes, then this is unnecessary
+  - if no, then this needs to be fixed so it doesn't error out
+
+## Convert a `trackframe` object with only one individual to and from a cocomo dataset
+
+The following example 
+
+```{r}
+# Create a trackframe that does not have an id column (all observations from a single individual)
+tf_one_id <- as.trackframe(data.frame(
+  timestamp = c(as.POSIXct(Sys.time() + 1:20)),
+  x = runif(20, 0, 10),
+  y = runif(20, 0, 10),
+  id = rep("Bob", times = 20)),
+crs = NA)
+
+head(tf_one_id)
+attributes(tf_one_id)[1:6]
+rm(cocomo_list_one_id)
+
+# Convert tf_one_id to a cocomo dataset
+cocomo_list_one_id <- tf_as_cocomo(tf_one_id)
+
+# Check out the cocomo dataset
+attributes(cocomo_list_one_id)
+str(cocomo_list_one_id)
+cocomo_list_one_id$xs
+cocomo_list_one_id$ys
+cocomo_list_one_id$t
+cocomo_list_one_id$ids
+
+# Apply a cocomo function
+get_group_centroid(xs = cocomo_list_one_id$xs,
+  ys = cocomo_list_one_id$ys)
+```
+-->

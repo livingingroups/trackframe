@@ -10,11 +10,11 @@ get_starting_points(tf)
 \item{tf}{an object of class trackframe}
 }
 \value{
-a trackframe providing the x and y coordinates of th starting points all
+a trackframe providing the x and y coordinates of the starting points all
 different tracks sorted by id (if available) and time.
 }
 \description{
-This function obtains starting points for all tracks of objects of class trackframe.
+This function obtains starting points for all tracks in a trackframe object.
 }
 \examples{
 library(trackframe)

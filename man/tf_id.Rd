@@ -11,13 +11,13 @@ id(tf) <- value
 }
 \arguments{
 \item{tf}{A \code{trackframe} object containing the tracking data.
-Must have an attribute indicating the track ID column (`id`).}
+Must have an attribute indicating the track ID column (\code{id}).}
 
 \item{value}{new values for id column}
 }
 \value{
 A vector of track ID values extracted from the \code{trackframe}.
-        NULL if no id column is configured.
+NULL if no id column is configured.
 }
 \description{
 This function retrieves the track ID values from a \code{trackframe} object.

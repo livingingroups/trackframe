@@ -17,6 +17,19 @@
 an object of class trackframe
 }
 \description{
-Sort a trackframe into ascending or descending order. Sorts if available by track id and time
-columns of the trackframe. If no id column is available only sorted by time.
+Sort a trackframe into ascending or descending order, by track ID and time.
+If no id column is available only sorted by time.
+}
+\examples{
+sort(
+  as.trackframe(
+    data.frame(
+      x = 1:6,
+      y = 1:6,
+      t = as.POSIXct(c(2, 2, 2, 1, 1, 1)),
+      id = c("Asa", "Betty", "Charlie", "Asa", "Betty", "Charlie")
+    ),
+    crs = NA
+  )
+)
 }

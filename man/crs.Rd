@@ -16,8 +16,8 @@ crs(tf) <- value
 }
 \value{
 A representation of crs extracted from the \code{trackframe}.
- If crs_type is geographic or projected, then crs is a valid input to sf::st_crs.
- If crs_type is nongeoreferenced, then crs can be any non-null value including NA.
+If crs_type is geographic or projected, then crs is a valid input to sf::st_crs.
+If crs_type is nongeoreferenced, then crs can be any non-null value including NA.
 
 tf with new crs
 }

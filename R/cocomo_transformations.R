@@ -2,10 +2,10 @@
 #'
 #' @param xs matrix of x coordinates (UTM eastings) of all individuals
 #'  in a group or population (rows) at every time point (columns)
-#'  x[i,t] gives the x / easting position of individual i at time point t
+#'  x\[i,t\] gives the x / easting position of individual i at time point t
 #' @param ys matrix of y coordinates (UTM northings) of all individuals
 #'  in a group or population (rows) at every time point (columns)
-#'  y[i,t] gives the y / northing position of individual i at time point t
+#'  y\[i,t\] gives the y / northing position of individual i at time point t
 #' @param t vector of timestamps in posixct corresponding to the columns
 #'  of x and y matrices. Timestamps must be uniformly sampled,
 #'  though it is possible to have gaps (e.g. between different days of recording)
@@ -21,7 +21,7 @@
 #' @param sort logical, if data should be sorted according to id_col and time_col
 #' @param coerce_to the format trackframe is coerced to. `base`,
 #' `data.table` and `tibble` are supported. Default is `base` and coerces to a `data.frame`.
-#' @param verbose logical, default value is \code{TRUE}
+#' @param verbose logical, default value is `TRUE`
 #'
 #' @return an object of class trackframe
 #' @export
@@ -81,11 +81,11 @@ cocomo_as_tf <- function(
 }
 
 
-#' Convert a \code{track\_frame} into the \code{cocomo} format
+#' Convert a `track_frame` into the `cocomo` format
 #'
-#' This function converts a \code{track\_frame} object into the cocomo format.
+#' This function converts a `track_frame` object into the cocomo format.
 #'
-#' @param tf an object inheriting from \code{track\_frame}.
+#' @param tf an object inheriting from `track_frame`.
 #'
 #' @return A list with three components:
 #'   \item{x}{A matrix of x-coordinates (easting values). If tf has no id attribute,

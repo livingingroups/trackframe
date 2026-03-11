@@ -8,7 +8,7 @@ unique_ids(tf)
 }
 \arguments{
 \item{tf}{A \code{trackframe} object containing the tracking data.
-Must have an attribute indicating the track ID column (`id`).}
+Must have an attribute indicating the track ID column (\code{id}).}
 }
 \value{
 A vector of unique track IDs extracted from the \code{trackframe}.
@@ -21,4 +21,7 @@ specifying the column containing track IDs.
 \examples{
 unique_ids(tf_mini)
 
+}
+\seealso{
+\code{\link[=as.trackframe]{as.trackframe()}}
 }
