@@ -57,7 +57,7 @@ tf_colnames <- function(tf) {
   assert_subset(names(value), key_cols)
   tf_colnames_order <- match(names(x), tf_colnames(x))
   is_key_col <- names(x) %in% tf_colnames(x)
-  new_key_col_names <- value[is_key_col[seq_len(length(value))]]
+  new_key_col_names <- value[is_key_col[seq_along(value)]]
   names(new_key_col_names) <- names(tf_colnames(x))[tf_colnames_order[!is.na(tf_colnames_order)]]
 
   # update tf_columns
