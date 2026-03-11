@@ -3,6 +3,12 @@ library(trackframe)
 
 "[.data.frame" <- trackframe:::`[.data.frame`
 
+if (getRversion() <= "4.4.0") {
+  `%||%` <- function(x, y) {
+    if (is.null(x)) y else x
+  }
+}
+
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
   tf_subclasses <- c("data.table", "tbl", "tbl_df")
