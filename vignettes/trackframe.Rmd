@@ -4,8 +4,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 title: Quickstart Guide
 vignette: >
-  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{Quickstart Guide}
+  %\VignetteEngine{knitr::knitr}
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Quickstart Guide
@@ -207,11 +209,28 @@ attributes(sftrack_tf)
 -->
 
 
-<!-- ### ...from an `sf` object
+### ...from an `sf` object
+For `sf` objects, key columns `time_col` and `id_col` need to be specified explicitly in the corresponding input arguments. Because `as.trackframe` can only handle Cartesian (i.e., projected) coordinates, objects that are in non-projected coordinates (e.g., latitude and longitude) must first be transformed. For more details about compatible coordinate reference systems, see `vignette("crs")`.
 
-ISSUE #139 
+```{r}
+raccoon_vanilla_sf <- sf::st_as_sf(
+  raccoon[!is.na(raccoon[[coords[1]]]) & !is.na(raccoon[[coords[2]]]), ],
+  coords = coords,
+  crs = crs
+)
+raccoon_vanilla_sf <- sf::st_transform(
+  raccoon_vanilla_sf,
+  suggest_utm_zone_crs(raccoon_vanilla_sf)
+)
 
-Add an example of a regular sf object... at least an sf POINT dataframe, maybe also MULTIPOINT or MULTILINESTRING sf dataframes. -->
+raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id")
+class(raccoon_vanilla_sf_tf)
+head(raccoon_vanilla_sf_tf)
+tf_colnames(raccoon_vanilla_sf_tf)
+```
+
+
+TODO: maybe also MULTIPOINT or MULTILINESTRING sf dataframes.
 
 
 ## Extract and/or replace key columns from a `trackframe`
