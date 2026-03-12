@@ -440,7 +440,7 @@ as.trackframe.move2 <- function(
 
   # move2: The `track_id_column` attribute should be a <character> of length 1
   id_col <- attr(data, "track_id_column")
-  
+
   as.trackframe.sf(
     data,
     time_col = time_index,
@@ -478,30 +478,30 @@ as.trackframe.sftrack <- function(
       "active_group"
     )
   }
-  
+
   as.trackframe.sf(
-      data,
-      time_col = time_col,
-      easting_col = easting_col,
-      northing_col = northing_col,
-      id_col = id_col,
-      sort = sort,
-      coerce_to = coerce_to,
-      ...
-    )
+    data,
+    time_col = time_col,
+    easting_col = easting_col,
+    northing_col = northing_col,
+    id_col = id_col,
+    sort = sort,
+    coerce_to = coerce_to,
+    ...
+  )
 }
 
 #' @export
 #' @rdname as_trackframe
 as.trackframe.sf <- function(
-    data,
-    time_col = NULL,
-    easting_col = NULL,
-    northing_col = NULL,
-    id_col = NULL,
-    sort = TRUE,
-    coerce_to = "base",
-    ...
+  data,
+  time_col = NULL,
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = NULL,
+  sort = TRUE,
+  coerce_to = "base",
+  ...
 ) {
   if (is.null(time_col)) {
     stop("time_col needs to be specified for objects of class sf")
@@ -518,12 +518,12 @@ as.trackframe.sf <- function(
   data_attr <- attributes(data)
   cols <- setdiff(colnames(data), attr(data, "sf_column"))
   data <- data[, cols]
-  
+
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
   easting_col <- (easting_col %||% "easting")[1]
   northing_col <- (northing_col %||% "northing")[1]
-  
+
   update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
     if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
       warning(sprintf(
@@ -543,11 +543,11 @@ as.trackframe.sf <- function(
     update_warn_if_overwriting("easting_col", easting_col, x_y[, 1]) |>
     update_warn_if_overwriting("northing_col", northing_col, x_y[, 2]) |>
     as.data.frame()
-  
+
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
     data$sft_group <- make_unique_id(data$sft_group)
   }
-  
+
   attr(data, "row.names") <- data_attr[["row.names"]]
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(

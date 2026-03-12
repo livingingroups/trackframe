@@ -223,7 +223,8 @@ raccoon_vanilla_sf <- sf::st_transform(
   suggest_utm_zone_crs(raccoon_vanilla_sf)
 )
 
-raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id")
+raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp",
+  id_col = "animal_id")
 class(raccoon_vanilla_sf_tf)
 head(raccoon_vanilla_sf_tf)
 tf_colnames(raccoon_vanilla_sf_tf)

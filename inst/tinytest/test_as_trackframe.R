@@ -249,12 +249,13 @@ test_as_trackframe <- function(coerce_to = "base") {
   )
   expect_error(as.trackframe(raccoon_vanilla_sf))
   expect_silent(as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id"))
-  raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id")
+  raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp",
+    id_col = "animal_id")
   expect_inherits(raccoon_vanilla_sf_tf, "trackframe")
   expect_equal(NROW(raccoon_vanilla_sf_tf), NROW(raccoon_vanilla_sf))
   expect_equal(
     cbind("X" = easting(raccoon_vanilla_sf_tf),
-          "Y" = northing(raccoon_vanilla_sf_tf)),
+      "Y" = northing(raccoon_vanilla_sf_tf)),
     sf::st_coordinates(raccoon_vanilla_sf),
     tol = 1e-4
   )
