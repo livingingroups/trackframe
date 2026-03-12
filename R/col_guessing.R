@@ -51,7 +51,7 @@ guess_all_cols <- function(
 guess_a_col <- function(col_names, candidates, id) {
   ind <- candidates %in% col_names
   if (sum(ind) < 1) {
-    stop(sprintf("%s needs to be specified. Guessing not successful.", id))
+    stop(sprintf("Unable to identify %s column.", id))
   }
   candidates[ind]
 }
@@ -74,36 +74,5 @@ warn_if_guess_ambiguous <- function(data, guesses) {
         ))
       }
     }
-  }
-}
-
-subset_guesses <- function(
-  data,
-  time_col = tf_options("time_col"),
-  easting_col = tf_options("easting_col"),
-  northing_col = tf_options("northing_col"),
-  id_col = tf_options("id_col")
-) {
-  guesses <- guess_all_cols(
-    col_names = colnames(data),
-    time_col_candidates = time_col,
-    easting_col_candidates = easting_col,
-    northing_col_candidates = northing_col,
-    id_col_candidates = id_col
-  )
-  warn_if_guess_ambiguous(data, guesses)
-  if (is.na(guesses[["id_col"]][1])) {
-    data[, c(
-      guesses[["time_col"]][1],
-      guesses[["easting_col"]][1],
-      guesses[["northing_col"]][1]
-    )]
-  } else {
-    data[, c(
-      guesses[["time_col"]][1],
-      guesses[["easting_col"]][1],
-      guesses[["northing_col"]][1],
-      guesses[["id_col"]][1]
-    )]
   }
 }

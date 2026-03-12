@@ -94,11 +94,10 @@ test_errors <- function(coerce_to = coerce_to) {
     northing_col = runif(5, 0, 10),
     id2 = 1:5
   )
-  expect_silent(
-    tf <- trackframe(data = df, coerce_to = coerce_to, crs = NA),
-    info = "id is optional, this doesn't fail, but id2 col is not recognized as id"
+  expect_warning(
+    trackframe(data = df, coerce_to = coerce_to, crs = NA),
+    info = "`id2` not close enough to be guessed"
   )
-  expect_null(id(tf))
 }
 
 test_warnings <- function(coerce_to = "base") {
@@ -112,7 +111,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     time = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
+    northing_col = runif(5, 0, 10),
+    animal_id = "A"
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),
@@ -123,7 +123,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     time = as.POSIXct(Sys.time() + 2:6),
     easting_col = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
+    northing_col = runif(5, 0, 10),
+    animal_id = "A"
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),
@@ -134,7 +135,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = 1001:1005,
     easting = 1001:1005,
-    northing_col = runif(5, 0, 10)
+    northing_col = runif(5, 0, 10),
+    animal_id = "A"
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),
@@ -145,7 +147,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting_col = runif(5, 0, 10),
     easting = runif(5, 0, 10),
-    northing_col = runif(5, 0, 10)
+    northing_col = runif(5, 0, 10),
+    animal_id = "A"
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),
@@ -156,7 +159,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting = runif(5, 0, 10),
     northing_col = 1001:1005,
-    northing = 1001:1005
+    northing = 1001:1005,
+    animal_id = "A"
   )
   expect_silent(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),
@@ -167,7 +171,8 @@ test_warnings <- function(coerce_to = "base") {
     time_col = as.POSIXct(Sys.time() + 1:5),
     easting = runif(5, 0, 10),
     northing_col = runif(5, 0, 10),
-    northing = runif(5, 0, 10)
+    northing = runif(5, 0, 10),
+    animal_id = "A"
   )
   expect_warning(
     trackframe(data = df, coerce_to = coerce_to, crs = NA),

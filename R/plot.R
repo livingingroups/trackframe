@@ -116,32 +116,26 @@ plot.trackframe <- function(
   y_col <- northing_col(x)
   i_col <- id_col(x)
 
-  if (is.null(i_col)) {
-    i_col <- "id_int"
-    x[[i_col]] <- "id_1"
-    as.trackframe(x, id_col = i_col)
-  }
-
   n_id <- length(unique(id(x)))
+
   nfacet_col <- nfacet_col %||% set_facet_ncol(n_id)
 
-  if (n_id > 1) {
-    form <- as.formula(paste(y_col, "~", x_col, "|", i_col))
-    default_options <- list(
-      type = "l",
-      grid = TRUE,
-      main = "Paths"
-    )
-    if (facet) {
-      default_options <- c(
-        default_options,
-        facet = "by",
-        facet.args = list("free" = FALSE, ncol = nfacet_col)
-      )
-    }
+  form <- if (n_id == 1) {
+    as.formula(paste(y_col, "~", x_col))
   } else {
-    form <- as.formula(paste(y_col, "~", x_col))
-    default_options <- list(type = "l", grid = TRUE, main = "")
+    as.formula(paste(y_col, "~", x_col, "|", i_col))
+  }
+  default_options <- list(
+    type = "l",
+    grid = TRUE,
+    main = "Paths"
+  )
+  if (facet && n_id > 1) {
+    default_options <- c(
+      default_options,
+      facet = "by",
+      facet.args = list("free" = FALSE, ncol = nfacet_col)
+    )
   }
 
   # delete restricted elements
@@ -342,12 +336,6 @@ plot_coords_by_time <- function(
   y_col <- northing_col(x)
   t_col <- time_col(x)
   i_col <- id_col(x)
-
-  if (is.null(i_col)) {
-    i_col <- "id_int"
-    x[[i_col]] <- "id_1"
-    as.trackframe(x, id_col = i_col)
-  }
 
   n_id <- length(unique(id(x)))
 

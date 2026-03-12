@@ -121,16 +121,12 @@ tf_backtransform <- function(tf) {
 #' @export
 tf_as_xyt <- function(x, ...) {
   assert_class(x, "trackframe")
-  if (is.null(attr(x, "id"))) {
-    cols <- c(attr(x, "easting"), attr(x, "northing"), attr(x, "time"))
-  } else {
-    cols <- c(
-      attr(x, "easting"),
-      attr(x, "northing"),
-      attr(x, "time"),
-      attr(x, "id")
-    )
-  }
+  cols <- c(
+    attr(x, "easting"),
+    attr(x, "northing"),
+    attr(x, "time"),
+    attr(x, "id")
+  )
   x <- x[, cols, with = FALSE]
   class(x) <- setdiff(class(x), "trackframe")
   x

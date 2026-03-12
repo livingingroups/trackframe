@@ -53,14 +53,12 @@ cocomo_as_tf <- function(
     "northing" = as.vector(base::t(ys)),
     "id" = rep(ids$id_code, each = NCOL(xs))
   )
-  if (NCOL(ids) > 1L) {
-    for (col in setdiff(colnames(ids), "id_code")) {
-      if (col %in% colnames(data)) {
-        new_name <- tail(make.unique(c(colnames(data), col), "_"), 1L)
-        data[[new_name]] <- ids[[col]]
-      } else {
-        data[[col]] <- ids[[col]]
-      }
+  for (col in setdiff(colnames(ids), "id_code")) {
+    if (col %in% colnames(data)) {
+      new_name <- tail(make.unique(c(colnames(data), col), "_"), 1L)
+      data[[new_name]] <- ids[[col]]
+    } else {
+      data[[col]] <- ids[[col]]
     }
   }
   if (isTRUE(na_omit)) {
@@ -99,23 +97,17 @@ cocomo_as_tf <- function(
 #'
 #' @export
 tf_as_cocomo <- function(tf) {
-  if (is.null(attr(tf, "id"))) {
-    x <- matrix(tf[[attr(tf, "easting")]])
-    y <- matrix(tf[[attr(tf, "northing")]])
-    time <- tf[[attr(tf, "time")]]
-  } else {
-    time <- sort(unique(tf[[attr(tf, "time")]]))
-    ids <- unique_ids(tf)
-    na_val <- as(NULL, mode(tf[[attr(tf, "easting")]]))
-    x <- y <- matrix(na_val, nrow = length(ids), ncol = length(time))
-    for (i in seq_along(ids)) {
-      id <- ids[i]
-      idx <- which(tf[[attr(tf, "id")]] == id)
-      m <- match(time, tf[[attr(tf, "time")]][idx])
-      x[i, ] <- tf[[attr(tf, "easting")]][idx][m]
-      y[i, ] <- tf[[attr(tf, "northing")]][idx][m]
-    }
-    rownames(x) <- rownames(y) <- ids
+  time <- sort(unique(tf[[attr(tf, "time")]]))
+  ids <- unique_ids(tf)
+  na_val <- as(NULL, mode(tf[[attr(tf, "easting")]]))
+  x <- y <- matrix(na_val, nrow = length(ids), ncol = length(time))
+  for (i in seq_along(ids)) {
+    id <- ids[i]
+    idx <- which(tf[[attr(tf, "id")]] == id)
+    m <- match(time, tf[[attr(tf, "time")]][idx])
+    x[i, ] <- tf[[attr(tf, "easting")]][idx][m]
+    y[i, ] <- tf[[attr(tf, "northing")]][idx][m]
   }
+  rownames(x) <- rownames(y) <- ids
   list(xs = x, ys = y, t = time, ids = data.frame(id_code = ids))
 }

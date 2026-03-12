@@ -129,7 +129,7 @@ time_col <- function(tf) {
 id <- function(tf) {
   assert_class(tf, "trackframe")
   id_col <- attr(tf, "id")
-  if (is.null(id_col)) NULL else tf[[id_col]]
+  tf[[id_col]]
 }
 
 
@@ -139,9 +139,6 @@ id <- function(tf) {
 "id<-" <- function(tf, value) {
   assert_class(tf, "trackframe")
   id_col <- attr(tf, "id")
-  if (is.null(id_col)) {
-    attr(tf, "id") <- id_col <- "id"
-  }
   tf[[id_col]] <- value
   tf
 }
@@ -151,7 +148,7 @@ id <- function(tf) {
 #' id_col(tf_mini)
 #' @export
 id_col <- function(tf) {
-  if ('id' %in% names(tf_colnames(tf))) tf_colnames(tf)[["id"]] else NULL
+  tf_colnames(tf)[["id"]]
 }
 
 #' @rdname tf_colnames

@@ -325,10 +325,12 @@ as.trackframe.data.frame <- function(
 
   id_col <- guesses[["id_col"]][1]
   if (is.na(id_col)) {
-    id_col <- NULL
+    warning("No id column found. Adding placeholder \"track_id\" column")
+    id_col <- "track_id"
+    data[[id_col]] <- "<id>"
   }
-  assert_choice(id_col, colnames(data), null.ok = TRUE)
-  assert_character(id_col, len = 1, null.ok = TRUE)
+  assert_choice(id_col, colnames(data), null.ok = FALSE)
+  assert_character(id_col, len = 1, null.ok = FALSE)
 
   assert_numeric(data[[easting_col]])
   assert_numeric(data[[northing_col]])
@@ -362,11 +364,7 @@ as.trackframe.data.frame <- function(
 
   # sort data by id and time
   if (isTRUE(sort)) {
-    if (is.null(attr(data, "id"))) {
-      idx <- order(time(data))
-    } else {
-      idx <- order(id(data), time(data))
-    }
+    idx <- order(id(data), time(data))
     id_hash_unsort <- id_hash(data)
     data <- data[idx, ]
     transformation_info <- attr(data, "transformation_info")

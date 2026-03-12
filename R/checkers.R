@@ -37,11 +37,6 @@ check_trackframe <- checkTrackframe <- function(x, ..., unsorted.ok = TRUE) {
     # not using accessors here to avoid circular dependency
     track_id <- attr(x, "id")
     len <- nrow(x)
-    if (is.null(track_id)) {
-      return(all(
-        order(x[[attr(x, 'time')]]) == seq_len(len)
-      ))
-    }
     return(all(
       order(x[[track_id]], x[[attr(x, 'time')]]) == seq_len(len)
     ))
