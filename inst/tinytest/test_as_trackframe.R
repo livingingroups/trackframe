@@ -3,6 +3,12 @@ library(trackframe)
 
 "[.data.frame" <- trackframe:::`[.data.frame`
 
+if (getRversion() <= "4.4.0") {
+  `%||%` <- function(x, y) {
+    if (is.null(x)) y else x
+  }
+}
+
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
   tf_subclasses <- c("data.table", "tbl", "tbl_df")
@@ -241,8 +247,17 @@ test_as_trackframe <- function(coerce_to = "base") {
     raccoon_vanilla_sf,
     suggest_utm_zone_crs(raccoon_vanilla_sf)
   )
-  # When issue #139 is complete, should be switched to expect_silent
   expect_error(as.trackframe(raccoon_vanilla_sf))
+  expect_silent(as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id"))
+  raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id")
+  expect_inherits(raccoon_vanilla_sf_tf, "trackframe")
+  expect_equal(NROW(raccoon_vanilla_sf_tf), NROW(raccoon_vanilla_sf))
+  expect_equal(
+    cbind("X" = easting(raccoon_vanilla_sf_tf),
+          "Y" = northing(raccoon_vanilla_sf_tf)),
+    sf::st_coordinates(raccoon_vanilla_sf),
+    tol = 1e-4
+  )
 }
 
 
