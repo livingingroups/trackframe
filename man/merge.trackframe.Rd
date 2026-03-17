@@ -30,11 +30,11 @@ Merge two trackframes by key colums ("time", "id", "easting", "northing"), or do
 tf1 <- trackframe::tf_mini
 tf2 <- tf1
 tf2$id2 <- "A"
-tf1_tf2 <- merge.trackframe(tf1, tf2)
+tf1_tf2 <- merge(tf1, tf2)
 tf1_tf2
 class(tf1_tf2)
 
 tf3 <- tf1
 tf3$id <- c(rep("A",5), rep("B", 4), rep("C",2))
-merge.trackframe(tf1, tf3, all = TRUE)
+merge(tf1, tf3, all = TRUE)
 }
