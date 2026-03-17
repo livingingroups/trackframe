@@ -61,7 +61,7 @@ tf_colnames <- function(tf) {
 
   # update tf_columns
   for (name in intersect(key_cols, names(new_key_col_names))) {
-      attr(x, name) <- new_key_col_names[[name]]
+    attr(x, name) <- new_key_col_names[[name]]
   }
 
   # update value
