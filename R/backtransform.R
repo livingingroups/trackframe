@@ -153,6 +153,7 @@ tf_as_sf <- function(tf, ...) {
   assert_class(tf, "trackframe")
   tf_crs <- crs(tf)
   coords <- c(attr(tf, "easting"), attr(tf, "northing"))
+  class(tf) <- setdiff(class(tf), "trackframe")
   new_sf <- sf::st_as_sf(
     x = tf,
     crs = tf_crs,
@@ -160,7 +161,6 @@ tf_as_sf <- function(tf, ...) {
     na.fail = FALSE,
     ...
   )
-  class(new_sf) <- setdiff(class(new_sf), "trackframe")
   new_sf
 }
 
