@@ -42,7 +42,6 @@ tf_colnames <- function(tf) {
 }
 
 
-
 #' @export
 #' @param value new column names
 #' @examples
@@ -61,10 +60,8 @@ tf_colnames <- function(tf) {
   names(new_key_col_names) <- names(tf_colnames(x))[tf_colnames_order[!is.na(tf_colnames_order)]]
 
   # update tf_columns
-  for (name in key_cols) {
-    if (name %in% names(new_key_col_names)) {
+  for (name in intersect(key_cols, names(new_key_col_names))) {
       attr(x, name) <- new_key_col_names[[name]]
-    }
   }
 
   # update value
