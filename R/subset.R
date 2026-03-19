@@ -5,11 +5,15 @@
 
 #' @noRd
 #' @export
-"[.trackframe" <- function(x, i, j, drop = FALSE, ...) {
-  x_attr <- attributes(x)
-  attr_names <- names(x_attr)
-  x_attr[names(x_attr) %in% c("names", "row.names", "class")] <- NULL
-  obj <- base::`[.data.frame`(x, i, j, drop = drop)
-  attributes(obj) <- c(attributes(obj), x_attr)[attr_names]
+"[.trackframe" <- function(x, i, j, drop = TRUE, ...) {
+  if(isTRUE(drop) & length(j) == 1) {
+    obj <- base::`[.data.frame`(x, i, j, drop = drop)
+  } else {
+    x_attr <- attributes(x)
+    attr_names <- names(x_attr)
+    x_attr[names(x_attr) %in% c("names", "row.names", "class")] <- NULL
+    obj <- base::`[.data.frame`(x, i, j, drop = drop)
+    attributes(obj) <- c(attributes(obj), x_attr)[attr_names]
+  }
   return(obj)
 }
