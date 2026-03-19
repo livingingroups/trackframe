@@ -6,7 +6,23 @@
 #' @noRd
 #' @export
 "[.trackframe" <- function(x, i, j, drop = TRUE, ...) {
-  if(isTRUE(drop) & length(j) == 1) {
+  has_j <- !missing(j)
+  if (missing(i)) {
+    i <- seq_len(NROW(x))
+  }
+  if (missing(j)) {
+    j <- seq_len(NCOL(x))
+  }
+  to_vec <- FALSE
+  if(has_j) {
+    if(length(j) == 1 & drop == TRUE) {
+      to_vec <- TRUE
+    }
+  }
+  if(length(i) == 1 & length(j) > 1) {
+    drop <- FALSE
+  }
+  if(isTRUE(to_vec)) {
     obj <- base::`[.data.frame`(x, i, j, drop = drop)
   } else {
     x_attr <- attributes(x)

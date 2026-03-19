@@ -159,7 +159,7 @@ get_starting_points <- function(tf) {
       id_col(tf)
     )]),
   ]
-  starting_points <- tf[!duplicated(id(tf)), ]
+  starting_points <- tf[!duplicated(id(tf)), , drop = FALSE]
   rownames(starting_points) <- id(starting_points)
   return(starting_points)
 }
@@ -186,7 +186,7 @@ get_direction_points <- function(tf) {
     !duplicated(tf[, c(easting_col(tf), northing_col(tf), id_col(tf))]),
   ]
   tf <- tf[duplicated(tf[[id_col(tf)]]), ]
-  direction_points <- tf[!duplicated(tf[[id_col(tf)]]), ]
+  direction_points <- tf[!duplicated(tf[[id_col(tf)]]), , drop = FALSE]
   rownames(direction_points) <- id(direction_points)
   return(direction_points)
 }
