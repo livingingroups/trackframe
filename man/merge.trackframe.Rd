@@ -24,7 +24,8 @@ unique the names of columns in the result which are not used for merging (appear
 an object of class trackframe
 }
 \description{
-Merge two trackframes by key colums ("time", "id", "easting", "northing"), or do other versions of database join operations.
+Merge two trackframes by key colums ("time", "id", "easting", "northing"), or do other versions
+of database join operations.
 }
 \examples{
 tf1 <- trackframe::tf_mini

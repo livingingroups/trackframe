@@ -14,15 +14,15 @@
     j <- seq_len(NCOL(x))
   }
   to_vec <- FALSE
-  if(has_j) {
-    if(length(j) == 1 & drop == TRUE) {
+  if (has_j) {
+    if (length(j) == 1 && drop == TRUE) {
       to_vec <- TRUE
     }
   }
-  if(length(i) == 1 & length(j) > 1) {
+  if (length(i) == 1 && length(j) > 1) {
     drop <- FALSE
   }
-  if(isTRUE(to_vec)) {
+  if (isTRUE(to_vec)) {
     obj <- base::`[.data.frame`(x, i, j, drop = drop)
   } else {
     x_attr <- attributes(x)
