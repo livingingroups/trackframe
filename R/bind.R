@@ -28,7 +28,7 @@ rbind.trackframe <- function(..., sort = FALSE) {
     })))
     # check attributes
     attr_check_vars <- c("time", "easting", "northing", "id")
-    stopifnot("Attributes of trackframes do not coincide" = all(sapply(objl, function(x) {
+    stopifnot("Names of key columns of trackframes do not coincide" = all(sapply(objl, function(x) {
       isTRUE(all.equal(attributes(x)[attr_check_vars], obj_attr[attr_check_vars]))
     })))
   } else {
