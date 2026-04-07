@@ -1,13 +1,7 @@
 library(tinytest)
 library(trackframe)
 
-"[.data.frame" <- trackframe:::`[.data.frame`
-
-if (getRversion() <= "4.4.0") {
-  `%||%` <- function(x, y) {
-    if (is.null(x)) y else x
-  }
-}
+source(system.file("tinytest/test_helpers.R", package = "trackframe"))
 
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
@@ -213,7 +207,8 @@ test_as_trackframe <- function(coerce_to = "base") {
 
   expect_equal(
     id(raccoon_tf),
-    expected_id
+    expected_id,
+    check.attributes = FALSE
   )
   expect_equal(
     id(raccoon_tf),
@@ -258,6 +253,10 @@ test_as_trackframe <- function(coerce_to = "base") {
       "Y" = northing(raccoon_vanilla_sf_tf)),
     sf::st_coordinates(raccoon_vanilla_sf),
     tol = 1e-4
+  )
+  expect_equal(colnames(raccoon_vanilla_sf_tf),
+    c("animal_id", "timestamp", "height", "hdop", "vdop", "fix", "month", "time", "geometry",
+      "easting", "northing")
   )
 }
 

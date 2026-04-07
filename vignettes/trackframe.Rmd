@@ -220,7 +220,7 @@ raccoon_vanilla_sf <- sf::st_as_sf(
 )
 raccoon_vanilla_sf <- sf::st_transform(
   raccoon_vanilla_sf,
-  suggest_utm_zone_crs(raccoon_vanilla_sf)
+  crs = 32735
 )
 
 raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp",
@@ -229,9 +229,6 @@ class(raccoon_vanilla_sf_tf)
 head(raccoon_vanilla_sf_tf)
 tf_colnames(raccoon_vanilla_sf_tf)
 ```
-
-
-TODO: maybe also MULTIPOINT or MULTILINESTRING sf dataframes.
 
 
 ## Extract and/or replace key columns from a `trackframe`

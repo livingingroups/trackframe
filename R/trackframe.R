@@ -405,6 +405,17 @@ as.trackframe.matrix <- function(
   )
 }
 
+update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) {
+  warning(sprintf(
+    c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in sf type object. Using %s."
+    ),
+    arg_name,
+    arg_value,
+    sf_value,
+    tf_value
+  ))
+}
+
 #' @export
 #' @rdname as_trackframe
 as.trackframe.move2 <- function(
@@ -417,33 +428,24 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  time_index <- attr(data, "time_column")
-
-  if (!is.null(time_col)) {
-    log_debug(
-      paste(
-        "move2 input so using implicitly configured time column %s",
-        "rather that time_col argument %s"
-      ),
-      time_index,
-      dput(time_col)
-    )
+  if (is.null(time_col)) {
+    time_col <- attr(data, "time_column")
   } else {
-    log_debug(
-      paste(
-        "move2 input so using implicitly configured time column %s",
-      ),
-      time_index
-    )
+    if (time_col != attr(data, "time_column")) {
+      update_warn_if_conflicting("time_col", time_col, attr(data, "time_column"), time_col)
+    }
   }
-  log_debug("Use move2::mt_set_time_column to adjust time column.")
-
-  # move2: The `track_id_column` attribute should be a <character> of length 1
-  id_col <- attr(data, "track_id_column")
+  if (is.null(id_col)) {
+    id_col <- attr(data, "track_id_column")
+  } else {
+    if (id_col != attr(data, "track_id_column")) {
+      update_warn_if_conflicting("id_col", id_col, attr(data, "track_id_column"), id_col)
+    }
+  }
 
   as.trackframe.sf(
     data,
-    time_col = time_index,
+    time_col = time_col,
     easting_col = easting_col,
     northing_col = northing_col,
     id_col = id_col,
@@ -467,6 +469,10 @@ as.trackframe.sftrack <- function(
 ) {
   if (is.null(time_col)) {
     time_col <- attr(data, "time_col")
+  } else {
+    if (time_col != attr(data, "time_col")) {
+      update_warn_if_conflicting("time_col", time_col, attr(data, "time_col"), time_col)
+    }
   }
   if (is.null(id_col)) {
     id_col <- "id"
@@ -477,6 +483,8 @@ as.trackframe.sftrack <- function(
       data[[attr(data, "group_col")]],
       "active_group"
     )
+  } else {
+    update_warn_if_conflicting("id_col", id_col, attr(data, "group_col"), id_col)
   }
 
   as.trackframe.sf(
@@ -490,6 +498,7 @@ as.trackframe.sftrack <- function(
     ...
   )
 }
+
 
 #' @export
 #' @rdname as_trackframe
@@ -510,20 +519,19 @@ as.trackframe.sf <- function(
     stop("id_col needs to be specified for objects of class sf")
   }
   if ('crs' %in% names(list(...))) {
-    stop("crs provided as arg for sf arg. this val will be ignored")
+    update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
   }
+  
   transformation_info <- attributes(data)
   crs <- sf::st_crs(data)$input
   transformation_info$crs_code <- crs
   data_attr <- attributes(data)
-  cols <- setdiff(colnames(data), attr(data, "sf_column"))
-  data <- data[, cols]
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
   easting_col <- (easting_col %||% "easting")[1]
   northing_col <- (northing_col %||% "northing")[1]
-
+  
   update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
     if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
       warning(sprintf(
