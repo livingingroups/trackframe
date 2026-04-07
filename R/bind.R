@@ -163,14 +163,12 @@ cbind.trackframe <- function(...) {
 #' tf3 <- tf1
 #' tf3$id <- c(rep("A",5), rep("B", 4), rep("C",2))
 #' merge(tf1, tf3, all = TRUE)
-merge.trackframe <- function(x, y, sort = TRUE, suffixes = c("", ".y"), by = NULL, ...) {
+merge.trackframe <- function(x, y, sort = TRUE, suffixes = c("", ".y"), by = NULL, 
+ by.x = tf_colnames(x)[c("time", "id")]
+ by.y = tf_colnames(y)[c("time", "id")]
+) {
   assert_trackframe(x)
   assert_trackframe(y)
-  time_id_cols <- tf_colnames(x)[c("time", "id")]
-  time_id_cols_y <- tf_colnames(y)[c("time", "id")]
-  # if (is.null(by)) {
-  by.x <- colnames(x)[match(time_id_cols, colnames(x))]
-  by.y <- colnames(y)[match(time_id_cols_y, colnames(y))]
   if (!is.null(by)) stop("Use by.x and by.y instead of by in merge.trackframe.")
   # FIXME: add warning for different crs, easting, northing?
   # }
