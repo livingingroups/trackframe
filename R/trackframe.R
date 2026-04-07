@@ -407,7 +407,8 @@ as.trackframe.matrix <- function(
 
 update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) {
   warning(sprintf(
-    c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in sf type object. Using %s."
+    c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in
+      sf type object. Using %s."
     ),
     arg_name,
     arg_value,
@@ -521,7 +522,7 @@ as.trackframe.sf <- function(
   if ('crs' %in% names(list(...))) {
     update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
   }
-  
+
   transformation_info <- attributes(data)
   crs <- sf::st_crs(data)$input
   transformation_info$crs_code <- crs
@@ -531,7 +532,7 @@ as.trackframe.sf <- function(
   x_y[is.nan(x_y)] <- NA
   easting_col <- (easting_col %||% "easting")[1]
   northing_col <- (northing_col %||% "northing")[1]
-  
+
   update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
     if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
       warning(sprintf(
