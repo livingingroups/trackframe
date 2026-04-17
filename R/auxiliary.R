@@ -182,11 +182,42 @@ get_starting_points <- function(tf) {
 get_direction_points <- function(tf) {
   assert_class(tf, "trackframe")
   tf <- sort(tf)
-  tf <- tf[
-    !duplicated(tf[, c(easting_col(tf), northing_col(tf), id_col(tf))]),
-  ]
+  tf <- tf[!duplicated(tf[, c(easting_col(tf), northing_col(tf), id_col(tf))]), ]
   tf <- tf[duplicated(tf[[id_col(tf)]]), ]
   direction_points <- tf[!duplicated(tf[[id_col(tf)]]), , drop = FALSE]
   rownames(direction_points) <- id(direction_points)
   return(direction_points)
+}
+
+validate_tf <- function(tf) {
+  if (!all(tf_colnames(tf) %in% names(tf))) {
+    stop("Not all tf_colnames(tf) are available in trackframe.")
+  }
+}
+
+
+#' Deduping of trackframe
+#'
+#' This function removes duplicated entries form objects of class trackframe.
+#'
+#' @param tf an object of class trackframe
+#' @param cols determines the unique identifier. Default are the key columns provided by
+#' tf_colnames(tf).
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' tf1 <- trackframe::tf_mini
+#' tf2 <- tf1
+#' tf2$northing <- 1:11
+#'
+#' tf <- trackframe:::rbind.trackframe(tf1, tf1)
+#' deduping(tf)
+#'
+#' tf <- trackframe:::rbind.trackframe(tf1, tf2)
+#' deduping(tf)
+#' deduping(tf, cols = c("time", "id"))
+deduping <- function(tf, cols = tf_colnames(tf)) {
+  tf[!duplicated(tf[, cols]), ]
 }

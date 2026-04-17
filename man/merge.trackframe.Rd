@@ -4,19 +4,44 @@
 \alias{merge.trackframe}
 \title{Merge Two trackframes}
 \usage{
-\method{merge}{trackframe}(x, y, sort = TRUE, suffixes = c("", ".y"), by = NULL, ...)
+\method{merge}{trackframe}(
+  x,
+  y,
+  by = NULL,
+  by.x = NULL,
+  by.y = NULL,
+  all = FALSE,
+  all.x = all,
+  all.y = all,
+  sort = TRUE,
+  suffixes = c("", ".y"),
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class trackframe}
 
 \item{y}{an object of class trackframe}
 
+\item{by}{specifications of the columns used for merging. Default is tf_colnames(x)}
+
+\item{by.x}{specifications of the columns used for merging of x.}
+
+\item{by.y}{specifications of the columns used for merging of y.}
+
+\item{all}{logical all = TRUE is shorthand for all.x = TRUE and all.y = TRUE}
+
+\item{all.x}{logical; if TRUE, then extra rows will be added to the output, one for each row in
+x that has no matching row in y. These rows will have NAs in those columns that are usually
+filled with values from y. The default is FALSE, so that only rows with data from both x
+and y are included in the output.}
+
+\item{all.y}{logical; analogous to all.x.}
+
 \item{sort}{logical, if true (default), data will be sorted by id_col and then by time_col.}
 
 \item{suffixes}{a character vector of length 2 specifying the suffixes to be used for making
 unique the names of columns in the result which are not used for merging (appearing in by etc).}
-
-\item{by}{specifications of the columns used for merging. Default is tf_colnames(x)}
 
 \item{...}{other arguments to be passed to appropriate merge methods}
 }

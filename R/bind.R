@@ -21,42 +21,40 @@ rbind.trackframe <- function(..., sort = FALSE) {
   objl <- list(...)
   obj_attr <- attributes(objl[[1]])
   # check if all trackframes
-  if (all(sapply(objl, function(x) "trackframe" %in% class(x)))) {
+  is_trackframe <- sapply(objl, inherits, "trackframe")
+  if (sum(is_trackframe) >= 2) {
     # check crs
     obj_crs <- obj_attr[["crs"]]
-    crs_equal <- sapply(objl, function(x) {
+    crs_equal <- sapply(objl[is_trackframe], function(x) {
       crs_x <- attributes(x)[["crs"]]
       if (is.na(obj_crs) || is.na(crs_x)) {
-        warning("crs attribute is NA for at least one object. crs are matching not possible.")
+        warning("crs attribute is NA for at least one object.
+          Ensure all inputs share the same crs.")
         return(TRUE)
       }
       isTRUE(all.equal(obj_crs, crs_x))
     })
     stopifnot("crs of trackframes do not coincide" = all(crs_equal))
-    
-    # stopifnot("crs of trackframes do not coincide" = all(sapply(objl, function(x) {
-    #   isTRUE(all.equal(attributes(x)["crs"], obj_attr["crs"]))
-    # })))
-    # check attributes
-    attr_check_vars <- c("time", "easting", "northing", "id")
-    stopifnot("Names of key columns of trackframes do not coincide" = all(sapply(objl, function(x) {
-      isTRUE(all.equal(attributes(x)[attr_check_vars], obj_attr[attr_check_vars]))
-    })))
-  } else {
-    # check if tf_columns are available
-    tf_cols <- tf_colnames(objl[[1]])
-    stopifnot("Colnames do not match" =
-        all(sapply(objl, function(x) all(colnames(x) %in% tf_cols))))
+
+    #check colnames - if not equal match according to tf cols
+    if (length(unique(lapply(objl, function(x) colnames(x)))) > 1) {
+      tf_cn <- tf_colnames(objl[[1]])
+      objl[seq_along(objl)[-1]] <- lapply(objl[-1], function(x) {
+        if (inherits(x, "trackframe")) {
+          if (!isTRUE(all.equal(tf_cn, tf_colnames(x)))) {
+            tf_colnames(x) <- tf_cn
+            warning("Names of key columns of trackframes do not coincide")
+          }
+        }
+        x
+      })
+    }
   }
-  #check colnames
-  stopifnot("Colnames are not equal for all objects." =
-      Reduce(all.equal, lapply(objl, function(x) colnames(x))))
+
   # check time stamp format
   tcol <- time_col(objl[[1]])
   stopifnot("Class of time cols differ." =
-      Reduce(all.equal, lapply(objl, function(x) class(x[[tcol]]))))
-
-  time_id_cols <- tf_colnames(objl[[1]])[c("time", "id")]
+      length(unique(lapply(objl, function(x) class(x[[tcol]])))) == 1)
 
   #remove trackframe class for correct S3 dispatch
   objl <- lapply(objl, function(x) {
@@ -65,11 +63,6 @@ rbind.trackframe <- function(..., sort = FALSE) {
   })
 
   obj <- do.call(rbind, objl)
-  # check for duplicates
-  if (any(duplicated(obj[, time_id_cols, with = FALSE]))) {
-    stop("duplicated time and id entries.")
-  }
-
   obj_attr$row.names <- attr(obj, "row.names")
   obj_attr$transformation_info <- NULL
   attributes(obj) <- obj_attr
@@ -79,6 +72,7 @@ rbind.trackframe <- function(..., sort = FALSE) {
   }
   return(obj)
 }
+
 
 #' Combine trackframes by columns
 #'
@@ -100,31 +94,14 @@ cbind.trackframe <- function(...) {
   objl <- list(...)
   obj_attr <- attributes(objl[[1]])
   # check if all trackframes
-  if (all(sapply(objl, function(x) "trackframe" %in% class(x)))) {
-    
+  is_trackframe <- sapply(objl, inherits, "trackframe")
+  if (sum(is_trackframe) >= 2) {
     # check crs
-    if (!all(sapply(objl, function(x) {
+    if (!all(sapply(objl[is_trackframe], function(x) {
       isTRUE(all.equal(attributes(x)["crs"], obj_attr["crs"]))
     }))) {
       warning("crs of trackframes do not coincide")
     }
-    # check attributes
-    attr_check_vars <- c("time", "easting", "northing", "id")
-    stopifnot("Names of key columns of trackframes do not coincide" = all(sapply(objl, function(x) {
-      isTRUE(all.equal(attributes(x)[attr_check_vars], obj_attr[attr_check_vars]))
-    })))
-
-    #check tf_columns
-    if (!isTRUE(try(do.call(all.equal,
-            c(lapply(objl, function(x) as.data.frame(x[, tf_colnames(x), with = FALSE])),
-              list(check.attributes = FALSE))), silent = TRUE))) {
-      stop("keycols (time, easting, northing, id) are not equal for all trackframes")
-    }
-
-    # remove duplicated tf_columns
-    objl[seq_along(objl)[-1]] <- lapply(objl[seq_along(objl)[-1]], function(x) {
-      x[, !colnames(x) %in% tf_colnames(x), drop = FALSE, with = FALSE]
-    })
   }
 
   #remove trackframe class for correct S3 dispatch
@@ -134,16 +111,9 @@ cbind.trackframe <- function(...) {
   })
 
   obj <- do.call(cbind, objl)
-  obj_attr$names <- colnames(obj)
+  obj_attr$names <- make.unique(colnames(obj), sep = "_")
   obj_attr$transformation_info <- NULL
   attributes(obj) <- obj_attr
-  # check for duplicated colnames
-  if (any(duplicated(colnames(obj)))) {
-    warning("duplicated colnames")
-    if (any(colnames(obj)[duplicated(colnames(obj))] %in% tf_colnames(obj))) {
-      stop("duplicated tf_colnames. change colnames of tf_columns before applying cbind.")
-    }
-  }
   return(obj)
 }
 
@@ -156,6 +126,14 @@ cbind.trackframe <- function(...) {
 #' @param x an object of class trackframe
 #' @param y an object of class trackframe
 #' @param by specifications of the columns used for merging. Default is tf_colnames(x)
+#' @param by.x specifications of the columns used for merging of x.
+#' @param by.y specifications of the columns used for merging of y.
+#' @param all logical all = TRUE is shorthand for all.x = TRUE and all.y = TRUE
+#' @param all.x logical; if TRUE, then extra rows will be added to the output, one for each row in
+#'  x that has no matching row in y. These rows will have NAs in those columns that are usually
+#'   filled with values from y. The default is FALSE, so that only rows with data from both x
+#'   and y are included in the output.
+#' @param all.y logical; analogous to all.x.
 #' @param sort logical, if true (default), data will be sorted by id_col and then by time_col.
 #' @param suffixes a character vector of length 2 specifying the suffixes to be used for making
 #'   unique the names of columns in the result which are not used for merging (appearing in by etc).
@@ -175,96 +153,64 @@ cbind.trackframe <- function(...) {
 #' tf3 <- tf1
 #' tf3$id <- c(rep("A",5), rep("B", 4), rep("C",2))
 #' merge(tf1, tf3, all = TRUE)
-merge.trackframe <- function(x, y, by = NULL, 
- by.x = NULL, by.y = NULL, all = FALSE, all.x = all, all.y = all,
- sort = TRUE, suffixes = c("", ".y"), ...
-) {
+merge.trackframe <- function(x, y, by = NULL, by.x = NULL, by.y = NULL, all = FALSE, all.x = all,
+  all.y = all, sort = TRUE, suffixes = c("", ".y"), ...) {
   assert_trackframe(x)
-  time_id_cols <- tf_colnames(x)[c("time", "id")]
+  validate_tf(x)
+  assert_character(by, null.ok = TRUE)
+  assert_character(by.x, null.ok = TRUE)
+  assert_character(by.y, null.ok = TRUE)
+  assert_logical(all)
+  assert_logical(all.x)
+  assert_logical(all.y)
+  assert_logical(sort)
+  tf_cols <- tf_colnames(x)[c("time", "id", "easting", "northing")]
   x_attr <- attributes(x)
-  
+
   # if by is set explicitely, we cannnot check trackframe specific attributes
   if (inherits(y, "trackframe")) {
-    assert_trackframe(y)
-    
-    if(!is.null(by.x)) {
+    validate_tf(y)
+    if (!is.null(by)) {
       by.x <- by
       by.y <- by
-    } else if((is.null(by.x) && (is.null(by.x)))) {
-      by.x = tf_colnames(x)[c("time", "id")]
-      by.y = tf_colnames(y)[c("time", "id")]
+    } else if ((is.null(by.x) && (is.null(by.y)))) {
+      by.x <- tf_colnames(x)[c("time", "id", "easting", "northing")]
+      by.y <- tf_colnames(y)[c("time", "id", "easting", "northing")]
+    } else {
+      stop("Use by, or by.x and by.y to specify the merge columns. Default is tf_colnames(x).")
     }
 
-    # check crs #FIXME warning with NA?
+    # check crs
     if (isTRUE(attr(x, "crs") != attr(y, "crs")) || any(is.na(c(attr(x, "crs"), attr(y, "crs"))))) {
       warning("crs of trackframes do not coincide")
     }
-    
-    # FIXME: add warning for different crs, easting, northing?
-    # }
 
-    
-    # check for easting, northing
-    en_cols <- tf_colnames(x)[c("easting", "northing")]
-    en_cols_y <- tf_colnames(y)[c("easting", "northing")]
-    time_col_y <- time_col(y)
-    # remove easting, northing of y if not in by.y and equal - to avoid duplicated cols
-    if (any(!en_cols_y %in% by.y)) {
-      if (isTRUE(all.equal(x[, tf_colnames(x), with = FALSE], y[, tf_colnames(y), with = FALSE],
-                           check.attributes = FALSE))) {
-        y <- y[, !colnames(y) %in% en_cols_y[!en_cols_y %in% by.y], with = FALSE]
-      }
-    } else {
-      if (isTRUE(all.equal(x[, en_cols, with = FALSE], y[, en_cols_y, with = FALSE],
-                           check.attributes = FALSE))) {
-        warning("easting/northing do not coincide.")
-      }
-    }
-    
     # check time stamp format
-    stopifnot("Class of time cols differ." =
-                all.equal(class(x[[time_col(x)]]), class(y[[time_col_y]])))
-    
+    if (!isTRUE(all.equal(class(x[[time_col(x)]]), class(y[[time_col(y)]]))) &&
+        tf_cols["time"] %in% by.x) {
+      warning("Class of time cols differ for x and y.")
+    }
 
     class(y) <- setdiff(class(y), "trackframe")
-  } else {
-    
-  # } else if (!inherits(y, "trackframe")) {
-    if(!is.null(by)) {
+  } else { # no trackframe
+    if (!is.null(by)) {
       by.x <- by
       by.y <- by
-    } else if (is.null(by.x) || is.null(by.x)) {
+    } else if (is.null(by.x) || is.null(by.y)) {
       stop("Use by, or by.x and by.y explicitely when merging a trackframe with a non-trackframe
           data.frame/data.table/tibble")
     }
-    
-    if (isTRUE(all.y)) {
-      stop("Only inner or left join are supported when merging a trackframe with a non-trackframe
-          data.frame/data.table/tibble")
-    }
   }
 
-
-
-  # 
   class(x) <- setdiff(class(x), "trackframe")
 
+  mtf <- merge(x, y, by.x = by.x, by.y = by.y, all = all, all.x = all.x, all.y = all.y, sort = sort,
+    suffixes = suffixes, ...)
 
-  mtf <- merge(x, y, by.x = by.x, by.y = by.y, sort = sort, suffixes = suffixes, ...)
-
-  # check for duplicates
-  if (any(duplicated(mtf[, time_id_cols, with = FALSE]))) {
-    stop("duplicated time and id entries.")
-  }
   x_attr$row.names <- attr(mtf, "row.names")
   x_attr$names <- colnames(mtf)
   x_attr$transformation_info <- NULL
   attributes(mtf) <- x_attr
-  #check if tf_colnames exist in mtf
-  if (!all(tf_colnames(mtf) %in% colnames(mtf))) {
-    stop(sprintf("%s not available in merged objects. Use appropriate suffixes.",
-        tf_colnames(mtf)[tf_colnames(mtf) %in% colnames(mtf)]))
-  }
   #sort
   if (isTRUE(sort)) {
     mtf <- mtf[order(id(mtf), time(mtf)), ]
