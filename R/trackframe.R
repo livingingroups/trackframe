@@ -530,28 +530,45 @@ as.trackframe.sf <- function(
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  easting_col <- (easting_col %||% "easting")[1]
-  northing_col <- (northing_col %||% "northing")[1]
-
-  update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
-    if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
-      warning(sprintf(
-        c(
-          "Column %s configured as %s, ",
-          "but existing data does not match sf coordinates. ",
-          "Overwriting."
-        ),
-        col_name,
-        arg_name
-      ))
-    }
-    df[[col_name]] <- value
-    df
+  # set colnames as defined in tf_options() #nolint 
+  colnames(x_y) <- c(tf_options("sf_easting_col"), tf_options("sf_northing_col"))
+  # error if colnames exist already in data
+  if (tf_options("sf_easting_col") %in% colnames(data)) {
+    stop(sprintf("Column %s set as sf_easting_col, but exists also in data. No Overwriting.
+      Remove column %sin data, or change sf_easting_col in tf_options()",
+        tf_options("sf_easting_col"), tf_options("sf_easting_col")))
   }
-  data <- data |>
-    update_warn_if_overwriting("easting_col", easting_col, x_y[, 1]) |>
-    update_warn_if_overwriting("northing_col", northing_col, x_y[, 2]) |>
-    as.data.frame()
+  if (tf_options("sf_northing_col") %in% colnames(data)) {
+    stop(sprintf("Column %s set as sf_northing_col, but exists also in data. No Overwriting.
+      Remove column %s in data, or change sf_northing_col in tf_options()",
+        tf_options("sf_northing_col"), tf_options("sf_northing_col")))
+  }
+
+  if (is.null(easting_col)) {
+    easting_col <- tf_options("sf_easting_col")
+  } else if (tf_options("sf_easting_col") %in% easting_col) {
+    easting_col <- tf_options("sf_easting_col")
+  } else {
+    easting_col <- easting_col[easting_col %in% colnames(data)][1]
+    if (is.na(easting_col)) {
+      stop("easting_col argument(s): %s are not available in data.")
+    }
+  }
+
+  if (is.null(northing_col)) {
+    northing_col <- tf_options("sf_northing_col")
+  } else if (tf_options("sf_northing_col") %in% northing_col) {
+    northing_col <- tf_options("sf_northing_col")
+  } else {
+    northing_col <- northing_col[northing_col %in% colnames(data)][1]
+    if (is.na(northing_col)) {
+      stop("northing_col argument(s): %s are not available in data.")
+    }
+  }
+
+  data[[tf_options("sf_easting_col")]] <- x_y[, 1]
+  data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  data <- as.data.frame(data)
 
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
     data$sft_group <- make_unique_id(data$sft_group)

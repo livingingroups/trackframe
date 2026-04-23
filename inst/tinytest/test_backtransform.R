@@ -26,6 +26,12 @@ sftrack_a <- as_sftrack(
   coords = c("easting", "northing"),
   crs = projected_crs
 )
+expect_error(as.trackframe(data = sftrack_a),
+  info = "Column easting set as sf_easting_col, but exists also in data. No Overwriting.
+    Remove column easting in data, or change sf_easting_col in tf_options()")
+
+tf_options("sf_easting_col", "e")
+tf_options("sf_northing_col", "n")
 tf <- as.trackframe(data = sftrack_a)
 sftrack_b <- tf_backtransform(tf)
 expect_equal(sftrack_b, sftrack_a)
