@@ -25,6 +25,6 @@ tf_options("easting_col", c("easting", "east", "utm.easting", "easting_col",
 "easting_column", "lon", "long", "longitude", "x"))
 tf_options("northing_col", c("northing", "north", "utm.northing",
 "northing_col", "northing_column", "lat", "latitude", "y"))
-tf_options("id_col", c("animal_id", "track_id", "trackid", "trackid_col",
+tf_options("id_col", c("track_id", "track_id", "trackid", "trackid_col",
 "trackid_column", "id"))
 }

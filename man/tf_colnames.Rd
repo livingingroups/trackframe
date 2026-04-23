@@ -67,7 +67,7 @@ easting_col(tf_mini) <- "x"
 northing_col(tf_mini)
 northing_col(tf_mini) <- "y"
 tf_colnames(tf_mini)
-tf_colnames(tf_mini)["id"] <- "animal_id"
+tf_colnames(tf_mini)["id"] <- "track_id"
 }
 \seealso{
 tf_coords, as.trackframe, tf_id, tf_time

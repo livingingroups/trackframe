@@ -13,9 +13,8 @@ editor_options:
 
 # Identifying the Key Columns
 
-When creating a `trackframe` object from another animal track data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options.
+When creating a `trackframe` object from another animal track data representation, `as.trackframe` identifies the columns representing time (`time_col`), coordinates (`northing_col` & `easting_col`), and track id (`id_col`). It obtains this information from 3 potential sources: 1) metadata inherited from the input object, 2) arguments supplied directly to `as.trackframe`, and/or 3) pre-set global package options.
 
-Note that the (`time_col`) and coordinate (`northing_col` & `easting_col`) columns are compulsory; `as.trackframe` will fail if it is unable to identify these 3 columns. The animal id (`id_col`) column, however, is optional; `as.trackframe` will neither error nor warn if it can't identify an animal id column.
 
 ## Load Package
 
@@ -27,7 +26,7 @@ library(trackframe)
 
 If the input object given to `as.trackframe` is a...
 
--   a `data.frame`, `data.table`, or `tibble`: no information about the (`time_col`), coordinates (`northing_col` & `easting_col`), and animal id (`id_col`) columns is inherited, all are identified from other sources.
+-   a `data.frame`, `data.table`, or `tibble`: no information about the (`time_col`), coordinates (`northing_col` & `easting_col`), and track id (`id_col`) columns is inherited, all are identified from other sources.
 -   an `sf` object (but not `sftrack` or `move2`): the `easting_col` and `northing_col` are identified from the input object's `geometry` column. The `time_col` and `id_col` are identified from other sources.
 -   an `sftrack` or `move2` object: all 4 of the key columns are identifiable from the input object's attributes.
 
@@ -157,7 +156,7 @@ df <- data.frame(
   y = runif(25, 0, 10),
   northing = runif(25, 0, 10),
   id = rep(1:5, each = 5),
-  animal_id = rep(1:5, each = 5)
+  track_id = rep(1:5, each = 5)
 )
 
 # Convert to trackframe, using pre-set global options
@@ -170,7 +169,7 @@ head(tf_2)
 attributes(tf_2)[1:6]
 ```
 
-In the above example, the columns `id` and `animal_id` contain identical values. The `animal_id` column was silently chosen to be the `id_col`, because "animal_id" comes before "id" in the `tf_options("id_col")` vector. The columns `y` and `northing` do not contain identical values. Here, the `northing` column was chosen to be the `northing_col` because "northing" comes before "y" in the `tf_options("northing_col")` vector. Because the two columns (`y` and `northing`) do not contain identical values, a warning is issued.
+In the above example, the columns `id` and `track_id` contain identical values. The `track_id` column was silently chosen to be the `id_col`, because "track_id" comes before "id" in the `tf_options("id_col")` vector. The columns `y` and `northing` do not contain identical values. Here, the `northing` column was chosen to be the `northing_col` because "northing" comes before "y" in the `tf_options("northing_col")` vector. Because the two columns (`y` and `northing`) do not contain identical values, a warning is issued.
 
 You can avoid this warning in three ways:
 
@@ -186,7 +185,7 @@ df <- data.frame(
   y = runif(25, 0, 10),
   northing = runif(25, 0, 10),
   id = rep(1:5, each = 5),
-  animal_id = rep(1:5, each = 5)
+  track_id = rep(1:5, each = 5)
 )
 
 # Convert to trackframe

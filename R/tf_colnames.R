@@ -23,7 +23,7 @@ tf_colnames <- function(tf) {
 
 #' @export
 #' @examples
-#' tf_colnames(tf_mini)["id"] <- "animal_id"
+#' tf_colnames(tf_mini)["id"] <- "track_id"
 #' @param value new column naems. `tf_colnames` takes a
 #' named character vector with names `easting`, `northing`, `time`, and (opt) `id`.
 #' `X_col()` functions take a single string
