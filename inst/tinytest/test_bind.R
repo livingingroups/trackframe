@@ -6,11 +6,33 @@ tf2 <- tf1
 tf2$northing <- 1:11
 tf_colnames(tf2)
 
+
+expect_most_elements_equal <- function(current, target, omit = c(), ...) {
+  filter_list <- function(l) {
+    l <- l[!names(l) %in% omit]
+    l[sort(names(l))]
+  }
+  expect_equal(filter_list(current), filter_list(target), ...)
+}
+
+crses_to_string <- function(...) {
+  paste(
+    "crs vals:",
+    paste(vapply(list(...), crs, character(1)), collapse = ", ")
+  )
+}
+
 # equal ids ----
 
 ## rbind ----
 rbind_tf1_tf2 <- trackframe:::rbind.trackframe(tf1, tf2)
 expect_inherits(rbind_tf1_tf2, "trackframe")
+expect_most_elements_equal(
+  attributes(rbind_tf1_tf2),
+  attributes(tf1),
+  # FIX - decide if transformation_info should be passed through
+  c("transformation_info", "row.names")
+)
 expect_equal(tf_colnames(rbind_tf1_tf2), tf_colnames(tf1))
 expect_equal(
   rbind_tf1_tf2,
@@ -21,16 +43,25 @@ expect_equal(
 ## merge ----
 merge_tf1_tf2 <- trackframe:::merge.trackframe(tf1, tf2)
 expect_inherits(merge_tf1_tf2, "trackframe")
-expect_equal(NROW(merge_tf1_tf2), 0)
+expect_equal(NROW(merge_tf1_tf2), 0, info = "inner join, no overlap")
 merge_tf1_tf2_all <- trackframe:::merge.trackframe(
   tf1,
   tf2,
   all = TRUE,
   sort = FALSE
 )
+expect_most_elements_equal(
+  attributes(merge_tf1_tf2_all),
+  attributes(tf1),
+  # FIX - decide if transformation_info should be passed through
+  # FIX - decide if col order should be preserved.
+  #   If so, "names" should be removed from below list.
+  c("transformation_info", "names", "row.names")
+)
 expect_equal(
   merge_tf1_tf2_all,
-  merge.data.frame(tf1, tf2, all = TRUE, sort = FALSE)[, c(
+  rbind_tf1_tf2[, c(
+    # just puts columns in the right order, does not omit columns
     "time",
     "id",
     "easting",
@@ -52,6 +83,12 @@ expect_equal(
   cbind_tf1_tf2,
   trackframe:::cbind.trackframe(tf1, as.data.frame(tf2))
 )
+expect_most_elements_equal(
+  attributes(cbind_tf1_tf2),
+  attributes(tf1),
+  # FIX - decide if transformation_info should be passed through
+  c("transformation_info", "names")
+)
 
 
 # different crs ----
@@ -67,7 +104,7 @@ expect_warning(trackframe:::cbind.trackframe(tf1, tf2b))
 
 # one crs is NA ----
 tf2c <- tf2
-attr(tf2c, "crs") <- NA
+attr(tf2c, "crs") <- NA_character_
 expect_warning(trackframe:::rbind.trackframe(tf1, tf2c))
 expect_warning(trackframe:::merge.trackframe(tf1, tf2c))
 expect_warning(trackframe:::cbind.trackframe(tf1, tf2c))
@@ -107,6 +144,7 @@ expect_equal(
   )],
   check.attributes = FALSE
 )
+# FIX: add an explicit attribute check
 
 ## cbind ----
 expect_error(
@@ -119,36 +157,64 @@ expect_error(
 ## rbind ----
 expect_error(
   trackframe:::rbind.trackframe(tf1, tf2b, tf2c, tf2d),
-  info = "crs of trackframes do not coincide"
+  info = paste(
+    "crs of trackframes do not coincide",
+    crses_to_string(tf1, tf2b, tf2c, tf2d),
+    sep = " - "
+  )
 )
-expect_warning(trackframe:::rbind.trackframe(tf1, tf2, tf2c, tf2d))
+
+# different order
+expect_error(
+  trackframe:::rbind.trackframe(tf1, tf2c, tf2d, tf2b),
+  info = paste(
+    "crs of trackframes do not coincide",
+    crses_to_string(tf1, tf2c, tf2d, tf2b),
+    sep = " - "
+  )
+)
+
+expect_warning(
+  trackframe:::rbind.trackframe(tf1, tf2, tf2c, tf2d),
+  info = crses_to_string(tf1, tf2, tf2c, tf2d),
+)
+
 expect_equal(
   trackframe:::rbind.trackframe(tf1, tf2, tf2c, tf2d),
   rbind.data.frame(tf1, tf2, tf2c, tf2d),
   check.attributes = FALSE
 )
+# FIX: add an explicit attribute check
+
 expect_equal(
   trackframe:::rbind.trackframe(tf1, tf2, tf2c, as.data.frame(tf2d)),
   rbind.data.frame(tf1, tf2, tf2c, tf2d),
   check.attributes = FALSE
 )
+# FIX: add an explicit attribute check
 
 ## cbind ----
 expect_error(
   trackframe:::cbind.trackframe(tf1, tf2b, tf2c, tf2d),
   info = "crs of arguments imply differing number of rows: 11, 8 do not coincide"
 )
-expect_warning(trackframe:::cbind.trackframe(tf1, tf2, tf2c, tf2b))
+expect_warning(
+  trackframe:::cbind.trackframe(tf1, tf2, tf2c, tf2b),
+  info = crses_to_string(tf1, tf2, tf2c, tf2b)
+)
 expect_equal(
   trackframe:::cbind.trackframe(tf1, tf2, tf2c, tf2b),
   cbind.data.frame(tf1, tf2, tf2c, tf2b),
   check.attributes = FALSE
 )
+# FIX: add an explicit attribute check
+
 expect_equal(
   trackframe:::cbind.trackframe(tf1, tf2, tf2c, as.data.frame(tf2b)),
   cbind.data.frame(tf1, tf2, tf2c, tf2b),
   check.attributes = FALSE
 )
+# FIX: add an explicit attribute check
 
 # different colnames ----
 tf3 <- tf1
@@ -159,11 +225,15 @@ objl <- list(tf1, tf3)
 expect_warning(trackframe:::rbind.trackframe(tf1, tf3))
 rbind_tf1_tf3 <- trackframe:::rbind.trackframe(tf1, tf3)
 expect_equal(colnames(tf1), colnames(rbind_tf1_tf3))
+expect_equal(tf_colnames(tf1), tf_colnames(rbind_tf1_tf3))
 expect_inherits(rbind_tf1_tf3, "trackframe")
+# FIX: add check of contents + attributes
 
 ## merge ----
 merge_tf1_tf3 <- trackframe:::merge.trackframe(tf1, tf3)
 expect_equal(tf_colnames(merge_tf1_tf3), tf_colnames(tf1))
+
+# just testing that `all=TRUE` doesn't change output
 expect_equal(trackframe:::merge.trackframe(tf1, tf3, all = TRUE), merge_tf1_tf3)
 
 ## cbind ----
@@ -172,6 +242,7 @@ expect_equal(
   cbind.data.frame(tf1, tf3),
   check.attributes = FALSE
 )
+# FIX: add attributes check
 
 # additional column ----
 tf4 <- tf1
@@ -180,7 +251,7 @@ tf4$id3 <- "A"
 ## rbind ----
 expect_error(
   trackframe:::rbind.trackframe(tf1, tf4),
-  info = "numbers of columns of arguments do not match"
+  info = "number of columns does not match"
 )
 
 ## merge ----
@@ -195,6 +266,7 @@ expect_equal(
   tf_colnames(merge_tf1_tf4),
   c(easting = "easting", northing = "northing", time = "time", id = "id")
 )
+# FIX: check contents? at least contents of id3 col
 
 expect_equal(
   trackframe:::merge.trackframe(tf1, tf4, all = TRUE),
@@ -210,7 +282,7 @@ expect_equal(
   check.attributes = FALSE
 )
 
-# different key col values ----
+# different ids and additional cols
 
 tf5 <- tf1
 tf5$id <- c(rep("A", 5), rep("B", 4), rep("C", 2))
@@ -224,7 +296,9 @@ expect_error(
 )
 
 ## merge ----
+# no overlap due to different id
 expect_equal(NROW(trackframe:::merge.trackframe(tf1, tf5)), 0)
+
 merge_tf1_tf5_all <- trackframe:::merge.trackframe(tf1, tf5, all = TRUE)
 expect_inherits(merge_tf1_tf5_all, "trackframe")
 expect_equal(dim(merge_tf1_tf5_all), c(22, 6))
@@ -236,6 +310,7 @@ expect_equal(
   tf_colnames(merge_tf1_tf5_all),
   c(easting = "easting", northing = "northing", time = "time", id = "id")
 )
+# FIX: check contents?
 
 ## cbind ----
 expect_equal(
@@ -243,6 +318,7 @@ expect_equal(
   cbind.data.frame(tf1, tf5),
   check.attributes = FALSE
 )
+# FIX: check attributes? or at least tf_colnames?
 
 # 5b - some overlapping ----
 tf5b <- tf5
@@ -262,13 +338,15 @@ expect_equal(
 )
 
 
-# Same as tf5? ----
+# Key cols different values ----
 tf6 <- tf1
 tf6$id <- c(rep("A", 5), rep("B", 4), rep("C", 2))
 tf6$northing <- 20
 tf6$easting <- 10
 rbind_tf1_tf6 <- trackframe:::rbind.trackframe(tf1, tf6)
 expect_inherits(rbind_tf1_tf6, "trackframe")
+
+# dim(tf1) is c(11, 4)
 expect_equal(dim(rbind_tf1_tf6), c(22, 4))
 expect_equal(names(rbind_tf1_tf6), c("time", "northing", "easting", "id"))
 expect_equal(
@@ -276,16 +354,19 @@ expect_equal(
   c(easting = "easting", northing = "northing", time = "time", id = "id")
 )
 expect_equal(id(rbind_tf1_tf6), c(tf1$id, tf6$id))
+# FIX: check contents?
 
 expect_equal(NROW(trackframe:::merge.trackframe(tf1, tf6)), 0)
 merge_tf1_tf6_all <- trackframe:::merge.trackframe(tf1, tf6, all = TRUE)
 expect_equal(dim(merge_tf1_tf6_all), c(22, 4))
+# FIX: check contents?
+
 expect_equal(
   trackframe:::cbind.trackframe(tf1, tf6),
   cbind.data.frame(tf1, tf6),
   check.attributes = FALSE
 )
-
+# FIX: check attributes? or at least tf_colnames?
 
 # Different time values ----
 tf7 <- tf1
@@ -319,12 +400,15 @@ expect_warning(
   trackframe:::merge.trackframe(x = tf1, y = tf8),
   info = "Class of time cols differ"
 )
+# check result and check result with all=TRUE?
+
 expect_equal(
   trackframe:::cbind.trackframe(tf1, tf8),
   cbind.data.frame(tf1, tf8),
   check.attributes = FALSE
 )
 
+# Totally missing key col ----
 
 tf9 <- tf1
 tf9$easting <- NULL
@@ -404,6 +488,9 @@ expect_equal(
   cbind.data.frame(tf1, df4),
   check.attributes = FALSE
 )
+
+# Rename key cols  ----
+
 colnames(df4) <- paste0(colnames(df4), "_2")
 cbind_tf1_df4 <- trackframe:::cbind.trackframe(tf1, df4)
 expect_inherits(cbind_tf1_df4, "trackframe")
