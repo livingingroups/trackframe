@@ -5,7 +5,7 @@
 \alias{paths_sftrack}
 \title{Simulated Travel Path with multiple IDs}
 \format{
-An object of class \code{sftrack} (inherits from \code{sf}, \code{data.frame}) with 3000 rows and 6 columns.
+An object of class \code{sftrack} (inherits from \code{sf}, \code{data.frame}) with 3000 rows and 4 columns.
 }
 \usage{
 paths_sftrack
