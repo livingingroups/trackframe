@@ -405,6 +405,7 @@ as.trackframe.matrix <- function(
   )
 }
 
+
 update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) {
   warning(sprintf(
     c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in
@@ -416,6 +417,22 @@ update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) 
     tf_value
   ))
 }
+
+update_col_arg <- function(data, arg_name, arg_value, sf_value) {
+  if (is.null(arg_value)) {
+    arg_value <- sf_value
+  } else {
+    if (arg_value != sf_value) {
+      update_warn_if_conflicting(arg_name, arg_value, sf_value, arg_value)
+    }
+    arg_value <- arg_value[arg_value %in% colnames(data)][1]
+    if (is.na(arg_value)) {
+      stop(sprintf("%s argument(s): %s are not available in data.", arg_name, arg_value))
+    }
+  }
+  return(arg_value)
+}
+
 
 #' @export
 #' @rdname as_trackframe
@@ -429,20 +446,11 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  if (is.null(time_col)) {
-    time_col <- attr(data, "time_column")
-  } else {
-    if (time_col != attr(data, "time_column")) {
-      update_warn_if_conflicting("time_col", time_col, attr(data, "time_column"), time_col)
-    }
-  }
-  if (is.null(id_col)) {
-    id_col <- attr(data, "track_id_column")
-  } else {
-    if (id_col != attr(data, "track_id_column")) {
-      update_warn_if_conflicting("id_col", id_col, attr(data, "track_id_column"), id_col)
-    }
-  }
+  time_col <- update_col_arg(data, arg_name = "time_col", arg_value = time_col,
+    sf_value = attr(data, "time_column"))
+
+  id_col <- update_col_arg(data, arg_name = "id_col", arg_value = id_col,
+    sf_value = attr(data, "track_id_column"))
 
   as.trackframe.sf(
     data,
@@ -468,13 +476,9 @@ as.trackframe.sftrack <- function(
   coerce_to = "base",
   ...
 ) {
-  if (is.null(time_col)) {
-    time_col <- attr(data, "time_col")
-  } else {
-    if (time_col != attr(data, "time_col")) {
-      update_warn_if_conflicting("time_col", time_col, attr(data, "time_col"), time_col)
-    }
-  }
+  time_col <- update_col_arg(data, arg_name = "time_col", arg_value = time_col,
+    sf_value = attr(data, "time_col"))
+
   if (is.null(id_col)) {
     id_col <- "id"
     if (inherits(data[[attr(data, "group_col")]], "c_grouping")) {
@@ -486,6 +490,9 @@ as.trackframe.sftrack <- function(
     )
   } else {
     update_warn_if_conflicting("id_col", id_col, attr(data, "group_col"), id_col)
+    if (!id_col %in% colnames(data)) {
+      stop(sprintf("id_col %s not available in data.", id_col))
+    }
   }
 
   as.trackframe.sf(

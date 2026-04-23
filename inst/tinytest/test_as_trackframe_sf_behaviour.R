@@ -77,6 +77,9 @@ m2_df$time2 <- m2_df$time
 tf_from_m2_2 <- as.trackframe(data = m2_df, time_col = "time2")
 expect_equal(time_col(tf_from_m2_2), "time2")
 
+expect_error(as.trackframe(data = m2_df, time_col = "time3"),
+  info = "time_col time3 not available in data.")
+
 m2_df$id2 <- "track2"
 tf_from_m2_3 <- as.trackframe(data = m2_df, id_col = "id2")
 expect_equal(id_col(tf_from_m2_3), "id2")
