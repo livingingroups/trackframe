@@ -1,11 +1,9 @@
 library(trackframe)
 library(tinytest)
 
-# source(system.file("tinytest/test_helpers.R", package = "trackframe"))
 data("sftrack_mini")
 
 sft_df <- sftrack_mini
-# sft_df <- sft_df[, !colnames(sft_df) %in% c("easting", "northing")]
 sft_df$easting <- NULL
 sft_df$northing <- NULL
 
