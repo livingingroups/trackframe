@@ -22,7 +22,7 @@ Refer to the following vignettes:
 
 -   **Quickstart guide** - `vignette("trackframe")`: Learn how to create `trackframe` objects, convert to and from other common representations of animal track data, and manipulate and subset columns of a `trackframe` object.
 
--   **Identifying the Key Columns** - `vignette("identifying_columns")`: Learn about how `as.trackframe` identifies the columns representing time, coordinates, and animal id, and how you can configure or override the sources it uses.
+-   **Identifying the Key Columns** - `vignette("identifying_columns")`: Learn about how `as.trackframe` identifies the columns representing time, coordinates, and track id (usually animal id), and how you can configure or override the sources it uses.
 
 -   **Compatible Coordinate Systems** - `vignette("crs")`: Learn about the coordinate systems that are compatible with trackframe, and how to set the crs of a `trackframe` object.
 
@@ -53,9 +53,9 @@ If you would like apply this function to multiple animal tracks, and you would l
 library(trackframe)
 
 #convert whatever representation of the data that you have to a trackframe object
-tf <- as.trackframe(data, id_col = 'animal_id')
+tf <- as.trackframe(data, id_col = 'track_id')
 
-#split the trackframe object by unique animal id
+#split the trackframe object by unique track id
 tf_split <- split_by_id(tf)
 
 # loop through each unique id and calculate each animal's average speed
@@ -82,7 +82,7 @@ if ('sf' %in% class(data)) {
   }
 } else {
   coords <- as.matrix(data[,c('x', 'y')])
-  track_id <- data$animal_id
+  track_id <- data$track_id
   timestamp <- data$t
 }
 

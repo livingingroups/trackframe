@@ -16,10 +16,10 @@ The trackframe package is designed to be complementary to more full featured geo
 
 ## Main advantages
 
-* The `trackframe` object is a flexible `data.frame` for storing animal track data; coordinates, times, and animal ids, are stored as columns.
+* The `trackframe` object is a flexible `data.frame` for storing animal track data; coordinates, times, and track (animal) ids, are stored as columns.
 * Multiple input object structures (e.g., `data.table`s, `tibble`s, `move2` objects, `sftrack` objects) can be easily coerced into `trackframe` objects.
 * A `trackframe` object can be easily backtransformed into its original data structure using `tf_backtransform()`.
-* Key columns, namely the x (easting) and y (northing) coordinates of each point, as well as the timestamp (date & time) and unique animal id, are stored as attributes and can be easily accessed by `easting()`, `northing()`, `time()`, and `id()`, regardless of the columns' actual names.
+* Key columns, namely the x (easting) and y (northing) coordinates of each point, as well as the timestamp (date & time) and unique track id, are stored as attributes and can be easily accessed by `easting()`, `northing()`, `time()`, and `id()`, regardless of the columns' actual names.
 * Coordinates are always stored as projected UTM easting/northing (for georeferenced data) or as x/y values on a Cartesian plane (for non georeferenced data, e.g., simulation data).
 * Coordinates are stored in simple numeric columns, allowing the user to perform vectorized R operations directly on the coordinates themselves
 * Trackframe's objects and functions integrate seamlessly with the travelpaths package.
@@ -61,7 +61,7 @@ average_speed_group_no_tf <- function(data) {
     # This part is for the vanilla dataframe
   } else {
     coords <- as.matrix(data[, c("x", "y")])
-    track_id <- data$animal_id
+    track_id <- data$track_id
     timestamp <- data$t
   }
   #  At this point, we have standardized coords, timestamp, and track_id objects
@@ -91,7 +91,7 @@ average_speed_group_tf <- function(data, ...) {
 
   # Automatically convert whatever input type is provided.
   tf <- as.trackframe(data, ...)
-  # id_col='animal_id' is only used for the dataframe conversion.
+  # id_col='track_id' is only used for the dataframe conversion.
   # track_id/animal_id is automatically detected from move2 and sftrack objects
 
   # Run the function over for each animal
@@ -113,7 +113,7 @@ df <- data.frame(
   x = rnorm(10),
   y = rnorm(10),
   t = 1:10,
-  animal_id = c(rep("a", 5), rep("b", 5))
+  track_id = c(rep("a", 5), rep("b", 5))
 )
 stopifnot(all.equal(
   average_speed_group_tf(df, crs = NA),

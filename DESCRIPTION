@@ -1,7 +1,7 @@
 Package: trackframe
 Type: Package
 Title: TrackFrame
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: c(
     person("Rainer", "Hirk", email = "Rainer.Hirk@quintik.at", role = "aut"),
     person("Florian", "Schwendinger", email = "Florian.Schwendinger@quintik.at", role = "aut"),
