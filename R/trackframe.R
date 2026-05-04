@@ -531,7 +531,7 @@ as.trackframe.sf <- function(
   }
 
   transformation_info <- attributes(data)
-  crs <- sf::st_crs(data)$input
+  crs <- list(...)][["crs"]] %||% sf::st_crs(data)$input
   transformation_info$crs_code <- crs
   data_attr <- attributes(data)
 
