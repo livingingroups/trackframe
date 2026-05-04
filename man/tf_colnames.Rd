@@ -36,7 +36,7 @@ tf_colnames(tf) <- value
 \arguments{
 \item{tf}{a trackframe}
 
-\item{value}{new column names. \code{tf_colnames} takes a
+\item{value}{new column naems. \code{tf_colnames} takes a
 named character vector with names \code{easting}, \code{northing}, \code{time}, and (opt) \code{id}.
 \code{X_col()} functions take a single string}
 }
