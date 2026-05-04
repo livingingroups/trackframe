@@ -83,10 +83,10 @@ as.trackframe(
 
 \method{as.trackframe}{sf}(
   data,
-  time_col = NULL,
+  time_col = tf_options("time_col"),
   easting_col = NULL,
   northing_col = NULL,
-  id_col = NULL,
+  id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
   ...

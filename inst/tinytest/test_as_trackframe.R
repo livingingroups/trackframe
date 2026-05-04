@@ -242,10 +242,11 @@ test_as_trackframe <- function(coerce_to = "base") {
     raccoon_vanilla_sf,
     suggest_utm_zone_crs(raccoon_vanilla_sf)
   )
-  expect_error(as.trackframe(raccoon_vanilla_sf))
+
   expect_silent(as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id"))
   raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp",
     id_col = "animal_id")
+  expect_equal(as.trackframe(raccoon_vanilla_sf), raccoon_vanilla_sf_tf)
   expect_inherits(raccoon_vanilla_sf_tf, "trackframe")
   expect_equal(NROW(raccoon_vanilla_sf_tf), NROW(raccoon_vanilla_sf))
   expect_equal(

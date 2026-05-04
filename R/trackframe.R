@@ -418,7 +418,7 @@ update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) 
   ))
 }
 
-update_col_arg <- function(data, arg_name, arg_value, sf_value) {
+update_sf_col_arg <- function(data, arg_name, arg_value, sf_value) {
   if (is.null(arg_value)) {
     arg_value <- sf_value
   } else {
@@ -446,10 +446,10 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  time_col <- update_col_arg(data, arg_name = "time_col", arg_value = time_col,
+  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
     sf_value = attr(data, "time_column"))
 
-  id_col <- update_col_arg(data, arg_name = "id_col", arg_value = id_col,
+  id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
     sf_value = attr(data, "track_id_column"))
 
   as.trackframe.sf(
@@ -476,7 +476,7 @@ as.trackframe.sftrack <- function(
   coerce_to = "base",
   ...
 ) {
-  time_col <- update_col_arg(data, arg_name = "time_col", arg_value = time_col,
+  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
     sf_value = attr(data, "time_col"))
 
   if (is.null(id_col)) {
@@ -520,12 +520,23 @@ as.trackframe.sf <- function(
   coerce_to = "base",
   ...
 ) {
+  assert_character(time_col)
+  assert_character(easting_col, null.ok = TRUE)
+  assert_character(northing_col, null.ok = TRUE)
+  assert_character(id_col)
+  assert_logical(sort)
+  assert_choice(
+    coerce_to,
+    choices = c("base", "data.table", "tibble"),
+    null.ok = TRUE
+  )
+
   if ('crs' %in% names(list(...))) {
     update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
   }
 
   transformation_info <- attributes(data)
-  crs <- list(...)][["crs"]] %||% sf::st_crs(data)$input
+  crs <- list(...)[["crs"]] %||% sf::st_crs(data)$input
   transformation_info$crs_code <- crs
   data_attr <- attributes(data)
 
@@ -536,7 +547,7 @@ as.trackframe.sf <- function(
   # error if colnames exist already in data
   if (tf_options("sf_easting_col") %in% colnames(data)) {
     stop(sprintf("Column %s set as sf_easting_col, but exists also in data.
-      Remove column %sin data, or change sf_easting_col using tf_options()",
+      Remove column %s in data, or change sf_easting_col using tf_options()",
         tf_options("sf_easting_col"), tf_options("sf_easting_col")))
   }
   if (tf_options("sf_northing_col") %in% colnames(data)) {
@@ -550,9 +561,10 @@ as.trackframe.sf <- function(
   } else if (tf_options("sf_easting_col") %in% easting_col) {
     easting_col <- tf_options("sf_easting_col")
   } else {
+    easting_col_orig <- easting_col
     easting_col <- easting_col[easting_col %in% colnames(data)][1]
     if (is.na(easting_col)) {
-      stop("easting_col argument(s): %s are not available in data.")
+      stop(sprintf("easting_col argument(s): %s are not available in data.", easting_col_orig))
     }
   }
 
@@ -561,9 +573,10 @@ as.trackframe.sf <- function(
   } else if (tf_options("sf_northing_col") %in% northing_col) {
     northing_col <- tf_options("sf_northing_col")
   } else {
+    northing_col_orig <- northing_col
     northing_col <- northing_col[northing_col %in% colnames(data)][1]
     if (is.na(northing_col)) {
-      stop("northing_col argument(s): %s are not available in data.")
+      stop(sprintf("northing_col argument(s): %s are not available in data.", northing_col_orig))
     }
   }
 
@@ -586,7 +599,7 @@ as.trackframe.sf <- function(
     sort = sort,
     coerce_to = coerce_to,
     crs = crs,
-    ...
+    list(...)[!names(list(...)) %in% "crs"]
   )
 }
 
