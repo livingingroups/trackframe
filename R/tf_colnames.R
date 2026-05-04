@@ -18,7 +18,8 @@
 #' @rdname tf_colnames
 tf_colnames <- function(tf) {
   assert_trackframe(tf)
-  unlist(attributes(tf)[key_cols])
+  key_col_order <- match(colnames(tf), attributes(tf)[key_cols])
+  unlist(attributes(tf)[key_cols[key_col_order]])
 }
 
 #' @export
