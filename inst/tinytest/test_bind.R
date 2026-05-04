@@ -633,6 +633,28 @@ expect_most_elements_equal(
   c("transformation_info", "row.names")
 )
 
+## checking inverse ----
+
+rbind_dt6_tf1 <- rbind(dt6, tf1)
+expect_inherits(rbind_dt6_tf1, "trackframe")
+expect_inherits(rbind_dt6_tf1, "data.table")
+expect_equal(sort(rbind_dt6_tf1), sort(rbind_tf1_dt6), check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(rbind_dt6_tf1),
+  attributes(dt6),
+  c("transformation_info", "row.names")
+)
+
+rbind_tib6_tf1 <- rbind(tib6, tf1)
+expect_inherits(rbind_tib6_tf1, "trackframe")
+expect_inherits(rbind_tib6_tf1, "tbl_df")
+expect_equal(sort(rbind_tib6_tf1), sort(rbind_tf1_tib6), check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(rbind_tib6_tf1),
+  attributes(tib6),
+  c("transformation_info", "row.names")
+)
+
 ## merge ----
 df4 <- as.data.frame(tf4)
 expect_error(
@@ -669,6 +691,28 @@ expect_most_elements_equal(
   c("transformation_info", "names", "row.names")
 )
 
+## checking inverse ----
+
+merge_dt4_tf1 <- merge(dt4, tf1)
+expect_inherits(merge_dt4_tf1, "trackframe")
+expect_inherits(merge_dt4_tf1, "data.table")
+expect_equal(sort(merge_dt4_tf1), sort(merge_tf1_dt4), check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(merge_dt4_tf1),
+  attributes(dt4),
+  c("transformation_info", "row.names")
+)
+
+merge_tib4_tf1 <- merge(tib4, tf1)
+expect_inherits(merge_tib4_tf1, "trackframe")
+expect_inherits(merge_tib4_tf1, "tbl_df")
+expect_equal(sort(merge_tib4_tf1), sort(merge_tf1_tib4), check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(merge_tib4_tf1),
+  attributes(tib4),
+  c("transformation_info", "row.names")
+)
+
 ## cbind ----
 cbind_tf1_dt4 <- trackframe:::cbind.trackframe(tf1, dt4)
 expect_equal(cbind_tf1_dt4, cbind_tf1_tf4)
@@ -696,6 +740,29 @@ expect_most_elements_equal(
   attributes(tf1),
   c("transformation_info", "names")
 )
+
+## checking inverse ----
+
+cbind_dt4_tf1 <- cbind(dt4, tf1)
+expect_inherits(cbind_dt4_tf1, "trackframe")
+expect_inherits(cbind_dt4_tf1, "data.table")
+expect_equal(cbind_dt4_tf1, cbind_tf1_dt4[, colnames(cbind_dt4_tf1)], check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(cbind_dt4_tf1),
+  attributes(dt4),
+  c("transformation_info", "names")
+)
+
+cbind_tib4_tf1 <- cbind(tib4, tf1)
+expect_inherits(cbind_tib4_tf1, "trackframe")
+expect_inherits(cbind_tib4_tf1, "tbl_df")
+expect_equal(cbind_tib4_tf1, cbind_tf1_tib4[, colnames(cbind_tib4_tf1)], check.attributes = FALSE)
+expect_most_elements_equal(
+  attributes(cbind_tib4_tf1),
+  attributes(tib4),
+  c("transformation_info", "names")
+)
+
 
 # Rename key cols  ----
 
