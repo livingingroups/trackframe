@@ -10,7 +10,9 @@
   tf_cn <- tf_colnames(x)
   attr_names <- names(x_attr)
   x_attr[names(x_attr) %in% c("names", "row.names", "class")] <- NULL
-  class2 <- attr(x, "class")[2]
+  class_tf <- attr(x, "class")
+  class_tf2 <- class_tf[class_tf %in% c("data.frame", "data.table", "tbl_df", "tbl")]
+  class2 <- class_tf2[1]
   if (is.null(drop)) {
     if (class2 == "data.frame") {
       drop <- TRUE
