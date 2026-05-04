@@ -3,7 +3,6 @@
 #' Take a sequence of trackframes to combine rows.
 #'
 #' @param ... objects of class trackframe.
-#' @param sort logical, if true (default), data will be sorted by id_col and then by time_col.
 #'
 #' @return an object of class trackframe
 #' @export
@@ -17,24 +16,26 @@
 #' tf1_tf2 <- rbind(tf1, tf2)
 #' tf1_tf2
 #' class(tf1_tf2)
-rbind.trackframe <- function(..., sort = FALSE) {
+rbind.trackframe <- function(...) {
   objl <- list(...)
   obj_attr <- attributes(objl[[1]])
   # check if all trackframes
   is_trackframe <- sapply(objl, inherits, "trackframe")
   if (sum(is_trackframe) >= 2) {
     # check crs
-    obj_crs <- obj_attr[["crs"]]
-    crs_equal <- sapply(objl[is_trackframe], function(x) {
-      crs_x <- attributes(x)[["crs"]]
-      if (is.na(obj_crs) || is.na(crs_x)) {
-        warning("crs attribute is NA for at least one object.
+    crs_infos <- sapply(objl[is_trackframe], function(x) attributes(x)[["crs"]])
+    if (!all(is.na(crs_infos))) {
+      obj_crs <- obj_attr[["crs"]]
+      crs_equal <- sapply(crs_infos, function(crs_x) {
+        if (is.na(obj_crs) || is.na(crs_x)) {
+          warning("crs attribute is NA for at least one object.
           Ensure all inputs share the same crs.")
-        return(TRUE)
-      }
-      isTRUE(all.equal(obj_crs, crs_x))
-    })
-    stopifnot("crs of trackframes do not coincide" = all(crs_equal))
+          return(TRUE)
+        }
+        isTRUE(all.equal(obj_crs, crs_x))
+      })
+      stopifnot("crs of trackframes do not coincide" = all(crs_equal))
+    }
 
     #check colnames - if not equal match according to tf cols
     if (length(unique(lapply(objl, function(x) colnames(x)))) > 1) {
@@ -53,8 +54,10 @@ rbind.trackframe <- function(..., sort = FALSE) {
 
   # check time stamp format
   tcol <- time_col(objl[[1]])
-  stopifnot("Class of time cols differ." =
-      length(unique(lapply(objl, function(x) class(x[[tcol]])))) == 1)
+  if (length(unique(lapply(objl, function(x) class(x[[tcol]])))) != 1) {
+    stop(sprintf("Class of time cols differ: Classes %s",
+        paste(unique(as.character(sapply(objl, function(x) class(x[[tcol]])))), collapse = ", ")))
+  }
 
   #remove trackframe class for correct S3 dispatch
   objl <- lapply(objl, function(x) {
@@ -66,10 +69,6 @@ rbind.trackframe <- function(..., sort = FALSE) {
   obj_attr$row.names <- attr(obj, "row.names")
   obj_attr$transformation_info <- NULL
   attributes(obj) <- obj_attr
-  #sort
-  if (isTRUE(sort)) {
-    obj <- obj[order(id(obj), time(obj)), ]
-  }
   return(obj)
 }
 
@@ -164,7 +163,7 @@ merge.trackframe <- function(x, y, by = NULL, by.x = NULL, by.y = NULL, all = FA
   assert_logical(all.x)
   assert_logical(all.y)
   assert_logical(sort)
-  tf_cols <- tf_colnames(x)[c("time", "id", "easting", "northing")]
+  tf_cols <- tf_colnames(x)
   x_attr <- attributes(x)
 
   # if by is set explicitely, we cannnot check trackframe specific attributes
@@ -173,24 +172,30 @@ merge.trackframe <- function(x, y, by = NULL, by.x = NULL, by.y = NULL, all = FA
     if (!is.null(by)) {
       by.x <- by
       by.y <- by
-    } else if ((is.null(by.x) && (is.null(by.y)))) {
-      by.x <- tf_colnames(x)[c("time", "id", "easting", "northing")]
-      by.y <- tf_colnames(y)[c("time", "id", "easting", "northing")]
     } else {
-      stop("Use by, or by.x and by.y to specify the merge columns. Default is tf_colnames(x).")
+      if (is.null(by.x)) {
+        by.x <- tf_colnames(x)
+      }
+      if (is.null(by.y)) {
+        by.y <- tf_colnames(y)
+      }
     }
 
     # check crs
-    if (isTRUE(attr(x, "crs") != attr(y, "crs")) || any(is.na(c(attr(x, "crs"), attr(y, "crs"))))) {
-      warning("crs of trackframes do not coincide")
+    if (!all(is.na(c(attr(x, "crs"), attr(y, "crs"))))) {
+      if (isTRUE(attr(x, "crs") != attr(y, "crs")) ||
+          any(is.na(c(attr(x, "crs"), attr(y, "crs"))))) {
+        stop("crs of trackframes do not coincide")
+      }
     }
 
     # check time stamp format
     if (!isTRUE(all.equal(class(x[[time_col(x)]]), class(y[[time_col(y)]]))) &&
         tf_cols["time"] %in% by.x) {
-      warning("Class of time cols differ for x and y.")
+      warning(sprintf("Class of time cols differ for x (%s) and y (%s).",
+          paste(class(x[[time_col(x)]]), collapse = ", "),
+          paste(class(y[[time_col(y)]]), collapse = ", ")))
     }
-
     class(y) <- setdiff(class(y), "trackframe")
   } else { # no trackframe
     if (!is.null(by)) {
