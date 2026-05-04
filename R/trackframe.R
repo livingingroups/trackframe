@@ -541,13 +541,13 @@ as.trackframe.sf <- function(
   colnames(x_y) <- c(tf_options("sf_easting_col"), tf_options("sf_northing_col"))
   # error if colnames exist already in data
   if (tf_options("sf_easting_col") %in% colnames(data)) {
-    stop(sprintf("Column %s set as sf_easting_col, but exists also in data. No Overwriting.
-      Remove column %sin data, or change sf_easting_col in tf_options()",
+    stop(sprintf("Column %s set as sf_easting_col, but exists also in data.
+      Remove column %sin data, or change sf_easting_col using tf_options()",
         tf_options("sf_easting_col"), tf_options("sf_easting_col")))
   }
   if (tf_options("sf_northing_col") %in% colnames(data)) {
-    stop(sprintf("Column %s set as sf_northing_col, but exists also in data. No Overwriting.
-      Remove column %s in data, or change sf_northing_col in tf_options()",
+    stop(sprintf("Column %s set as sf_northing_col, but exists also in data.
+      Remove column %s in data, or change sf_northing_col using tf_options()",
         tf_options("sf_northing_col"), tf_options("sf_northing_col")))
   }
 
