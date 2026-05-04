@@ -512,20 +512,14 @@ as.trackframe.sftrack <- function(
 #' @rdname as_trackframe
 as.trackframe.sf <- function(
   data,
-  time_col = NULL,
+  time_col = tf_options("time_col"),
   easting_col = NULL,
   northing_col = NULL,
-  id_col = NULL,
+  id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
   ...
 ) {
-  if (is.null(time_col)) {
-    stop("time_col needs to be specified for objects of class sf")
-  }
-  if (is.null(id_col)) {
-    stop("id_col needs to be specified for objects of class sf")
-  }
   if ('crs' %in% names(list(...))) {
     update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
   }
