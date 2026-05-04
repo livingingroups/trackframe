@@ -44,7 +44,8 @@ rbind.trackframe <- function(...) {
         if (inherits(x, "trackframe")) {
           if (!isTRUE(all.equal(tf_cn, tf_colnames(x)))) {
             tf_colnames(x) <- tf_cn
-            warning("Names of key columns of trackframes do not coincide")
+            warning(sprintf("Names of key columns of trackframes do not coincide.
+              Using key cols %s from the first trackframe.", paste(unlist(tf_cn), collapse = ", ")))
           }
         }
         x
