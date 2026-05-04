@@ -46,7 +46,8 @@ expect_inherits(tf2, "data.table")
 
 dt2 <- as.data.table(tf2)
 expect_equal(tf2[, tf_colnames(tf2), with = TRUE], dt2[, tf_colnames(tf2)])
-expect_equal(tf2[, tf_colnames(tf2), with = FALSE], dt2[, tf_colnames(tf2), with = FALSE], check.attributes = FALSE)
+expect_equal(tf2[, tf_colnames(tf2), with = FALSE], dt2[, tf_colnames(tf2), with = FALSE],
+  check.attributes = FALSE)
 tf3 <- tf2[, tf_colnames(tf2), with = FALSE]
 expect_inherits(tf3, "trackframe")
 expect_inherits(tf3, "data.table")

@@ -15,9 +15,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "animal_id"
   )
 )
@@ -39,9 +39,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "animal_id"
   )
 )
@@ -66,9 +66,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "ep",
-    northing = "np",
     time = "time2",
+    northing = "np",
+    easting = "ep",
     id = "id_col2"
   )
 )
@@ -86,9 +86,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "ep",
-    northing = "np",
     time = "time2",
+    northing = "np",
+    easting = "ep",
     id = "id_col2"
   )
 )
@@ -104,9 +104,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "ep",
-    northing = "np",
     time = "time3",
+    northing = "np",
+    easting = "ep",
     id = "id_col4"
   )
 )
@@ -122,9 +122,9 @@ expect_equal(
 expect_equal(
   tf_colnames(dt),
   c(
-    easting = "ep",
-    northing = "np",
     time = "time4",
+    northing = "np",
+    easting = "ep",
     id = "id_col6"
   )
 )
@@ -138,9 +138,9 @@ expect_equal(
 expect_equal(
   tf_colnames(tib),
   c(
-    easting = "ep",
-    northing = "np",
     time = "time5",
+    northing = "np",
+    easting = "ep",
     id = "id_col8"
   )
 )

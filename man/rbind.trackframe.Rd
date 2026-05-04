@@ -4,12 +4,10 @@
 \alias{rbind.trackframe}
 \title{Combine trackframes by rows}
 \usage{
-\method{rbind}{trackframe}(..., sort = FALSE)
+\method{rbind}{trackframe}(...)
 }
 \arguments{
 \item{...}{objects of class trackframe.}
-
-\item{sort}{logical, if true (default), data will be sorted by id_col and then by time_col.}
 }
 \value{
 an object of class trackframe

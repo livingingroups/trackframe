@@ -9,9 +9,9 @@ tf <- as.trackframe(df_mini, crs = NA)
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "id"
   )
 )
@@ -22,9 +22,9 @@ tf_colnames(tf)[['id']] <- 'animal_id'
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "animal_id"
   )
 )
@@ -36,9 +36,9 @@ tf_colnames(tf)['id'] <- 'ind_id'
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "ind_id"
   )
 )
@@ -48,9 +48,9 @@ tf$new_id_col <- c('a', 'a', 'b', 'b', 'b')
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "ind_id"
   )
 )
@@ -64,9 +64,9 @@ tf <- as.trackframe(tf, id_col = 'new_id_col')
 expect_equal(
   tf_colnames(tf),
   c(
-    easting = "easting",
-    northing = "northing",
     time = "time",
+    northing = "northing",
+    easting = "easting",
     id = "new_id_col"
   )
 )
@@ -82,6 +82,8 @@ tf_colnames(tf) <- c(
   id = "id_col"
 )
 
+
+tf <- tf[, c(3, 2, 1, 5, 4)]
 expect_equal(
   tf_colnames(tf),
   c(

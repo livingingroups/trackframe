@@ -23,7 +23,7 @@ expect_equal(easting(tf), orig_right)
 expect_equal(northing(tf), orig_up)
 expect_equal(
   tf_colnames(tf),
-  c(easting = "right", northing = "up", time = "when", id = "who")
+  c(time = "when", northing = "up", easting = "right", id = "who")
 )
 
 # update which columns are used as key columns
@@ -39,7 +39,7 @@ expect_equal(easting(tf), orig_right * 10)
 expect_equal(northing(tf), orig_up * 10)
 expect_equal(
   tf_colnames(tf),
-  c(easting = "right_10x", northing = "up_10x", time = "when", id = "who")
+  c(time = "when", id = "who", northing = "up_10x", easting = "right_10x")
 )
 
 # check for warning if coords change, but crs not provided
