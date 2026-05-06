@@ -580,8 +580,18 @@ as.trackframe.sf <- function(
     }
   }
 
-  data[[tf_options("sf_easting_col")]] <- x_y[, 1]
-  data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  x_orientation <- sf:::crs_parameters(st_crs(crs))$axes$orientation[1]
+  if (is.na(crs)) {
+    warning("crs = NA. Assume traditional GIS order: Easting/Northing.")
+    data[[tf_options("sf_easting_col")]] <- x_y[, 1]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  } else if (x_orientation == 3) {
+    data[[tf_options("sf_easting_col")]] <- x_y[, 1]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  } else {
+    data[[tf_options("sf_easting_col")]] <- x_y[, 2]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 1]
+  }
   data <- as.data.frame(data)
 
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
