@@ -1,5 +1,5 @@
 #' @import checkmate tinyplot
-#' @importFrom sf st_coordinates st_as_sf st_transform
+#' @importFrom sf st_coordinates st_as_sf st_transform st_crs
 #' @importFrom stats runif time setNames as.formula
 #' @importFrom utils tail modifyList
 #' @importFrom methods as

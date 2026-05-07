@@ -5,7 +5,7 @@
 \alias{sftrack_mini}
 \title{Simulated Travel Path}
 \format{
-An object of class \code{sftrack} (inherits from \code{sf}, \code{data.frame}) with 5 rows and 6 columns.
+An object of class \code{sftrack} (inherits from \code{sf}, \code{data.frame}) with 5 rows and 4 columns.
 }
 \usage{
 sftrack_mini

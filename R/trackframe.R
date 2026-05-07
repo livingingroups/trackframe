@@ -403,6 +403,35 @@ as.trackframe.matrix <- function(
   )
 }
 
+
+update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) {
+  warning(sprintf(
+    c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in
+      sf type object. Using %s."
+    ),
+    arg_name,
+    arg_value,
+    sf_value,
+    tf_value
+  ))
+}
+
+update_sf_col_arg <- function(data, arg_name, arg_value, sf_value) {
+  if (is.null(arg_value)) {
+    arg_value <- sf_value
+  } else {
+    arg_value <- arg_value[arg_value %in% colnames(data)][1]
+    if (is.na(arg_value)) {
+      stop(sprintf("%s argument(s): %s are not available in data.", arg_name, arg_value))
+    }
+    if (isTRUE(arg_value != sf_value)) {
+      update_warn_if_conflicting(arg_name, arg_value, sf_value, arg_value)
+    }
+  }
+  return(arg_value)
+}
+
+
 #' @export
 #' @rdname as_trackframe
 as.trackframe.move2 <- function(
@@ -415,57 +444,20 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  time_index <- attr(data, "time_column")
+  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
+    sf_value = attr(data, "time_column"))
 
-  if (!is.null(time_col)) {
-    log_debug(
-      paste(
-        "move2 input so using implicitly configured time column %s",
-        "rather that time_col argument %s"
-      ),
-      time_index,
-      dput(time_col)
-    )
-  } else {
-    log_debug(
-      paste(
-        "move2 input so using implicitly configured time column %s",
-      ),
-      time_index
-    )
-  }
-  log_debug("Use move2::mt_set_time_column to adjust time column.")
+  id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
+    sf_value = attr(data, "track_id_column"))
 
-  # move2: The `track_id_column` attribute should be a <character> of length 1
-  id_col <- attr(data, "track_id_column")
-  transformation_info <- attributes(data)
-  if ('crs' %in% names(list(...))) {
-    stop("crs provided as arg for sf arg. this val will be ignored")
-  }
-  crs <- sf::st_crs(data)$input
-  transformation_info$crs_code <- crs
-
-  data_attr <- attributes(data)
-  cols <- setdiff(colnames(data), attr(data, "sf_column"))
-  data <- data[, cols]
-
-  x_y <- sf::st_coordinates(data[[attr(data, "sf_column")]])
-  x_y[is.nan(x_y)] <- NA
-  data[["easting"]] <- x_y[, 1]
-  data[["northing"]] <- x_y[, 2]
-
-  class(data) <- c("data.frame")
-  attr(data, "row.names") <- data_attr[["row.names"]]
-  attr(data, "transformation_info") <- transformation_info
-  as.trackframe(
+  as.trackframe.sf(
     data,
-    time_col = time_index,
-    easting_col = "easting",
-    northing_col = "northing",
+    time_col = time_col,
+    easting_col = easting_col,
+    northing_col = northing_col,
     id_col = id_col,
     sort = sort,
     coerce_to = coerce_to,
-    crs = crs,
     ...
   )
 }
@@ -482,11 +474,9 @@ as.trackframe.sftrack <- function(
   coerce_to = "base",
   ...
 ) {
-  if (is.null(time_col)) {
-    time_index <- attr(data, "time_col")
-  } else {
-    time_index <- time_col
-  }
+  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
+    sf_value = attr(data, "time_col"))
+
   if (is.null(id_col)) {
     id_col <- "id"
     if (inherits(data[[attr(data, "group_col")]], "c_grouping")) {
@@ -496,40 +486,109 @@ as.trackframe.sftrack <- function(
       data[[attr(data, "group_col")]],
       "active_group"
     )
+  } else {
+    id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
+      sf_value = attr(data, "group_col"))
   }
+
+  as.trackframe.sf(
+    data,
+    time_col = time_col,
+    easting_col = easting_col,
+    northing_col = northing_col,
+    id_col = id_col,
+    sort = sort,
+    coerce_to = coerce_to,
+    ...
+  )
+}
+
+
+#' @export
+#' @rdname as_trackframe
+as.trackframe.sf <- function(
+  data,
+  time_col = tf_options("time_col"),
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = tf_options("id_col"),
+  sort = TRUE,
+  coerce_to = "base",
+  ...
+) {
+  assert_character(time_col)
+  assert_character(easting_col, null.ok = TRUE)
+  assert_character(northing_col, null.ok = TRUE)
+  assert_character(id_col)
+  assert_logical(sort)
+  assert_choice(
+    coerce_to,
+    choices = c("base", "data.table", "tibble"),
+    null.ok = TRUE
+  )
+
   if ('crs' %in% names(list(...))) {
-    stop("crs provided as arg for sf arg. this val will be ignored")
+    update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
   }
+
   transformation_info <- attributes(data)
-  crs <- sf::st_crs(data)$input
+  crs <- list(...)[["crs"]] %||% sf::st_crs(data)$input
+  transformation_info$crs_code <- crs
   data_attr <- attributes(data)
-  cols <- setdiff(colnames(data), attr(data, "sf_column"))
-  data <- data[, cols]
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  easting_col <- (easting_col %||% "easting")[1]
-  northing_col <- (northing_col %||% "northing")[1]
-
-  update_warn_if_overwriting <- function(df, arg_name, col_name, value) {
-    if (col_name %in% colnames(df) && !all(df[[col_name]] %||% 1 == value)) {
-      warning(sprintf(
-        c(
-          "Column %s configured as %s, ",
-          "but existing data does not match sf coordinates. ",
-          "Overwriting."
-        ),
-        col_name,
-        arg_name
-      ))
-    }
-    df[[col_name]] <- value
-    df
+  # set colnames as defined in tf_options() #nolint 
+  colnames(x_y) <- c(tf_options("sf_easting_col"), tf_options("sf_northing_col"))
+  # error if colnames exist already in data
+  if (tf_options("sf_easting_col") %in% colnames(data)) {
+    stop(sprintf("Column %s set as sf_easting_col, but exists also in data.
+      Remove column %s in data, or change sf_easting_col using tf_options()",
+        tf_options("sf_easting_col"), tf_options("sf_easting_col")))
   }
-  data <- data |>
-    update_warn_if_overwriting("easting_col", easting_col, x_y[, 1]) |>
-    update_warn_if_overwriting("northing_col", northing_col, x_y[, 2]) |>
-    as.data.frame()
+  if (tf_options("sf_northing_col") %in% colnames(data)) {
+    stop(sprintf("Column %s set as sf_northing_col, but exists also in data.
+      Remove column %s in data, or change sf_northing_col using tf_options()",
+        tf_options("sf_northing_col"), tf_options("sf_northing_col")))
+  }
+
+  if (is.null(easting_col)) {
+    easting_col <- tf_options("sf_easting_col")
+  } else if (tf_options("sf_easting_col") %in% easting_col) {
+    easting_col <- tf_options("sf_easting_col")
+  } else {
+    easting_col_orig <- easting_col
+    easting_col <- easting_col[easting_col %in% colnames(data)][1]
+    if (is.na(easting_col)) {
+      stop(sprintf("easting_col argument(s): %s are not available in data.", easting_col_orig))
+    }
+  }
+
+  if (is.null(northing_col)) {
+    northing_col <- tf_options("sf_northing_col")
+  } else if (tf_options("sf_northing_col") %in% northing_col) {
+    northing_col <- tf_options("sf_northing_col")
+  } else {
+    northing_col_orig <- northing_col
+    northing_col <- northing_col[northing_col %in% colnames(data)][1]
+    if (is.na(northing_col)) {
+      stop(sprintf("northing_col argument(s): %s are not available in data.", northing_col_orig))
+    }
+  }
+
+  x_orientation <- sf:::crs_parameters(st_crs(crs))$axes$orientation[1]
+  if (is.na(crs)) {
+    warning("crs = NA. Assume traditional GIS order: Easting/Northing.")
+    data[[tf_options("sf_easting_col")]] <- x_y[, 1]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  } else if (x_orientation == 3) {
+    data[[tf_options("sf_easting_col")]] <- x_y[, 1]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 2]
+  } else {
+    data[[tf_options("sf_easting_col")]] <- x_y[, 2]
+    data[[tf_options("sf_northing_col")]] <- x_y[, 1]
+  }
+  data <- as.data.frame(data)
 
   if (!is.null(data$sft_group) && coerce_to %||% "" == "tibble") {
     data$sft_group <- make_unique_id(data$sft_group)
@@ -539,14 +598,14 @@ as.trackframe.sftrack <- function(
   attr(data, "transformation_info") <- transformation_info
   as.trackframe(
     data,
-    time_col = time_index,
+    time_col = time_col,
     easting_col = easting_col,
     northing_col = northing_col,
     id_col = id_col,
     sort = sort,
     coerce_to = coerce_to,
     crs = crs,
-    ...
+    list(...)[!names(list(...)) %in% "crs"]
   )
 }
 

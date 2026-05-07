@@ -7,6 +7,7 @@
 \alias{as.trackframe.matrix}
 \alias{as.trackframe.move2}
 \alias{as.trackframe.sftrack}
+\alias{as.trackframe.sf}
 \alias{as.trackframe.trackframe}
 \title{Convert an object to a \code{trackframe}}
 \usage{
@@ -75,6 +76,17 @@ as.trackframe(
   easting_col = NULL,
   northing_col = NULL,
   id_col = NULL,
+  sort = TRUE,
+  coerce_to = "base",
+  ...
+)
+
+\method{as.trackframe}{sf}(
+  data,
+  time_col = tf_options("time_col"),
+  easting_col = NULL,
+  northing_col = NULL,
+  id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
   ...

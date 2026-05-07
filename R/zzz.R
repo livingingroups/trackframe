@@ -101,6 +101,14 @@ log_info <- function(
       "individual_local_identifier"
     )
   )
+  tf_options(
+    "sf_easting_col",
+    "easting"
+  )
+  tf_options(
+    "sf_northing_col",
+    "northing"
+  )
   logger::log_formatter(logger::formatter_sprintf, namespace = "trackframe")
 }
 
