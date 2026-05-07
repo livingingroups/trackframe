@@ -102,7 +102,7 @@ id_hash <- function(
   } else {
     cols <- c(time_col, id_col)
   }
-  apply(data[, cols, with = FALSE, silent = TRUE], 1, digest)
+  apply(data[, cols, with = FALSE], 1, digest)
 }
 
 

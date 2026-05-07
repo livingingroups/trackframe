@@ -5,7 +5,7 @@
 
 #' @noRd
 #' @export
-"[.trackframe" <- function(x, i, j, drop = NULL, silent = FALSE, ...) {
+"[.trackframe" <- function(x, i, j, drop = NULL, ...) {
   x_attr <- attributes(x)
   tf_cn <- tf_colnames(x)
   attr_names <- names(x_attr)
@@ -44,13 +44,9 @@
     if (all(tf_cn %in% colnames(obj))) {
       attributes(obj) <- c(attributes(obj), x_attr)[attr_names]
     } else {
-      if (silent == FALSE) {
         class(obj) <- class(obj)[!class(obj) %in% "trackframe"]
         attributes(obj)[c("time", "easting", "northing", "id", "crs", "crs_type",
             "transformation_info")] <- NULL
-        warning(sprintf("Key col %s removed. Dropping class trackframe.\n",
-            tf_cn[!tf_cn %in% colnames(obj)]))
-      }
     }
   }
   return(obj)

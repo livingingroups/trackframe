@@ -805,7 +805,7 @@ expect_most_elements_equal(
 
 
 # matrix
-m1 <- as.matrix(tf1[, 2:3, silent = TRUE])
+m1 <- as.matrix(tf1[, 2:3])
 colnames(m1) <- c("A", "B")
 cbind_tf1_m1 <- cbind(tf1, m1)
 expect_inherits(cbind_tf1_m1, "trackframe")

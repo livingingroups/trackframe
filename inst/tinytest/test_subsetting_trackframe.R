@@ -110,12 +110,12 @@ expect_true(!any(class(df_tf_mini_time) %in% "trackframe"))
 expect_equal(df_tf_mini_time, df_mini[, "time"])
 
 dt_tf_mini_time <- dt_tf_mini[, "time"]
-expect_warning(dt_tf_mini[, "time"])
+expect_silent(dt_tf_mini[, "time"])
 expect_true(!any(class(dt_tf_mini_time) %in% "trackframe"))
 expect_equal(dt_tf_mini_time, dt_mini[, "time"])
 
 tbl_tf_mini_time <- tbl_tf_mini[, "time"]
-expect_warning(tbl_tf_mini[, "time"])
+expect_silent(tbl_tf_mini[, "time"])
 expect_true(!any(class(tbl_tf_mini_time) %in% "trackframe"))
 expect_equal(tbl_tf_mini_time, tbl_mini[, "time"])
 
