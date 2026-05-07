@@ -422,12 +422,12 @@ update_sf_col_arg <- function(data, arg_name, arg_value, sf_value) {
   if (is.null(arg_value)) {
     arg_value <- sf_value
   } else {
-    if (arg_value != sf_value) {
-      update_warn_if_conflicting(arg_name, arg_value, sf_value, arg_value)
-    }
     arg_value <- arg_value[arg_value %in% colnames(data)][1]
     if (is.na(arg_value)) {
       stop(sprintf("%s argument(s): %s are not available in data.", arg_name, arg_value))
+    }
+    if (isTRUE(arg_value != sf_value)) {
+      update_warn_if_conflicting(arg_name, arg_value, sf_value, arg_value)
     }
   }
   return(arg_value)
@@ -489,10 +489,8 @@ as.trackframe.sftrack <- function(
       "active_group"
     )
   } else {
-    update_warn_if_conflicting("id_col", id_col, attr(data, "group_col"), id_col)
-    if (!id_col %in% colnames(data)) {
-      stop(sprintf("id_col %s not available in data.", id_col))
-    }
+    id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
+                                  sf_value = attr(data, "group_col"))
   }
 
   as.trackframe.sf(
