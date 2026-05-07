@@ -490,7 +490,7 @@ as.trackframe.sftrack <- function(
     )
   } else {
     id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
-                                  sf_value = attr(data, "group_col"))
+      sf_value = attr(data, "group_col"))
   }
 
   as.trackframe.sf(

@@ -152,10 +152,9 @@ test_as_trackframe <- function(coerce_to = "base") {
     attr(move2_ex, "time_column"),
     attr(move2_ex_bt, "time_column")
   )
-  
+
   expect_silent(as.trackframe(move2_ex, time_col = tf_options("time_col"),
-                              id_col = c("id", "id2", "individual-local-identifier"),
-                              coerce_to = coerce_to))
+      id_col = c("id", "id2", "individual-local-identifier"), coerce_to = coerce_to))
 
   #sftrack
   library("sftrack")
@@ -226,14 +225,15 @@ test_as_trackframe <- function(coerce_to = "base") {
     time(raccoon_tf),
     raccoon_sftrack[[attr(raccoon_sftrack, "time_col")]]
   )
-  
+
   expect_silent(suppressWarnings(as.trackframe(raccoon_sftrack,
-    time_col = c("t", "timestamp", "time3"), id_col = tf_options("id_col"), coerce_to = coerce_to)))
+        time_col = c("t", "timestamp", "time3"), id_col = tf_options("id_col"),
+        coerce_to = coerce_to)))
   expect_warning(as.trackframe(raccoon_sftrack, time_col = c("t", "timestamp", "time3"),
-    id_col = tf_options("id_col"), coerce_to = coerce_to))
+      id_col = tf_options("id_col"), coerce_to = coerce_to))
   expect_silent(as.trackframe(raccoon_sftrack, time_col = c("t", "time", "time3"),
-    id_col = NULL, coerce_to = coerce_to))
-  
+      id_col = NULL, coerce_to = coerce_to))
+
   #backtransformation
   sftrack_bt <- tf_as_sftrack(raccoon_tf[!is.na(northing(raccoon_tf)), ])
   sftrack_no_na <- raccoon_sftrack[!is.na(raccoon_sftrack$longitude), ]
