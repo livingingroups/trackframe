@@ -44,9 +44,9 @@
     if (all(tf_cn %in% colnames(obj))) {
       attributes(obj) <- c(attributes(obj), x_attr)[attr_names]
     } else {
-        class(obj) <- class(obj)[!class(obj) %in% "trackframe"]
-        attributes(obj)[c("time", "easting", "northing", "id", "crs", "crs_type",
-            "transformation_info")] <- NULL
+      class(obj) <- class(obj)[!class(obj) %in% "trackframe"]
+      attributes(obj)[c("time", "easting", "northing", "id", "crs", "crs_type",
+          "transformation_info")] <- NULL
     }
   }
   return(obj)
