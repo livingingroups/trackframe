@@ -1,9 +1,4 @@
-library(tinytest)
-library(trackframe)
-
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
-  base::`[.data.frame`(x, i, j, drop = drop)
-}
+"[.data.frame" <- trackframe:::`[.data.frame`
 
 test_sort <- function(coerce_to) {
   df <- tf_as_xyt(trackframe::tf_mini)
@@ -29,6 +24,7 @@ lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
 
 
 # test set_facet_ncol
+set_facet_ncol <- trackframe:::set_facet_ncol
 expect_equal(set_facet_ncol(1), 1)
 expect_equal(set_facet_ncol(2), 2)
 expect_equal(set_facet_ncol(3), 3)

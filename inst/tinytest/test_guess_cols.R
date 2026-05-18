@@ -1,9 +1,4 @@
-library(tinytest)
-library(trackframe)
-
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
-  base::`[.data.frame`(x, i, j, drop = drop)
-}
+"[.data.frame" <- trackframe:::`[.data.frame`
 
 test_guess_all_cols <- function() {
   # duplicated guesses

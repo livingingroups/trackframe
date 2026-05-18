@@ -12,8 +12,11 @@ deduping(tf, cols = tf_colnames(tf))
 \item{cols}{determines the unique identifier. Default are the key columns provided by
 tf_colnames(tf).}
 }
+\value{
+an object of class trackframe
+}
 \description{
-This function removes duplicated entries form objects of class trackframe.
+This function removes duplicated entries from objects of class trackframe.
 }
 \examples{
 tf1 <- trackframe::tf_mini

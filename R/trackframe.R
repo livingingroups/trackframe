@@ -266,7 +266,7 @@ as.trackframe.data.frame <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs = NULL,
+  crs = tf_options("crs"),
   ...
 ) {
   cn_input <- colnames(data)
@@ -387,7 +387,7 @@ as.trackframe.matrix <- function(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs = NULL,
+  crs = tf_options("crs"),
   ...
 ) {
   as.trackframe(
@@ -404,9 +404,15 @@ as.trackframe.matrix <- function(
 }
 
 
-update_warn_if_conflicting <- function(arg_name, arg_value, sf_value, tf_value) {
+update_warn_if_conflicting <- function(
+  arg_name,
+  arg_value,
+  sf_value,
+  tf_value
+) {
   warning(sprintf(
-    c("Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in
+    c(
+      "Conflicting %s info provided: %s provided as an arg to as.trackframe, but %s implicit in
       sf type object. Using %s."
     ),
     arg_name,
@@ -422,7 +428,11 @@ update_sf_col_arg <- function(data, arg_name, arg_value, sf_value) {
   } else {
     arg_value <- arg_value[arg_value %in% colnames(data)][1]
     if (is.na(arg_value)) {
-      stop(sprintf("%s argument(s): %s are not available in data.", arg_name, arg_value))
+      stop(sprintf(
+        "%s argument(s): %s are not available in data.",
+        arg_name,
+        arg_value
+      ))
     }
     if (isTRUE(arg_value != sf_value)) {
       update_warn_if_conflicting(arg_name, arg_value, sf_value, arg_value)
@@ -444,11 +454,19 @@ as.trackframe.move2 <- function(
   coerce_to = "base",
   ...
 ) {
-  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
-    sf_value = attr(data, "time_column"))
+  time_col <- update_sf_col_arg(
+    data,
+    arg_name = "time_col",
+    arg_value = time_col,
+    sf_value = attr(data, "time_column")
+  )
 
-  id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
-    sf_value = attr(data, "track_id_column"))
+  id_col <- update_sf_col_arg(
+    data,
+    arg_name = "id_col",
+    arg_value = id_col,
+    sf_value = attr(data, "track_id_column")
+  )
 
   as.trackframe.sf(
     data,
@@ -474,8 +492,12 @@ as.trackframe.sftrack <- function(
   coerce_to = "base",
   ...
 ) {
-  time_col <- update_sf_col_arg(data, arg_name = "time_col", arg_value = time_col,
-    sf_value = attr(data, "time_col"))
+  time_col <- update_sf_col_arg(
+    data,
+    arg_name = "time_col",
+    arg_value = time_col,
+    sf_value = attr(data, "time_col")
+  )
 
   if (is.null(id_col)) {
     id_col <- "id"
@@ -487,8 +509,12 @@ as.trackframe.sftrack <- function(
       "active_group"
     )
   } else {
-    id_col <- update_sf_col_arg(data, arg_name = "id_col", arg_value = id_col,
-      sf_value = attr(data, "group_col"))
+    id_col <- update_sf_col_arg(
+      data,
+      arg_name = "id_col",
+      arg_value = id_col,
+      sf_value = attr(data, "group_col")
+    )
   }
 
   as.trackframe.sf(
@@ -528,7 +554,12 @@ as.trackframe.sf <- function(
   )
 
   if ('crs' %in% names(list(...))) {
-    update_warn_if_conflicting("crs", list(...)[["crs"]], st_crs(data)[[1]], st_crs(data)[[1]])
+    update_warn_if_conflicting(
+      "crs",
+      list(...)[["crs"]],
+      st_crs(data)[[1]],
+      st_crs(data)[[1]]
+    )
   }
 
   transformation_info <- attributes(data)
@@ -538,18 +569,27 @@ as.trackframe.sf <- function(
 
   x_y <- st_coordinates(data[[attr(data, "sf_column")]])
   x_y[is.nan(x_y)] <- NA
-  # set colnames as defined in tf_options() #nolint 
-  colnames(x_y) <- c(tf_options("sf_easting_col"), tf_options("sf_northing_col"))
+  # set colnames as defined in tf_options() #nolint
+  colnames(x_y) <- c(
+    tf_options("sf_easting_col"),
+    tf_options("sf_northing_col")
+  )
   # error if colnames exist already in data
   if (tf_options("sf_easting_col") %in% colnames(data)) {
-    stop(sprintf("Column %s set as sf_easting_col, but exists also in data.
+    stop(sprintf(
+      "Column %s set as sf_easting_col, but exists also in data.
       Remove column %s in data, or change sf_easting_col using tf_options()",
-        tf_options("sf_easting_col"), tf_options("sf_easting_col")))
+      tf_options("sf_easting_col"),
+      tf_options("sf_easting_col")
+    ))
   }
   if (tf_options("sf_northing_col") %in% colnames(data)) {
-    stop(sprintf("Column %s set as sf_northing_col, but exists also in data.
+    stop(sprintf(
+      "Column %s set as sf_northing_col, but exists also in data.
       Remove column %s in data, or change sf_northing_col using tf_options()",
-        tf_options("sf_northing_col"), tf_options("sf_northing_col")))
+      tf_options("sf_northing_col"),
+      tf_options("sf_northing_col")
+    ))
   }
 
   if (is.null(easting_col)) {
@@ -560,7 +600,10 @@ as.trackframe.sf <- function(
     easting_col_orig <- easting_col
     easting_col <- easting_col[easting_col %in% colnames(data)][1]
     if (is.na(easting_col)) {
-      stop(sprintf("easting_col argument(s): %s are not available in data.", easting_col_orig))
+      stop(sprintf(
+        "easting_col argument(s): %s are not available in data.",
+        easting_col_orig
+      ))
     }
   }
 
@@ -572,7 +615,10 @@ as.trackframe.sf <- function(
     northing_col_orig <- northing_col
     northing_col <- northing_col[northing_col %in% colnames(data)][1]
     if (is.na(northing_col)) {
-      stop(sprintf("northing_col argument(s): %s are not available in data.", northing_col_orig))
+      stop(sprintf(
+        "northing_col argument(s): %s are not available in data.",
+        northing_col_orig
+      ))
     }
   }
 
@@ -667,7 +713,6 @@ as.trackframe.trackframe <- function(
     )
   )
 }
-
 
 is.trackframe <- function(x) {
   inherits(x, "trackframe")

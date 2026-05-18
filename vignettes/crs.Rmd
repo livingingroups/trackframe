@@ -85,7 +85,7 @@ crs(fisher_tf)
 ```
 -->
 
-In the following example, we convert a `data.frame` object to a `trackframe` object. The dataframe doesn't contain any georeferencing metadata (i.e., a crs), but let's say that we know that these data were collected in southern Germany and that the coordinates are already projected (i.e., they're in UTM zone 32N, or ESPG:32632). In this case, you can simply tell `as.trackframe` what the crs is, using the `crs` argument.
+In the following example, we convert a `data.frame` object to a `trackframe` object. The dataframe doesn't contain any georeferencing metadata (i.e., a crs), but let's say that we know that these data were collected in southern Germany and that the coordinates are already projected (i.e., they're in UTM zone 32N, or ESPG:32632). In this case, you can simply tell `as.trackframe` what the crs is, using the `crs` argument or `tf_options("crs")`.
 
 ```{r eval = TRUE}
 
@@ -102,13 +102,20 @@ tf <- as.trackframe(df, crs = "EPSG:32632")
 
 # Extract the input crs EPSG code from the tf object
 crs(tf)
+
+# Set crs globally using `tf_options`
+tf_options("crs", "EPSG:32632")
+tf <- as.trackframe(df)
+
+# Global crs is applied to tf
+crs(tf)
 ```
 
 ## Non-georeferenced data
 
 For non-georeferenced coordinates, i.e., those that do not represent locations on the Earth's surface, the `crs` argument in `as.trackframe` should be set to `NA`. This may apply to, for example, data pertaining to simulations (i.e., representing locations on a virtual plane) or captive animal locations (i.e., representing locations in an enclosure, measured relative to some reference point in or near the enclosure). Note that even non-georeferenced coordinates should still be Cartesian, but `trackframe` has no way of verifying this or alerting if this is not the case.
 
-Where `as.trackframe` does not inherit metadata specifying the `crs` from the input object (for example, when the input object is a dataframe), the `crs` argument **must** be provided. Otherwise `as.trackframe` will throw an error.
+Where `as.trackframe` does not inherit metadata specifying the `crs` from the input object (for example, when the input object is a dataframe), the `crs` **must** be provided either as an argument or via `tf_options("crs")`. Otherwise `as.trackframe` will throw an error.
 
 ```{r eval = TRUE, error = TRUE}
 # Create some example data
@@ -127,4 +134,11 @@ tf_non_gr <- as.trackframe(df, crs = NA)
 
 # Extract the crs from the tf object
 crs(tf_non_gr)
+
+# Set crs globally using `tf_options`
+tf_options("crs", NA)
+tf <- as.trackframe(df)
+
+# Global crs is applied to tf
+crs(tf)
 ```

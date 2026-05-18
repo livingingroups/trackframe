@@ -1,8 +1,3 @@
-library(tinytest)
-library(trackframe)
-
-"[.data.frame" <- trackframe:::`[.data.frame`
-
 set.seed(2025)
 
 #cocomo

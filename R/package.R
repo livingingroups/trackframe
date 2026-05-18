@@ -80,3 +80,8 @@ NULL
 #'
 #' sftrack object created with travelpaths::sim_travel_path().
 "sftrack_mini"
+
+#' Artificial Travel Path
+#'
+#' data.frame with manually created data.
+"df_demo"

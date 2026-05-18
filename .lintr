@@ -10,3 +10,6 @@ linters: linters_with_defaults(
             regexes = c("^as\\.[a-z]*$", "^is\\.[a-z]*$")
         )
     )
+exclusions: list(
+        "inst/tinytest" = list("object_usage_linter"=Inf)
+    )

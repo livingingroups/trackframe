@@ -1,10 +1,4 @@
-if (FALSE) {
-  library(tinytest)
-}
-
 # backtransform
-library(checkmate)
-library(trackframe)
 projected_crs <- "EPSG:32632"
 
 # move2

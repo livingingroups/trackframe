@@ -1,6 +1,3 @@
-library(tinytest)
-library(trackframe)
-
 data <- df_mini[c(4, 1, 3, 5, 2), ]
 
 data_tf <- as.trackframe(data, crs = NA)

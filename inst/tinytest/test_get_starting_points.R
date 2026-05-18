@@ -1,5 +1,10 @@
-library(trackframe)
-library(tinytest)
+get_starting_points <- function(tf) {
+  trackframe:::get_starting_ending_segments(tf)$startpoint
+}
+
+get_direction_points <- function(tf) {
+  trackframe:::get_starting_ending_segments(tf)$endpoint
+}
 
 data("tf_mini", package = "trackframe")
 

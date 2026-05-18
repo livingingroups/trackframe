@@ -1,6 +1,4 @@
-library(tinytest)
 library(sftrack)
-library(trackframe)
 
 projected_crs <- "EPSG:32632"
 

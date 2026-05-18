@@ -135,22 +135,16 @@ sort.trackframe <- function(x, decreasing = FALSE, ...) {
 }
 
 
-#' Obtain starting points
-#'
-#' This function obtains starting points for all tracks in a trackframe object.
-#'
-#' @param tf an object of class trackframe
-#'
-#' @return a trackframe providing the x and y coordinates of the starting points all
-#' different tracks sorted by id (if available) and time.
-#'
-#' @examples
-#' library(trackframe)
-#' get_starting_points(tf_mini)
-#'
-#' @export
-get_starting_points <- function(tf) {
+get_starting_ending_segments <- function(
+  tf,
+  starting_segments = TRUE,
+  dedup = FALSE,
+  validate = FALSE
+) {
   assert_class(tf, "trackframe")
+  get_track_endpoints <- function(tf) {
+    tf[!duplicated(id(tf), fromLast = !starting_segments), , drop = FALSE]
+  }
   tf <- sort(tf)
   tf <- tf[
     !duplicated(tf[, c(
@@ -159,34 +153,29 @@ get_starting_points <- function(tf) {
       id_col(tf)
     )]),
   ]
-  starting_points <- tf[!duplicated(id(tf)), , drop = FALSE]
-  rownames(starting_points) <- id(starting_points)
-  return(starting_points)
-}
+  endpoint_rows <- rownames(get_track_endpoints(tf))
+  direction_point_rows <- rownames(get_track_endpoints(tf[
+    !rownames(tf) %in% endpoint_rows,
+  ]))
 
-#' Obtain direction points
-#'
-#' This function obtains direction points (representing the second data point) for all tracks of
-#' objects of class trackframe.
-#'
-#' @param tf an object of class trackframe
-#'
-#' @return a trackframe providing the x and y coordinates of the direction points
-#' of all different tracks sorted by id (if available) and time.
-#'
-#' @examples
-#' library(trackframe)
-#' get_direction_points(tf_mini)
-#'
-#' @export
-get_direction_points <- function(tf) {
-  assert_class(tf, "trackframe")
-  tf <- sort(tf)
-  tf <- tf[!duplicated(tf[, c(easting_col(tf), northing_col(tf), id_col(tf))]), ]
-  tf <- tf[duplicated(tf[[id_col(tf)]]), ]
-  direction_points <- tf[!duplicated(tf[[id_col(tf)]]), , drop = FALSE]
-  rownames(direction_points) <- id(direction_points)
-  return(direction_points)
+  res <- list(tf[endpoint_rows, ], tf[direction_point_rows, ])
+  if (dedup) {
+    # Remove ids with only a single data point
+    dupes <- endpoint_rows %in% direction_point_rows
+    res <- lapply(res, \(tf) {
+      tf[!dupes, ]
+    })
+  }
+  if (validate) {
+    # omit any points missing either direction or starting points
+    uids <- intersect(id(res[[1]]), id(res[[2]]))
+    res <- lapply(res, \(tf) {
+      # ensure same ordering
+      tf[match(uids, id(tf))]
+    })
+  }
+  names(res) <- c("startpoint", "endpoint")
+  res
 }
 
 validate_tf <- function(tf) {
@@ -198,13 +187,13 @@ validate_tf <- function(tf) {
 
 #' Deduping of trackframe
 #'
-#' This function removes duplicated entries form objects of class trackframe.
+#' This function removes duplicated entries from objects of class trackframe.
 #'
 #' @param tf an object of class trackframe
 #' @param cols determines the unique identifier. Default are the key columns provided by
 #' tf_colnames(tf).
 #'
-#' @return
+#' @return an object of class trackframe
 #' @export
 #'
 #' @examples

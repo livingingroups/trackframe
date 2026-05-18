@@ -1,8 +1,4 @@
-library(tinytest)
-
-"[.data.frame" <- function(x, i, j, drop = FALSE, ...) {
-  base::`[.data.frame`(x, i, j, drop = drop)
-}
+"[.data.frame" <- trackframe:::`[.data.frame`
 
 set.seed(2025)
 df <- data.frame(

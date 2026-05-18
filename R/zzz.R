@@ -1,7 +1,8 @@
 #' Options for col guessing in trackframe
 #'
 #' @param option a character string name of option.
-#'  "time_col", "easting_col", "northing_col", or "id_col"
+#'  "time_col", "easting_col", "northing_col", "id_col", "crs",
+#' "sf_easting_col", or "sf_northing_col"
 #' @param value  vector of characters with possible candidates
 #'
 #' @return a vector of candidates for col guessing
@@ -15,6 +16,7 @@
 #' "northing_col", "northing_column", "lat", "latitude", "y"))
 #' tf_options("id_col", c("track_id", "track_id", "trackid", "trackid_col",
 #' "trackid_column", "id"))
+#' tf_options("crs", NA)
 tf_options <- local({
   options <- list()
   function(option, value) {
@@ -101,6 +103,7 @@ log_info <- function(
       "individual_local_identifier"
     )
   )
+  tf_options("crs", NULL)
   tf_options(
     "sf_easting_col",
     "easting"

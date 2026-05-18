@@ -2,8 +2,6 @@
 # - rename coord column, keeping it as coord col
 # - change contents of coord col
 
-library(trackframe)
-
 tf <- as.trackframe(df_mini, crs = NA)
 
 expect_equal(

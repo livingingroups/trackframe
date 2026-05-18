@@ -3,12 +3,6 @@ library(trackframe)
 
 source(system.file("tinytest/test_helpers.R", package = "trackframe"))
 
-if (getRversion() <= "4.4.0") {
-  `%||%` <- function(x, y) {
-    if (is.null(x)) y else x
-  }
-}
-
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
   tf_subclasses <- c("data.table", "tbl", "tbl_df")
@@ -159,11 +153,15 @@ test_as_trackframe <- function(coerce_to = "base") {
     attr(move2_ex_bt, "time_column")
   )
 
-  expect_silent(as.trackframe(move2_ex, time_col = tf_options("time_col"),
-      id_col = c("id", "id2", "individual-local-identifier"), coerce_to = coerce_to))
+  expect_silent(as.trackframe(
+    move2_ex,
+    time_col = tf_options("time_col"),
+    id_col = c("id", "id2", "individual-local-identifier"),
+    coerce_to = coerce_to
+  ))
 
   #sftrack
-  library("sftrack")
+  library(sftrack)
   # Make tracks from raw data
   data("raccoon", package = "sftrack")
   raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
@@ -232,13 +230,24 @@ test_as_trackframe <- function(coerce_to = "base") {
     raccoon_sftrack[[attr(raccoon_sftrack, "time_col")]]
   )
 
-  expect_silent(suppressWarnings(as.trackframe(raccoon_sftrack,
-        time_col = c("t", "timestamp", "time3"), id_col = tf_options("id_col"),
-        coerce_to = coerce_to)))
-  expect_warning(as.trackframe(raccoon_sftrack, time_col = c("t", "timestamp", "time3"),
-      id_col = tf_options("id_col"), coerce_to = coerce_to))
-  expect_silent(as.trackframe(raccoon_sftrack, time_col = c("t", "time", "time3"),
-      id_col = NULL, coerce_to = coerce_to))
+  expect_silent(suppressWarnings(as.trackframe(
+    raccoon_sftrack,
+    time_col = c("t", "timestamp", "time3"),
+    id_col = tf_options("id_col"),
+    coerce_to = coerce_to
+  )))
+  expect_warning(as.trackframe(
+    raccoon_sftrack,
+    time_col = c("t", "timestamp", "time3"),
+    id_col = tf_options("id_col"),
+    coerce_to = coerce_to
+  ))
+  expect_silent(as.trackframe(
+    raccoon_sftrack,
+    time_col = c("t", "time", "time3"),
+    id_col = NULL,
+    coerce_to = coerce_to
+  ))
 
   #backtransformation
   sftrack_bt <- tf_as_sftrack(raccoon_tf[!is.na(northing(raccoon_tf)), ])
@@ -261,21 +270,42 @@ test_as_trackframe <- function(coerce_to = "base") {
     suggest_utm_zone_crs(raccoon_vanilla_sf)
   )
 
-  expect_silent(as.trackframe(raccoon_vanilla_sf, time_col = "timestamp", id_col = "animal_id"))
-  raccoon_vanilla_sf_tf <- as.trackframe(raccoon_vanilla_sf, time_col = "timestamp",
-    id_col = "animal_id")
+  expect_silent(as.trackframe(
+    raccoon_vanilla_sf,
+    time_col = "timestamp",
+    id_col = "animal_id"
+  ))
+  raccoon_vanilla_sf_tf <- as.trackframe(
+    raccoon_vanilla_sf,
+    time_col = "timestamp",
+    id_col = "animal_id"
+  )
   expect_equal(as.trackframe(raccoon_vanilla_sf), raccoon_vanilla_sf_tf)
   expect_inherits(raccoon_vanilla_sf_tf, "trackframe")
   expect_equal(NROW(raccoon_vanilla_sf_tf), NROW(raccoon_vanilla_sf))
   expect_equal(
-    cbind("X" = easting(raccoon_vanilla_sf_tf),
-      "Y" = northing(raccoon_vanilla_sf_tf)),
+    cbind(
+      "X" = easting(raccoon_vanilla_sf_tf),
+      "Y" = northing(raccoon_vanilla_sf_tf)
+    ),
     sf::st_coordinates(raccoon_vanilla_sf),
     tol = 1e-4
   )
-  expect_equal(colnames(raccoon_vanilla_sf_tf),
-    c("animal_id", "timestamp", "height", "hdop", "vdop", "fix", "month", "time", "geometry",
-      "easting", "northing")
+  expect_equal(
+    colnames(raccoon_vanilla_sf_tf),
+    c(
+      "animal_id",
+      "timestamp",
+      "height",
+      "hdop",
+      "vdop",
+      "fix",
+      "month",
+      "time",
+      "geometry",
+      "easting",
+      "northing"
+    )
   )
 }
 

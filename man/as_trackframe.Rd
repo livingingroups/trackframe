@@ -43,7 +43,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs = NULL,
+  crs = tf_options("crs"),
   ...
 )
 
@@ -55,7 +55,7 @@ as.trackframe(
   id_col = tf_options("id_col"),
   sort = TRUE,
   coerce_to = "base",
-  crs = NULL,
+  crs = tf_options("crs"),
   ...
 )
 

@@ -6,46 +6,77 @@
 \usage{
 \method{plot}{trackframe}(
   x,
-  direction = FALSE,
-  direction_style = list(length = 0.1, code = 2, col = "black", lty = 3, lwd = 1),
-  facet = TRUE,
-  nfacet_col = NULL,
-  start_point = FALSE,
-  start_point_style = list(col = "green", pch = 0, cex = 1),
-  end_point = FALSE,
-  end_point_style = list(col = "red", pch = 1, cex = 1),
+  lines = TRUE,
+  lines_style = list(alpha = 0.5),
+  points = TRUE,
+  points_style = list(pch = 19),
+  start_indicator = TRUE,
+  start_indicator_style = list(arrowhead_loc = 0.001, length = 0.1, lwd = 3),
+  end_indicator = TRUE,
+  end_indicator_style = list(arrowhead_loc = 0.001, length = 0.1, code = 1, angle = 90,
+    lwd = 3),
   marker = NULL,
-  marker_style = list(col = "blue", pch = 4, cex = 1),
+  marker_style = list(pch = 22, col = "black", cex = 2),
+  facet = FALSE,
+  facet.args = list(),
+  theme = NULL,
+  xlab = sprintf("easting (\%s)", easting_col(x)),
+  ylab = sprintf("northing (\%s)", northing_col(x)),
+  asp = 1,
   ...
 )
 }
 \arguments{
 \item{x}{an object of class \code{trackframe}}
 
-\item{direction}{logical indicator if the path direction should be added to the plot}
+\item{lines}{logical should lines be plotted?}
 
-\item{direction_style}{a list of length, code, col, lty, lwd of the arrow of the direction
-(argument passed to \code{\link[graphics]{arrows}}) specifying the style of the arrows}
+\item{lines_style}{list of graphical parameters
+passed to \code{\link[tinyplot:tinyplot]{tinyplot::tinyplot()}} when plotting lines}
 
-\item{facet}{logical if facets should be used (TRUE is default). If FALSE all lines are plotted
-in a single plot.}
+\item{points}{logical should points be plotted?}
 
-\item{nfacet_col}{number of columns used in facet.args argument ncol}
+\item{points_style}{graphical parameters
+passed to \code{\link[tinyplot:tinyplot]{tinyplot::tinyplot()}} when plotting points}
 
-\item{start_point}{logical if starting point of each track should be plotted}
+\item{start_indicator}{logical indicator if arrows indicating
+start point of each track should be added}
 
-\item{start_point_style}{a list where col, pch and cex for starting points are specified}
+\item{start_indicator_style}{list of graphical parameters for start indicator.
+See section 'x_indicator_style'.}
 
-\item{end_point}{logical if end point of each track should be plotted}
+\item{end_indicator}{logical indicator if arrows indicating
+endpoint of each track should be added}
 
-\item{end_point_style}{a list where col, pch and cex for end points are specified}
+\item{end_indicator_style}{list of graphical parameters for end indicator.
+See section 'x_indicator_style'.}
 
-\item{marker}{(optional) column name of additional markers to be ploted (depending on a 0/1
-labeling)}
+\item{marker}{character column name of logical column indicating which points to mark}
 
-\item{marker_style}{a list where col, pch and cex for markers are specified}
+\item{marker_style}{list of graphical parameters passed to \code{\link[tinyplot]{tinyplot}}
+as markers are being drawn}
 
-\item{...}{other arguments used in \code{\link[tinyplot]{tinyplot}}}
+\item{facet}{logical should the plot be facetted by track?}
+
+\item{facet.args}{list of arguments controlling facet behavior.
+If \code{ncol} is unspecified, an attempt is made chose a visually pleasing value.
+See \code{\link[tinyplot]{tinyplot}}}
+
+\item{theme}{character or list:
+\enumerate{
+\item \code{NULL} (default): Use currently set \code{tinyplot} theme if one is set.
+Otherwise use trackframe default.
+\item a string naming a built-in tinyplot theme \code{vignette("themes", package = "tinyplot")} or
+\item a list of graphical parameters defining a custom theme
+}}
+
+\item{xlab}{a title for the x axis}
+
+\item{ylab}{a title for the x axis}
+
+\item{asp}{numeric y/x aspect ratio}
+
+\item{...}{additional graphical parameters passed to \code{\link[tinyplot]{tinyplot}}}
 }
 \value{
 No return value, called for side effect of producing a plot.
@@ -54,6 +85,37 @@ No return value, called for side effect of producing a plot.
 Plots coordinates of objects of class \code{\link[trackframe]{trackframe}} based on
 \code{\link[tinyplot]{tinyplot}} functionality.
 }
+\section{x_style}{
+The arguments \code{lines_style}, \code{points_style},
+\code{start_indicator_style}, \code{end_indicator_style} and \code{marker_style} each take
+list of argments passed to \code{tinyplot}to style the corresponding element.
+
+Possible arguments can come from:
+\itemize{
+\item \code{\link[tinyplot]{tinyplot}} (e.g. \code{facet.args})
+\item \code{\link[graphics]{par}} (e.g. \code{fg})
+}
+
+Parameters in \code{...} can come from the same lists and are applied to
+the entire plot.
+}
+
+\section{x_indicator_style}{
+Start/end indicators are arrows that point from the start/endpoint of each track
+toward the second/penultimate point.
+In addition to standard arrow paramenters,
+\code{start_indicator_style} and \code{end_indicator_style} can have a key: \code{arrowhead_loc}
+which controls how far along the first/last segment the arrow extends.
+\code{0} refering to putting the arrow having the head only.
+and \code{1} referring to having the arrow extend to second/penultimate point.
+.001 inch is added to the user-provided value to ensure arrow direction
+can be determined.
+
+Note: Because end arrows go from the endpoint toward the penultimate point,
+the \code{\link[graphics:arrows]{graphics::arrows()}} default of \verb{angle = 30, code = 2} will
+result in arrows pointing against the direction of travel.
+}
+
 \examples{
 library(trackframe)
 
@@ -68,17 +130,25 @@ library(tinyplot)
 tinytheme("clean2")
 plot(data)
 
-plot(data, direction = TRUE)
+plot(data)
+
+
+# with facets and no indicator arrows
+plot(
+  data,
+  facet = TRUE,
+  start_indicator = FALSE,
+  end_indicator = FALSE
+)
 
 # allow free y axis
 plot(data, facet.args = list("free" = TRUE))
-
-# without facets
-plot(data, facet = FALSE)
 
 track_1 <- select_id(data, "track_1")
 plot(track_1)
 plot(track_1, direction = TRUE)
 
-plot(track_1, start_point = TRUE, start_point_style = list(col = "blue"), end_point = TRUE)
+# Customize start/stop arrows
+plot(track_1, start_indicator_style = list(col = "blue"))
+
 }
