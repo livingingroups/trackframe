@@ -30,18 +30,40 @@ add_plot <- function(..., more = list()) {
   )
 }
 
+qualitative_palette <- function(colors, ...) {
+  function(n) {
+    n_base_cols <- length(colors)
+    cols <- if (n <= n_base_cols) {
+      colors
+    } else {
+      n_inc <- (n %/% n_base_cols) + 1
+      shuffle <- rep(seq_len(n_base_cols) - 1, lenght.out = n_inc) *
+        n_inc +
+        rep(seq_len(n_inc), each = n_base_cols)
+      cols <- colorRampPalette(c(colors, colors[1]), ...)(
+        n_inc * n_base_cols + 1
+      )[
+        shuffle
+      ]
+    }
+    cols[seq_len(n)]
+  }
+}
+
 apply_eas_theme_as_default <- function(theme_arg) {
   eas_theme <- list(
     theme = "minimal",
     family = "sans",
     grid = TRUE,
-    palette.qualitative = c(
-      "#7CCE7D",
-      "#274F48",
-      "#5ECDB9",
-      "#3A8474",
-      "#010101"
-    ),
+    palette.qualitative = qualitative_palette(
+      c(
+        "#7CCE7D",
+        "#274F48",
+        "#5ECDB9",
+        "#3A8474",
+        "#010101"
+      )
+    )(25),
     palette.sequential = c(
       "#7CCE7D",
       "#5ECDB9",

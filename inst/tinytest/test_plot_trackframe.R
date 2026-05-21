@@ -36,3 +36,14 @@ expect_snapshot_plot(
   },
   label = index("data_tf_mini_start_end_dir_style")
 )
+
+expect_snapshot_plot(
+  \() {
+    data2 <- data
+    data2[[id_col(data2)]] <- paste(id(data2), "_2")
+    plot(
+      rbind(data, data2)
+    )
+  },
+  label = index("more_tracks")
+)
