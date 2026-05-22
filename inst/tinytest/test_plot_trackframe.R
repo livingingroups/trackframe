@@ -17,15 +17,14 @@ expect_snapshot_plot(
   label = index("long_end_arrow")
 )
 
-default_label <-
-  expect_snapshot_plot(
-    \() {
-      plot(
-        data
-      )
-    },
-    label = index("data_tf_mini_start_end_dir")
-  )
+expect_snapshot_plot(
+  \() {
+    plot(
+      data
+    )
+  },
+  label = default <- index("data_tf_mini_start_end_dir")
+)
 
 expect_snapshot_plot(
   \() {
@@ -55,4 +54,16 @@ expect_snapshot_plot(
     )
   },
   label = index("more_tracks")
+)
+
+expect_warning(
+  expect_snapshot_plot(
+    \() {
+      r1 <- data[1, ]
+      data <- rbind(r1, data)
+      data[[time_col(data)]][2] <- NA
+      plot(data)
+    },
+    label = default
+  )
 )

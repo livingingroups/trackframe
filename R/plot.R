@@ -104,6 +104,17 @@ defaults <- function(arg) {
   )
 }
 
+drop_na_keycols <- function(tf) {
+  na_rows <- apply(tf[, tf_colnames(tf)], 1, \(x) any(is.na(x)))
+  if (any(na_rows)) {
+    warning(sprintf(
+      "NA values found in key cols in rows %s. \n Dropping these rows.",
+      paste(which(na_rows), collapse = ", ")
+    ))
+  }
+  tf[!na_rows, ]
+}
+
 #' Plot trackframes
 #'
 #' Plots coordinates of objects of class \code{\link[trackframe]{trackframe}} based on
@@ -261,6 +272,7 @@ plot.trackframe <- function(
   assert_number(asp)
   # sort data by id and time
   x <- sort(x)
+  x <- drop_na_keycols(x)
 
   x_col <- easting_col(x)
   y_col <- northing_col(x)
