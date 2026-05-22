@@ -33,6 +33,13 @@ attr_tf2$row.names <- as.numeric(rownames(tf6))
 expect_equal(attributes(tf6), attr_tf2)
 expect_equal(rownames(tf6), rownames(tf2)[-2])
 
+tf7 <- tf2[seq_len(nrow(tf2)) == 1, ]
+expect_inherits(tf7, "trackframe")
+attr_tf2 <- attributes(tf2)
+attr_tf2$row.names <- as.numeric(rownames(tf7))
+expect_equal(attributes(tf7), attr_tf2)
+expect_equal(rownames(tf7), "1")
+
 # data.table
 library(data.table)
 tf1 <- as.trackframe(trackframe::tf_mini, coerce_to = "data.table")
@@ -46,8 +53,11 @@ expect_inherits(tf2, "data.table")
 
 dt2 <- as.data.table(tf2)
 expect_equal(tf2[, tf_colnames(tf2), with = TRUE], dt2[, tf_colnames(tf2)])
-expect_equal(tf2[, tf_colnames(tf2), with = FALSE], dt2[, tf_colnames(tf2), with = FALSE],
-  check.attributes = FALSE)
+expect_equal(
+  tf2[, tf_colnames(tf2), with = FALSE],
+  dt2[, tf_colnames(tf2), with = FALSE],
+  check.attributes = FALSE
+)
 tf3 <- tf2[, tf_colnames(tf2), with = FALSE]
 expect_inherits(tf3, "trackframe")
 expect_inherits(tf3, "data.table")
@@ -63,7 +73,6 @@ attr_tf2 <- attributes(tf2)
 attr_tf2$row.names <- as.numeric(rownames(tf4))
 expect_equal(attributes(tf4), attr_tf2)
 expect_equal(rownames(tf4), "1")
-
 
 
 # tibble
@@ -91,7 +100,6 @@ attr_tf2 <- attributes(tf2)
 attr_tf2$row.names <- as.numeric(rownames(tf4))
 expect_equal(attributes(tf4), attr_tf2)
 expect_equal(rownames(tf4), "1")
-
 
 
 ###
@@ -135,7 +143,10 @@ expect_equal(class(dt_tf_mini2), c("trackframe", "data.table", "data.frame"))
 
 tbl_tf_mini$A <- "A"
 tbl_tf_mini2 <- tbl_tf_mini[, c("time", "id", "easting", "northing")]
-expect_equal(class(tbl_tf_mini2), c("trackframe", "tbl_df", "tbl", "data.frame"))
+expect_equal(
+  class(tbl_tf_mini2),
+  c("trackframe", "tbl_df", "tbl", "data.frame")
+)
 
 expect_equal(df_tf_mini[1, "time"], df_mini[1, "time"])
 expect_equal(dt_tf_mini[1, "time"], dt_mini[1, "time"])
