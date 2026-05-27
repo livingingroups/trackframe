@@ -270,7 +270,7 @@ plot.trackframe <- function(
   nfacet_col <- facet.args[["ncol"]] %||% set_facet_ncol(n_id)
 
   if (n_id > 1) {
-    form <- as.formula(paste(y_col, "~", x_col, "|", i_col))
+    form <- as.formula(sprintf("`%s` ~ `%s` | `%s`", y_col, x_col, i_col))
     default_options <- list()
     if (facet) {
       default_options <- c(
@@ -282,7 +282,7 @@ plot.trackframe <- function(
       )
     }
   } else {
-    form <- as.formula(paste(y_col, "~", x_col))
+    form <- as.formula(sprintf("`%s` ~ `%s`", y_col, x_col))
     default_options <- list(main = "")
   }
 

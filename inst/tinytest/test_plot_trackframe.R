@@ -17,15 +17,15 @@ expect_snapshot_plot(
   label = index("long_end_arrow")
 )
 
-
-expect_snapshot_plot(
-  \() {
-    plot(
-      data
-    )
-  },
-  label = index("data_tf_mini_start_end_dir")
-)
+default_label <-
+  expect_snapshot_plot(
+    \() {
+      plot(
+        data
+      )
+    },
+    label = index("data_tf_mini_start_end_dir")
+  )
 
 expect_snapshot_plot(
   \() {
@@ -35,6 +35,15 @@ expect_snapshot_plot(
     )
   },
   label = index("data_tf_mini_start_end_dir_style")
+)
+expect_snapshot_plot(
+  \() {
+    colnames(data) <- paste(colnames(data), colnames(data))
+    plot(
+      data
+    )
+  },
+  label = index("colnames_with_spaces")
 )
 
 expect_snapshot_plot(
