@@ -28,10 +28,10 @@ expect_snapshot_plot <- function(
 # snapshot labels so that they
 # are in the same order in the folder
 # as in the file
-idx <- 1
 index_fn_factory <- function(suite_label) {
-  function(test_label) {
-    label <- sprintf("%s%02d_%s", suite_label, idx, test_label)
+  idx <- 1
+  function(...) {
+    label <- sprintf("%s%02d_%s", suite_label, idx, paste(..., collapse = "_"))
     idx <<- idx + 1
     label
   }

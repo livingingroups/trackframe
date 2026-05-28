@@ -142,21 +142,30 @@ get_starting_ending_segments <- function(
   validate = FALSE
 ) {
   assert_class(tf, "trackframe")
-  get_track_endpoints <- function(tf) {
-    tf[!duplicated(id(tf), fromLast = !starting_segments), , drop = FALSE]
+  get_track_endpoints <- function(tf, starting_segments) {
+    !duplicated(id(tf), fromLast = !starting_segments)
   }
   tf <- sort(tf)
   tf <- tf[
-    !duplicated(tf[, c(
-      easting_col(tf),
-      northing_col(tf),
-      id_col(tf)
-    )]),
+    !duplicated(tf[,
+      c(
+        easting_col(tf),
+        northing_col(tf),
+        id_col(tf)
+      ),
+      with = FALSE
+    ]),
   ]
-  endpoint_rows <- rownames(get_track_endpoints(tf))
-  direction_point_rows <- rownames(get_track_endpoints(tf[
-    !rownames(tf) %in% endpoint_rows,
-  ]))
+
+  endpoint_rows <- get_track_endpoints(tf, starting_segments)
+  direction_point_rows <- seq_len(nrow(tf))[
+    !endpoint_rows
+  ][get_track_endpoints(
+    tf[
+      !endpoint_rows,
+    ],
+    starting_segments
+  )]
 
   res <- list(tf[endpoint_rows, ], tf[direction_point_rows, ])
   if (dedup) {
