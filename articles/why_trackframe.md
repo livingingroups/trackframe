@@ -1,0 +1,206 @@
+# Why trackframe
+
+## Why trackframe?
+
+The trackframe package is designed to be complementary to more full
+featured geospatial libraries such as
+[sf](https://r-spatial.github.io/sf/). This vignette demonstrates the
+main advantages of using trackframe rather than non-trackframe
+approaches to writing functions for manipulating and analyzing animal
+tracks.
+
+### Main advantages
+
+- The `trackframe` object is a flexible `data.frame` for storing animal
+  track data; coordinates, times, and track (animal) ids, are stored as
+  columns.
+- Multiple input object structures (e.g., `data.table`s, `tibble`s,
+  `move2` objects, `sftrack` objects) can be easily coerced into
+  `trackframe` objects.
+- A `trackframe` object can be easily backtransformed into its original
+  data structure using
+  [`tf_backtransform()`](../reference/tf_backtransform.md).
+- Key columns, namely the x (easting) and y (northing) coordinates of
+  each point, as well as the timestamp (date & time) and unique track
+  id, are stored as attributes and can be easily accessed by
+  [`easting()`](../reference/tf_coords.md),
+  [`northing()`](../reference/tf_coords.md),
+  [`time()`](https://rdrr.io/r/stats/time.html), and
+  [`id()`](../reference/tf_id.md), regardless of the columns’ actual
+  names.
+- Coordinates are always stored as projected UTM easting/northing (for
+  georeferenced data) or as x/y values on a Cartesian plane (for non
+  georeferenced data, e.g., simulation data).
+- Coordinates are stored in simple numeric columns, allowing the user to
+  perform vectorized R operations directly on the coordinates themselves
+- Trackframe’s objects and functions integrate seamlessly with the
+  travelpaths package.
+
+### Example
+
+Below is example function that takes x, y, t data columns from a single
+animal track as inputs, and outputs the average travel speed of the
+animal. We want to write code that applies this function to multiple
+tracks (for e.g., separate tracks for different individual animals)
+provided in a single object.
+
+``` r
+
+average_speed_over_time <- function(x, y, t)  {
+  weighted.mean(sqrt(diff(x)^2 + diff(y)^2) / as.numeric(diff(t)),
+    as.numeric(diff(t)), na.rm = TRUE)
+}
+```
+
+#### Without trackframe
+
+Here is an example of how this would be done without trackframe, if you
+wanted the function to be able to take a variety of different data
+representations as input objects (e.g., `move2` object, `sftrack`
+object, `data.frame`, etc).
+
+``` r
+
+average_speed_group_no_tf <- function(data) {
+  # Both move2 and sftrack are sf based
+  if ("sf" %in% class(data)) {
+    # sf objects have a consistent way of providing coordinates
+    # we need to project them into euclidean space
+    stopifnot(!sf::st_is_longlat(sf::st_crs(data)))
+    coords <- sf::st_coordinates(data)
+    coords[is.nan(coords)] <- NA
+
+    # sftrack and move2 have different ways of encoding
+    # the track_id/animal_id so we need to account for both
+    if ("sftrack" %in% class(data)) {
+      track_id <- sapply(data[[attr(data, "group_col")]], \(x) x[["id"]])
+      timestamp <- data[[attr(data, "time_col")]]
+    } else if ("move2" %in% class(data)) {
+      track_id <- move2::mt_track_id(data)
+      timestamp <- move2::mt_time(data)
+    }
+    # This part is for the vanilla dataframe
+  } else {
+    coords <- as.matrix(data[, c("x", "y")])
+    track_id <- data$track_id
+    timestamp <- data$t
+  }
+  #  At this point, we have standardized coords, timestamp, and track_id objects
+
+  # Now we can finally use sapply to run our `average_speed_over_time`
+  # function for each track.
+  utid <- sort(unique(track_id))
+  names(utid) <- utid
+  sapply(
+    utid,
+    function(focal_track_id) {
+      idx <- which(track_id == focal_track_id)
+      average_speed_over_time(coords[idx, 1], coords[idx, 2], timestamp[idx])
+    }
+  )
+}
+```
+
+#### With trackframe
+
+Using the `as.trackframe` function, we can pull in data of many other
+types, and trackframe will automatically detect which columns are
+`easting` (i.e., x or longitude), `northing` (i.e., y or latitude),
+`time` (i.e., the date-time stamp), and `id` (i.e., the identifier of
+each individual animal). We can then extract those columns as vectors
+using the [`easting()`](../reference/tf_coords.md),
+[`northing()`](../reference/tf_coords.md),
+[`time()`](https://rdrr.io/r/stats/time.html), and
+[`id()`](../reference/tf_id.md) functions respectively. No custom logic
+dictated by the input format, nor juggling of original column names, is
+needed to accomplish this.
+
+``` r
+
+library(trackframe)
+
+average_speed_group_tf <- function(data, ...) {
+
+  # Automatically convert whatever input type is provided.
+  tf <- as.trackframe(data, ...)
+  # id_col='track_id' is only used for the dataframe conversion.
+  # track_id/animal_id is automatically detected from move2 and sftrack objects
+
+  # Run the function over for each animal
+  sapply(split(tf, id(tf)), function(tf) {
+    # Use trackframe functions to specify the necessary columns
+    average_speed_over_time(easting(tf), northing(tf), time(tf))
+  })
+}
+```
+
+#### Check output
+
+In the following code, we check that our newly created function (using
+trackframe) works with the most common formats of animal track data
+(`data.frame`, `sftrack`, and `move2`), and that it returns the same
+results as the messy cross-compatible function that does not use
+trackframe.
+
+``` r
+
+# dataframe
+set.seed(2025)
+df <- data.frame(
+  x = rnorm(10),
+  y = rnorm(10),
+  t = 1:10,
+  track_id = c(rep("a", 5), rep("b", 5))
+)
+stopifnot(all.equal(
+  average_speed_group_tf(df, crs = NA),
+  average_speed_group_no_tf(df)
+))
+
+# sftrack
+sftrack_raccoon <- sftrack::as_sftrack(
+  data = sftrack::raccoon,
+  coords = c("longitude", "latitude"),
+  time = "timestamp",
+  group = "animal_id",
+  crs = 4326
+)
+
+sftrack_raccoon_proj <- sf::st_transform(
+  sftrack_raccoon,
+  trackframe::suggest_utm_zone_crs(sftrack_raccoon)
+)
+
+stopifnot(all.equal(
+  average_speed_group_tf(sftrack_raccoon_proj),
+  average_speed_group_no_tf(sftrack_raccoon_proj)
+))
+
+# move2
+move2_fisher <- move2::mt_read(move2::mt_example())
+
+move2_fisher_proj <- sf::st_transform(
+  move2_fisher,
+  trackframe::suggest_utm_zone_crs(move2_fisher)
+)
+
+stopifnot(all.equal(
+  average_speed_group_tf(move2_fisher_proj),
+  average_speed_group_no_tf(move2_fisher_proj)
+))
+```
+
+### Why non-`sf` based?
+
+Trackframe is designed to be complementary to more full featured
+geospatial libraries such as sf. The sf library uses a geometry list
+column to store Euclidean or Haversine coordinates. This allows sf to
+support many geometry types (`LINESTRING`, `POLYGON` etc.) and
+facilitates interfacing with non-R geospatial/geometry programs.
+However, it does not allow the user to perform vectorized R operations
+directly on the coordinates. In contrast, trackframe is focused on
+supporting analyses that operate on the geometry and timing of the x, y,
+t data itself, rather than how the track is embedded in other geospatial
+systems. To facilitate efficient R code for these use cases,
+`trackframe` objects store Euclidean coordinates directly as dataframe
+columns.

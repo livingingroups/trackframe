@@ -1,0 +1,13 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  accessor: accessor.html
+  crs: crs.html
+  identifying_columns: identifying_columns.html
+  other_data_reps: other_data_reps.html
+  performance: performance.html
+  plotting: plotting.html
+  trackframe: trackframe.html
+  why_trackframe: why_trackframe.html
+last_built: 2026-06-09T08:53Z
