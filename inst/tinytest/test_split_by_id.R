@@ -19,7 +19,7 @@ tf_micro <- as.trackframe(
 
 split_micro <- split_by_id(tf_micro)
 
-expect_equal(
+expect_equivalent(
   split_micro,
   list(
     a = as.trackframe(
@@ -61,7 +61,8 @@ split_micro_rev <- split_by_id(rev_by_row(tf_micro))
 
 expect_equivalent(
   split_micro_rev,
-  lapply(rev(split_micro), \(tf) {
+  # base::split() sorts levels themselves, but not within levels
+  lapply(split_micro, \(tf) {
     rev_by_row(tf)
   })
 )
