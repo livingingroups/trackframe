@@ -1,19 +1,9 @@
-library(trackframe)
-library(tinytest)
+source("helpers.R")
 
 tf1 <- trackframe::tf_mini
 tf2 <- tf1
 tf2$northing <- 1:11
 tf_colnames(tf2)
-
-
-expect_most_elements_equal <- function(current, target, omit = c(), ...) {
-  filter_list <- function(l) {
-    l <- l[!names(l) %in% omit]
-    l[sort(names(l))]
-  }
-  expect_equal(filter_list(current), filter_list(target), ...)
-}
 
 crses_to_string <- function(...) {
   paste(
@@ -271,9 +261,7 @@ expect_equal(tf_colnames(tf1), tf_colnames(rbind_tf1_tf3))
 expect_inherits(rbind_tf1_tf3, "trackframe")
 tf3_cn <- tf3
 colnames(tf3_cn) <- colnames(tf1)
-expect_equal(rbind_tf1_tf3,
-  rbind.data.frame(tf1, tf3_cn),
-  check.attributes = FALSE)
+expect_equal(rbind_tf1_tf3, rbind.data.frame(tf1, tf3_cn), check.attributes = FALSE)
 expect_most_elements_equal(
   attributes(rbind_tf1_tf3),
   attributes(tf1),
@@ -305,10 +293,17 @@ expect_most_elements_equal(
 )
 
 
-expect_error(merge(tf1, tf3, by = c("time", "id")),
-  info = "Error in fix.by(by.y, y) : 'by' must specify uniquely valid columns")
-merge_tf1_tf3_byxy <- merge(tf1, tf3, by.x = c("time", "id"),
-  by.y = c("time2", "id2"), sort = FALSE)
+expect_error(
+  merge(tf1, tf3, by = c("time", "id")),
+  info = "Error in fix.by(by.y, y) : 'by' must specify uniquely valid columns"
+)
+merge_tf1_tf3_byxy <- merge(
+  tf1,
+  tf3,
+  by.x = c("time", "id"),
+  by.y = c("time2", "id2"),
+  sort = FALSE
+)
 
 # additional column ----
 tf4 <- tf1
@@ -346,8 +341,7 @@ expect_equal(
 
 
 merge_tf1_tf4_by <- merge(tf1, tf4, by = c("time", "id"), sort = FALSE)
-merge_tf1_tf4_byxy <- merge(tf1, tf4, by.x = c("time", "id"),
-  by.y = c("time", "id"), sort = FALSE)
+merge_tf1_tf4_byxy <- merge(tf1, tf4, by.x = c("time", "id"), by.y = c("time", "id"), sort = FALSE)
 expect_equal(merge_tf1_tf4_by, merge_tf1_tf4_byxy)
 expect_most_elements_equal(
   attributes(merge_tf1_tf4_by),
@@ -462,7 +456,7 @@ expect_equal(dim(rbind_tf1_tf6), c(22, 4))
 expect_equal(names(rbind_tf1_tf6), c("time", "northing", "easting", "id"))
 expect_equal(
   tf_colnames(rbind_tf1_tf6),
-  c(time = "time", northing = "northing", easting = "easting",  id = "id")
+  c(time = "time", northing = "northing", easting = "easting", id = "id")
 )
 expect_equal(id(rbind_tf1_tf6), c(tf1$id, tf6$id))
 expect_equal(rbind_tf1_tf6, rbind.data.frame(tf1, tf6), check.attributes = FALSE)
