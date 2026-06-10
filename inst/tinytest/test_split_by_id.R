@@ -6,7 +6,6 @@ rev_by_row <- function(df) {
 }
 
 tf_options("crs", NA)
-tf_options("time_col", "t")
 
 tf_micro <- as.trackframe(
   data.frame(

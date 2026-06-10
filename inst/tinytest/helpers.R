@@ -5,3 +5,9 @@ expect_most_elements_equal <- function(current, target, omit = c(), ...) {
   }
   expect_equal(filter_list(current), filter_list(target), ...)
 }
+
+if (getRversion() <= "4.4.0") {
+  `%||%` <- function(x, y) {
+    if (is.null(x)) y else x
+  }
+}
