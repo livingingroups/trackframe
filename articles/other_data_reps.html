@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Alison
 Ashbury</h4>
             
-            <h4 data-toc-skip class="date">2026-06-09</h4>
+            <h4 data-toc-skip class="date">2026-06-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/livingingroups/travelpaths-devel/blob/main/vignettes/other_data_reps.rmd" class="external-link"><code>vignettes/other_data_reps.rmd</code></a></small>
       <div class="d-none name"><code>other_data_reps.rmd</code></div>
@@ -131,7 +131,7 @@ cocomo dataset of animal tracks.</p>
 <span><span class="co">##   ..- attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">##   .. ..$ : chr [1:3] "1" "2" "3"</span></span>
 <span><span class="co">##   .. ..$ : NULL</span></span>
-<span><span class="co">##  $ t  : POSIXct[1:7], format: "2026-06-09 08:53:46" "2026-06-09 08:53:47" ...</span></span>
+<span><span class="co">##  $ t  : POSIXct[1:7], format: "2026-06-11 17:04:41" "2026-06-11 17:04:42" ...</span></span>
 <span><span class="co">##  $ ids:'data.frame': 3 obs. of  1 variable:</span></span>
 <span><span class="co">##   ..$ id_code: int [1:3] 1 2 3</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -148,10 +148,10 @@ cocomo dataset of animal tracks.</p>
 <span><span class="co">## 3 4.321713 7.064338 9.4857658 1.803388 2.168999 6.8016292 4.988456</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cocomo_list</span><span class="op">$</span><span class="va">t</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "2026-06-09 08:53:46 UTC" "2026-06-09 08:53:47 UTC"</span></span>
-<span><span class="co">## [3] "2026-06-09 08:53:48 UTC" "2026-06-09 08:53:49 UTC"</span></span>
-<span><span class="co">## [5] "2026-06-09 08:53:50 UTC" "2026-06-09 08:53:51 UTC"</span></span>
-<span><span class="co">## [7] "2026-06-09 08:53:52 UTC"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "2026-06-11 17:04:41 UTC" "2026-06-11 17:04:42 UTC"</span></span>
+<span><span class="co">## [3] "2026-06-11 17:04:43 UTC" "2026-06-11 17:04:44 UTC"</span></span>
+<span><span class="co">## [5] "2026-06-11 17:04:45 UTC" "2026-06-11 17:04:46 UTC"</span></span>
+<span><span class="co">## [7] "2026-06-11 17:04:47 UTC"</span></span></code></pre>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cocomo_list</span><span class="op">$</span><span class="va">ids</span></span></code></pre></div>
 <pre><code><span><span class="co">##   id_code</span></span>
@@ -202,27 +202,27 @@ columns in the arguments.</p>
 <span></span>
 <span><span class="va">tf2</span></span></code></pre></div>
 <pre><code><span><span class="co">##                   time    easting  northing id</span></span>
-<span><span class="co">## 1  2026-06-09 08:53:46 0.80750138 6.7838043  1</span></span>
-<span><span class="co">## 2  2026-06-09 08:53:47 8.34333037 7.3531960  1</span></span>
-<span><span class="co">## 3  2026-06-09 08:53:48 6.00760886 1.9595673  1</span></span>
-<span><span class="co">## 4  2026-06-09 08:53:49 1.57208442 9.8053967  1</span></span>
-<span><span class="co">## 5  2026-06-09 08:53:50 0.07399441 7.4152153  1</span></span>
-<span><span class="co">## 6  2026-06-09 08:53:51 4.66393497 0.5144628  1</span></span>
-<span><span class="co">## 7  2026-06-09 08:53:52 4.97777389 5.3021246  1</span></span>
-<span><span class="co">## 8  2026-06-09 08:53:46 2.89767245 6.9582388  2</span></span>
-<span><span class="co">## 9  2026-06-09 08:53:47 7.32881987 6.8855600  2</span></span>
-<span><span class="co">## 10 2026-06-09 08:53:48 7.72521511 0.3123033  2</span></span>
-<span><span class="co">## 11 2026-06-09 08:53:49 8.74600661 2.2556253  2</span></span>
-<span><span class="co">## 12 2026-06-09 08:53:50 1.74940627 3.0083081  2</span></span>
-<span><span class="co">## 13 2026-06-09 08:53:51 0.34241333 6.3646561  2</span></span>
-<span><span class="co">## 14 2026-06-09 08:53:52 3.20385731 4.7902455  2</span></span>
-<span><span class="co">## 15 2026-06-09 08:53:46 4.02328238 4.3217126  3</span></span>
-<span><span class="co">## 16 2026-06-09 08:53:47 1.95669835 7.0643384  3</span></span>
-<span><span class="co">## 17 2026-06-09 08:53:48 4.03538117 9.4857658  3</span></span>
-<span><span class="co">## 18 2026-06-09 08:53:49 0.63661457 1.8033877  3</span></span>
-<span><span class="co">## 19 2026-06-09 08:53:50 3.88701313 2.1689988  3</span></span>
-<span><span class="co">## 20 2026-06-09 08:53:51 9.75547835 6.8016292  3</span></span>
-<span><span class="co">## 21 2026-06-09 08:53:52 2.89892295 4.9884561  3</span></span></code></pre>
+<span><span class="co">## 1  2026-06-11 17:04:41 0.80750138 6.7838043  1</span></span>
+<span><span class="co">## 2  2026-06-11 17:04:42 8.34333037 7.3531960  1</span></span>
+<span><span class="co">## 3  2026-06-11 17:04:43 6.00760886 1.9595673  1</span></span>
+<span><span class="co">## 4  2026-06-11 17:04:44 1.57208442 9.8053967  1</span></span>
+<span><span class="co">## 5  2026-06-11 17:04:45 0.07399441 7.4152153  1</span></span>
+<span><span class="co">## 6  2026-06-11 17:04:46 4.66393497 0.5144628  1</span></span>
+<span><span class="co">## 7  2026-06-11 17:04:47 4.97777389 5.3021246  1</span></span>
+<span><span class="co">## 8  2026-06-11 17:04:41 2.89767245 6.9582388  2</span></span>
+<span><span class="co">## 9  2026-06-11 17:04:42 7.32881987 6.8855600  2</span></span>
+<span><span class="co">## 10 2026-06-11 17:04:43 7.72521511 0.3123033  2</span></span>
+<span><span class="co">## 11 2026-06-11 17:04:44 8.74600661 2.2556253  2</span></span>
+<span><span class="co">## 12 2026-06-11 17:04:45 1.74940627 3.0083081  2</span></span>
+<span><span class="co">## 13 2026-06-11 17:04:46 0.34241333 6.3646561  2</span></span>
+<span><span class="co">## 14 2026-06-11 17:04:47 3.20385731 4.7902455  2</span></span>
+<span><span class="co">## 15 2026-06-11 17:04:41 4.02328238 4.3217126  3</span></span>
+<span><span class="co">## 16 2026-06-11 17:04:42 1.95669835 7.0643384  3</span></span>
+<span><span class="co">## 17 2026-06-11 17:04:43 4.03538117 9.4857658  3</span></span>
+<span><span class="co">## 18 2026-06-11 17:04:44 0.63661457 1.8033877  3</span></span>
+<span><span class="co">## 19 2026-06-11 17:04:45 3.88701313 2.1689988  3</span></span>
+<span><span class="co">## 20 2026-06-11 17:04:46 9.75547835 6.8016292  3</span></span>
+<span><span class="co">## 21 2026-06-11 17:04:47 2.89892295 4.9884561  3</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">tf2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "trackframe" "data.frame"</span></span></code></pre>
@@ -269,12 +269,12 @@ head(tf_one_id)
 
 ```
 ##             timestamp         x        y  id
-## 1 2026-06-09 08:53:47 6.4167935 5.700450 Bob
-## 2 2026-06-09 08:53:48 6.6028435 3.357191 Bob
-## 3 2026-06-09 08:53:49 0.9602416 5.962628 Bob
-## 4 2026-06-09 08:53:50 7.6560016 1.915180 Bob
-## 5 2026-06-09 08:53:51 7.6967480 9.477639 Bob
-## 6 2026-06-09 08:53:52 9.9071231 5.424804 Bob
+## 1 2026-06-11 17:04:42 6.4167935 5.700450 Bob
+## 2 2026-06-11 17:04:43 6.6028435 3.357191 Bob
+## 3 2026-06-11 17:04:44 0.9602416 5.962628 Bob
+## 4 2026-06-11 17:04:45 7.6560016 1.915180 Bob
+## 5 2026-06-11 17:04:46 7.6967480 9.477639 Bob
+## 6 2026-06-11 17:04:47 9.9071231 5.424804 Bob
 ```
 
 ``` r
@@ -336,7 +336,7 @@ str(cocomo_list_one_id)
 ##   ..- attr(*, "dimnames")=List of 2
 ##   .. ..$ : chr "Bob"
 ##   .. ..$ : NULL
-##  $ t  : POSIXct[1:20], format: "2026-06-09 08:53:47" "2026-06-09 08:53:48" ...
+##  $ t  : POSIXct[1:20], format: "2026-06-11 17:04:42" "2026-06-11 17:04:43" ...
 ##  $ ids:'data.frame': 1 obs. of  1 variable:
 ##   ..$ id_code: chr "Bob"
 ```
@@ -372,16 +372,16 @@ cocomo_list_one_id$t
 ```
 
 ```
-##  [1] "2026-06-09 08:53:47 UTC" "2026-06-09 08:53:48 UTC"
-##  [3] "2026-06-09 08:53:49 UTC" "2026-06-09 08:53:50 UTC"
-##  [5] "2026-06-09 08:53:51 UTC" "2026-06-09 08:53:52 UTC"
-##  [7] "2026-06-09 08:53:53 UTC" "2026-06-09 08:53:54 UTC"
-##  [9] "2026-06-09 08:53:55 UTC" "2026-06-09 08:53:56 UTC"
-## [11] "2026-06-09 08:53:57 UTC" "2026-06-09 08:53:58 UTC"
-## [13] "2026-06-09 08:53:59 UTC" "2026-06-09 08:54:00 UTC"
-## [15] "2026-06-09 08:54:01 UTC" "2026-06-09 08:54:02 UTC"
-## [17] "2026-06-09 08:54:03 UTC" "2026-06-09 08:54:04 UTC"
-## [19] "2026-06-09 08:54:05 UTC" "2026-06-09 08:54:06 UTC"
+##  [1] "2026-06-11 17:04:42 UTC" "2026-06-11 17:04:43 UTC"
+##  [3] "2026-06-11 17:04:44 UTC" "2026-06-11 17:04:45 UTC"
+##  [5] "2026-06-11 17:04:46 UTC" "2026-06-11 17:04:47 UTC"
+##  [7] "2026-06-11 17:04:48 UTC" "2026-06-11 17:04:49 UTC"
+##  [9] "2026-06-11 17:04:50 UTC" "2026-06-11 17:04:51 UTC"
+## [11] "2026-06-11 17:04:52 UTC" "2026-06-11 17:04:53 UTC"
+## [13] "2026-06-11 17:04:54 UTC" "2026-06-11 17:04:55 UTC"
+## [15] "2026-06-11 17:04:56 UTC" "2026-06-11 17:04:57 UTC"
+## [17] "2026-06-11 17:04:58 UTC" "2026-06-11 17:04:59 UTC"
+## [19] "2026-06-11 17:05:00 UTC" "2026-06-11 17:05:01 UTC"
 ```
 
 ``` r

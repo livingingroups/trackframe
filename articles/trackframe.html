@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Trackframe
 Team</h4>
             
-            <h4 data-toc-skip class="date">2026-06-09</h4>
+            <h4 data-toc-skip class="date">2026-06-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/livingingroups/travelpaths-devel/blob/main/vignettes/trackframe.Rmd" class="external-link"><code>vignettes/trackframe.Rmd</code></a></small>
       <div class="d-none name"><code>trackframe.Rmd</code></div>
@@ -156,21 +156,21 @@ options:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp        x        y id</span></span>
-<span><span class="co">## 21 2026-06-09 08:54:03 2.898923 7.656002  1</span></span>
-<span><span class="co">## 22 2026-06-09 08:54:04 6.783804 7.696748  1</span></span>
-<span><span class="co">## 23 2026-06-09 08:54:05 7.353196 9.907123  1</span></span>
-<span><span class="co">## 24 2026-06-09 08:54:06 1.959567 9.705209  1</span></span>
-<span><span class="co">## 25 2026-06-09 08:54:07 9.805397 3.891828  1</span></span>
-<span><span class="co">## 16 2026-06-09 08:54:03 1.956698 6.801629  2</span></span></code></pre>
+<span><span class="co">## 21 2026-06-11 17:04:58 2.898923 7.656002  1</span></span>
+<span><span class="co">## 22 2026-06-11 17:04:59 6.783804 7.696748  1</span></span>
+<span><span class="co">## 23 2026-06-11 17:05:00 7.353196 9.907123  1</span></span>
+<span><span class="co">## 24 2026-06-11 17:05:01 1.959567 9.705209  1</span></span>
+<span><span class="co">## 25 2026-06-11 17:05:02 9.805397 3.891828  1</span></span>
+<span><span class="co">## 16 2026-06-11 17:04:58 1.956698 6.801629  2</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_go</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp        x        y id</span></span>
-<span><span class="co">## 21 2026-06-09 08:54:03 2.898923 7.656002  1</span></span>
-<span><span class="co">## 22 2026-06-09 08:54:04 6.783804 7.696748  1</span></span>
-<span><span class="co">## 23 2026-06-09 08:54:05 7.353196 9.907123  1</span></span>
-<span><span class="co">## 24 2026-06-09 08:54:06 1.959567 9.705209  1</span></span>
-<span><span class="co">## 25 2026-06-09 08:54:07 9.805397 3.891828  1</span></span>
-<span><span class="co">## 16 2026-06-09 08:54:03 1.956698 6.801629  2</span></span></code></pre>
+<span><span class="co">## 21 2026-06-11 17:04:58 2.898923 7.656002  1</span></span>
+<span><span class="co">## 22 2026-06-11 17:04:59 6.783804 7.696748  1</span></span>
+<span><span class="co">## 23 2026-06-11 17:05:00 7.353196 9.907123  1</span></span>
+<span><span class="co">## 24 2026-06-11 17:05:01 1.959567 9.705209  1</span></span>
+<span><span class="co">## 25 2026-06-11 17:05:02 9.805397 3.891828  1</span></span>
+<span><span class="co">## 16 2026-06-11 17:04:58 1.956698 6.801629  2</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -236,59 +236,59 @@ options:</p>
 <span><span class="co"># Compare sorted vs unsorted</span></span>
 <span><span class="va">tf_args_sorted</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp          x         y id</span></span>
-<span><span class="co">## 21 2026-06-09 08:54:03 2.89892295 7.6560016  1</span></span>
-<span><span class="co">## 22 2026-06-09 08:54:04 6.78380427 7.6967480  1</span></span>
-<span><span class="co">## 23 2026-06-09 08:54:05 7.35319599 9.9071231  1</span></span>
-<span><span class="co">## 24 2026-06-09 08:54:06 1.95956733 9.7052090  1</span></span>
-<span><span class="co">## 25 2026-06-09 08:54:07 9.80539675 3.8918276  1</span></span>
-<span><span class="co">## 16 2026-06-09 08:54:03 1.95669835 6.8016292  2</span></span>
-<span><span class="co">## 17 2026-06-09 08:54:04 4.03538117 4.9884561  2</span></span>
-<span><span class="co">## 18 2026-06-09 08:54:05 0.63661457 6.4167935  2</span></span>
-<span><span class="co">## 19 2026-06-09 08:54:06 3.88701313 6.6028435  2</span></span>
-<span><span class="co">## 20 2026-06-09 08:54:07 9.75547835 0.9602416  2</span></span>
-<span><span class="co">## 11 2026-06-09 08:54:03 8.74600661 4.3217126  3</span></span>
-<span><span class="co">## 12 2026-06-09 08:54:04 1.74940627 7.0643384  3</span></span>
-<span><span class="co">## 13 2026-06-09 08:54:05 0.34241333 9.4857658  3</span></span>
-<span><span class="co">## 14 2026-06-09 08:54:06 3.20385731 1.8033877  3</span></span>
-<span><span class="co">## 15 2026-06-09 08:54:07 4.02328238 2.1689988  3</span></span>
-<span><span class="co">## 6  2026-06-09 08:54:03 4.66393497 0.3123033  4</span></span>
-<span><span class="co">## 7  2026-06-09 08:54:04 4.97777389 2.2556253  4</span></span>
-<span><span class="co">## 8  2026-06-09 08:54:05 2.89767245 3.0083081  4</span></span>
-<span><span class="co">## 9  2026-06-09 08:54:06 7.32881987 6.3646561  4</span></span>
-<span><span class="co">## 10 2026-06-09 08:54:07 7.72521511 4.7902455  4</span></span>
-<span><span class="co">## 1  2026-06-09 08:54:03 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2  2026-06-09 08:54:04 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3  2026-06-09 08:54:05 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4  2026-06-09 08:54:06 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5  2026-06-09 08:54:07 0.07399441 6.8855600  5</span></span></code></pre>
+<span><span class="co">## 21 2026-06-11 17:04:58 2.89892295 7.6560016  1</span></span>
+<span><span class="co">## 22 2026-06-11 17:04:59 6.78380427 7.6967480  1</span></span>
+<span><span class="co">## 23 2026-06-11 17:05:00 7.35319599 9.9071231  1</span></span>
+<span><span class="co">## 24 2026-06-11 17:05:01 1.95956733 9.7052090  1</span></span>
+<span><span class="co">## 25 2026-06-11 17:05:02 9.80539675 3.8918276  1</span></span>
+<span><span class="co">## 16 2026-06-11 17:04:58 1.95669835 6.8016292  2</span></span>
+<span><span class="co">## 17 2026-06-11 17:04:59 4.03538117 4.9884561  2</span></span>
+<span><span class="co">## 18 2026-06-11 17:05:00 0.63661457 6.4167935  2</span></span>
+<span><span class="co">## 19 2026-06-11 17:05:01 3.88701313 6.6028435  2</span></span>
+<span><span class="co">## 20 2026-06-11 17:05:02 9.75547835 0.9602416  2</span></span>
+<span><span class="co">## 11 2026-06-11 17:04:58 8.74600661 4.3217126  3</span></span>
+<span><span class="co">## 12 2026-06-11 17:04:59 1.74940627 7.0643384  3</span></span>
+<span><span class="co">## 13 2026-06-11 17:05:00 0.34241333 9.4857658  3</span></span>
+<span><span class="co">## 14 2026-06-11 17:05:01 3.20385731 1.8033877  3</span></span>
+<span><span class="co">## 15 2026-06-11 17:05:02 4.02328238 2.1689988  3</span></span>
+<span><span class="co">## 6  2026-06-11 17:04:58 4.66393497 0.3123033  4</span></span>
+<span><span class="co">## 7  2026-06-11 17:04:59 4.97777389 2.2556253  4</span></span>
+<span><span class="co">## 8  2026-06-11 17:05:00 2.89767245 3.0083081  4</span></span>
+<span><span class="co">## 9  2026-06-11 17:05:01 7.32881987 6.3646561  4</span></span>
+<span><span class="co">## 10 2026-06-11 17:05:02 7.72521511 4.7902455  4</span></span>
+<span><span class="co">## 1  2026-06-11 17:04:58 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2  2026-06-11 17:04:59 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3  2026-06-11 17:05:00 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4  2026-06-11 17:05:01 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5  2026-06-11 17:05:02 0.07399441 6.8855600  5</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_args_unsorted</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp          x         y id</span></span>
-<span><span class="co">## 1  2026-06-09 08:54:03 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2  2026-06-09 08:54:04 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3  2026-06-09 08:54:05 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4  2026-06-09 08:54:06 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5  2026-06-09 08:54:07 0.07399441 6.8855600  5</span></span>
-<span><span class="co">## 6  2026-06-09 08:54:03 4.66393497 0.3123033  4</span></span>
-<span><span class="co">## 7  2026-06-09 08:54:04 4.97777389 2.2556253  4</span></span>
-<span><span class="co">## 8  2026-06-09 08:54:05 2.89767245 3.0083081  4</span></span>
-<span><span class="co">## 9  2026-06-09 08:54:06 7.32881987 6.3646561  4</span></span>
-<span><span class="co">## 10 2026-06-09 08:54:07 7.72521511 4.7902455  4</span></span>
-<span><span class="co">## 11 2026-06-09 08:54:03 8.74600661 4.3217126  3</span></span>
-<span><span class="co">## 12 2026-06-09 08:54:04 1.74940627 7.0643384  3</span></span>
-<span><span class="co">## 13 2026-06-09 08:54:05 0.34241333 9.4857658  3</span></span>
-<span><span class="co">## 14 2026-06-09 08:54:06 3.20385731 1.8033877  3</span></span>
-<span><span class="co">## 15 2026-06-09 08:54:07 4.02328238 2.1689988  3</span></span>
-<span><span class="co">## 16 2026-06-09 08:54:03 1.95669835 6.8016292  2</span></span>
-<span><span class="co">## 17 2026-06-09 08:54:04 4.03538117 4.9884561  2</span></span>
-<span><span class="co">## 18 2026-06-09 08:54:05 0.63661457 6.4167935  2</span></span>
-<span><span class="co">## 19 2026-06-09 08:54:06 3.88701313 6.6028435  2</span></span>
-<span><span class="co">## 20 2026-06-09 08:54:07 9.75547835 0.9602416  2</span></span>
-<span><span class="co">## 21 2026-06-09 08:54:03 2.89892295 7.6560016  1</span></span>
-<span><span class="co">## 22 2026-06-09 08:54:04 6.78380427 7.6967480  1</span></span>
-<span><span class="co">## 23 2026-06-09 08:54:05 7.35319599 9.9071231  1</span></span>
-<span><span class="co">## 24 2026-06-09 08:54:06 1.95956733 9.7052090  1</span></span>
-<span><span class="co">## 25 2026-06-09 08:54:07 9.80539675 3.8918276  1</span></span></code></pre>
+<span><span class="co">## 1  2026-06-11 17:04:58 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2  2026-06-11 17:04:59 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3  2026-06-11 17:05:00 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4  2026-06-11 17:05:01 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5  2026-06-11 17:05:02 0.07399441 6.8855600  5</span></span>
+<span><span class="co">## 6  2026-06-11 17:04:58 4.66393497 0.3123033  4</span></span>
+<span><span class="co">## 7  2026-06-11 17:04:59 4.97777389 2.2556253  4</span></span>
+<span><span class="co">## 8  2026-06-11 17:05:00 2.89767245 3.0083081  4</span></span>
+<span><span class="co">## 9  2026-06-11 17:05:01 7.32881987 6.3646561  4</span></span>
+<span><span class="co">## 10 2026-06-11 17:05:02 7.72521511 4.7902455  4</span></span>
+<span><span class="co">## 11 2026-06-11 17:04:58 8.74600661 4.3217126  3</span></span>
+<span><span class="co">## 12 2026-06-11 17:04:59 1.74940627 7.0643384  3</span></span>
+<span><span class="co">## 13 2026-06-11 17:05:00 0.34241333 9.4857658  3</span></span>
+<span><span class="co">## 14 2026-06-11 17:05:01 3.20385731 1.8033877  3</span></span>
+<span><span class="co">## 15 2026-06-11 17:05:02 4.02328238 2.1689988  3</span></span>
+<span><span class="co">## 16 2026-06-11 17:04:58 1.95669835 6.8016292  2</span></span>
+<span><span class="co">## 17 2026-06-11 17:04:59 4.03538117 4.9884561  2</span></span>
+<span><span class="co">## 18 2026-06-11 17:05:00 0.63661457 6.4167935  2</span></span>
+<span><span class="co">## 19 2026-06-11 17:05:01 3.88701313 6.6028435  2</span></span>
+<span><span class="co">## 20 2026-06-11 17:05:02 9.75547835 0.9602416  2</span></span>
+<span><span class="co">## 21 2026-06-11 17:04:58 2.89892295 7.6560016  1</span></span>
+<span><span class="co">## 22 2026-06-11 17:04:59 6.78380427 7.6967480  1</span></span>
+<span><span class="co">## 23 2026-06-11 17:05:00 7.35319599 9.9071231  1</span></span>
+<span><span class="co">## 24 2026-06-11 17:05:01 1.95956733 9.7052090  1</span></span>
+<span><span class="co">## 25 2026-06-11 17:05:02 9.80539675 3.8918276  1</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="from-a-move2-object">…from a <code>move2</code> object<a class="anchor" aria-label="anchor" href="#from-a-move2-object"></a>
@@ -3182,7 +3182,7 @@ about compatible coordinate reference systems, see
 <span><span class="co">##   .. ..   `study-name` = <span style="color: #BB0000;">col_factor(levels = NULL, ordered = FALSE, include_na = FALSE)</span>,</span></span>
 <span><span class="co">##   .. ..   .delim = ","</span></span>
 <span><span class="co">##   .. .. )</span></span>
-<span><span class="co">##   ..$ problems       :&lt;pointer: 0x5582111d1ac0&gt; </span></span>
+<span><span class="co">##   ..$ problems       :&lt;pointer: 0x55c7c30df080&gt; </span></span>
 <span><span class="co">##   ..$ sf_column      : chr "geometry"</span></span>
 <span><span class="co">##   ..$ agr            : Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span><span class="co">##   .. ..- attr(*, "names")= chr [1:20] "event-id" "visible" "timestamp" "behavioural-classification" ...</span></span>
@@ -3392,11 +3392,11 @@ in the track id column:</p>
 <code class="sourceCode R"><span><span class="va">tf_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_id.html">select_id</a></span><span class="op">(</span><span class="va">tf</span>, <span class="st">"Bob"</span><span class="op">)</span></span>
 <span><span class="va">tf_2</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-09 08:54:05 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-11 17:05:01 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-09 08:54:07 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-09 08:54:08 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-09 08:54:09 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-11 17:05:03 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-11 17:05:04 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-11 17:05:05 4.183614 5 Bob</span></span></code></pre>
 <p>To split the tracks of each individual, and store them as a list of
 <code>trackframe</code> objects, use the <code>split_by_id</code>
 function.</p>
@@ -3410,19 +3410,19 @@ function.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_split</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-09 08:54:05 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-11 17:05:01 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-09 08:54:07 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-09 08:54:08 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-09 08:54:09 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-11 17:05:03 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-11 17:05:04 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-11 17:05:05 4.183614 5 Bob</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_split</span><span class="op">[[</span><span class="st">"Bob"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-09 08:54:05 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-11 17:05:01 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-09 08:54:07 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-09 08:54:08 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-09 08:54:09 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-11 17:05:03 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-11 17:05:04 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-11 17:05:05 4.183614 5 Bob</span></span></code></pre>
 <ul>
 <li>*_col (e.g. “easting_col”) gets / sets the key column’s column name.
 In the “set” case, it updates the designated column’s name. It does not
@@ -3462,12 +3462,12 @@ regardless of its history. The second approach can only be used on
 <span><span class="va">df1_recovered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tf_as_xyt.html">tf_as_xyt</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           x        y           timestamp id</span></span>
-<span><span class="co">## 21 2.898923 7.656002 2026-06-09 08:54:03  1</span></span>
-<span><span class="co">## 22 6.783804 7.696748 2026-06-09 08:54:04  1</span></span>
-<span><span class="co">## 23 7.353196 9.907123 2026-06-09 08:54:05  1</span></span>
-<span><span class="co">## 24 1.959567 9.705209 2026-06-09 08:54:06  1</span></span>
-<span><span class="co">## 25 9.805397 3.891828 2026-06-09 08:54:07  1</span></span>
-<span><span class="co">## 16 1.956698 6.801629 2026-06-09 08:54:03  2</span></span></code></pre>
+<span><span class="co">## 21 2.898923 7.656002 2026-06-11 17:04:58  1</span></span>
+<span><span class="co">## 22 6.783804 7.696748 2026-06-11 17:04:59  1</span></span>
+<span><span class="co">## 23 7.353196 9.907123 2026-06-11 17:05:00  1</span></span>
+<span><span class="co">## 24 1.959567 9.705209 2026-06-11 17:05:01  1</span></span>
+<span><span class="co">## 25 9.805397 3.891828 2026-06-11 17:05:02  1</span></span>
+<span><span class="co">## 16 1.956698 6.801629 2026-06-11 17:04:58  2</span></span></code></pre>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df1_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -3520,70 +3520,70 @@ regardless of its history. The second approach can only be used on
 <span><span class="co">## </span></span>
 <span><span class="co">## $transformation_info$id_hash_orig</span></span>
 <span><span class="co">##                                  1                                  2 </span></span>
-<span><span class="co">## "e08e976646cac897b906b651db6d89c8" "1cb2f3dd3e6a0932eb7d698dc310a904" </span></span>
+<span><span class="co">## "8e24b5b9e72c815178fde0c6e710db8b" "6eb7f2902a4d7f19c43ecbebdd4302b7" </span></span>
 <span><span class="co">##                                  3                                  4 </span></span>
-<span><span class="co">## "99d9d04cc63f08578e9d74c3a5fd5d3c" "52b4cb374cfe9f52af64f4058d708ba3" </span></span>
+<span><span class="co">## "96e514acabb3bc83c6f10fd8ff44d626" "19f2ad927345982d86f03929a9f19283" </span></span>
 <span><span class="co">##                                  5                                  6 </span></span>
-<span><span class="co">## "bc3b1425fcaeba1327fb06b0a2624627" "60bbe0e2a153fa34b1fcb0051076b535" </span></span>
+<span><span class="co">## "a87ee155b77c94c8273ee1a3d48c9f04" "4ef43f95016a41a69d34ea7e77bb22a7" </span></span>
 <span><span class="co">##                                  7                                  8 </span></span>
-<span><span class="co">## "e1e81ed8688a08d111201ddb2cbce22d" "77ebb64cc48dc0cd85c77cd279dd9742" </span></span>
+<span><span class="co">## "b00ac1bd66f364c372421d5007be3e3a" "6dc22e54f54dc780cdbaf8b45aedf29f" </span></span>
 <span><span class="co">##                                  9                                 10 </span></span>
-<span><span class="co">## "897522ddad2df909e7736433baa19520" "7872f167e9edd589eb6307677d3bc722" </span></span>
+<span><span class="co">## "c5550f9fdeb79695f3232c7168d8d4e0" "8a5ac636b8c9258d360d35486a9eab86" </span></span>
 <span><span class="co">##                                 11                                 12 </span></span>
-<span><span class="co">## "d93814b8ecc63799b1ba46055e89e1d7" "1af79f60612a3d7e8cc160e33750c963" </span></span>
+<span><span class="co">## "edefbd97496d74b0d76cff9692dd3bc4" "1d114f7412c6437277e912e5bd49cc10" </span></span>
 <span><span class="co">##                                 13                                 14 </span></span>
-<span><span class="co">## "8bbf2ded680085dc3f2920142f7aa2f2" "20dab255b78236fcdb8b77e943fd49f7" </span></span>
+<span><span class="co">## "6ca0e03d5d51eb7d71681edc96941a52" "ed809ad41cf8ff7789c86624f20148b8" </span></span>
 <span><span class="co">##                                 15                                 16 </span></span>
-<span><span class="co">## "3686b4bfbf6c13f446b5d55463e8c652" "1f76ed7298650fcff7e9f306ad79ffb1" </span></span>
+<span><span class="co">## "f7645bb85e642b8d1b91aaa30d21601d" "21b557f9b36ee173e46c33ac6d91ad1f" </span></span>
 <span><span class="co">##                                 17                                 18 </span></span>
-<span><span class="co">## "3b8c24fd200ee508b80099b12e6968a9" "ec9af2f6dcaf58e2ac690a3a0b00f69d" </span></span>
+<span><span class="co">## "b353f63c53767c0703fbb4daeb92a62a" "1a365625a42ed4d858facc4173b148e7" </span></span>
 <span><span class="co">##                                 19                                 20 </span></span>
-<span><span class="co">## "a03899c32558cb6101c1b4c3c89c9dee" "16172adca33b9fd3de10190005d1faf5" </span></span>
+<span><span class="co">## "12d6bda0a9d9cdcb60c76a96e5b0c389" "90b177d037518b62927012b97000fe8e" </span></span>
 <span><span class="co">##                                 21                                 22 </span></span>
-<span><span class="co">## "d7a10a51f3faf3650b0db9d2831a74b6" "4c26fbbb934e245a18652a340bdc471a" </span></span>
+<span><span class="co">## "10e049aab56cc273aa97f97bb7b47fb6" "dc91080e2fe4702c16ab6fcf707d1727" </span></span>
 <span><span class="co">##                                 23                                 24 </span></span>
-<span><span class="co">## "71be9cacb16d45ec2818a4d3df626735" "a8a4b06595e31b99df0cc332c5256c2f" </span></span>
+<span><span class="co">## "5e54e1cf5614e7fe6ee6707d9708d330" "aea72d1d641fd7cfb06661c6b6fbc1cd" </span></span>
 <span><span class="co">##                                 25 </span></span>
-<span><span class="co">## "be95c5bb799c7feaedbe69f9959cb79f" </span></span>
+<span><span class="co">## "d987b0aa9945c18d8f54a1164b5df55e" </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $transformation_info$id_hash_ordered</span></span>
 <span><span class="co">##                                 21                                 22 </span></span>
-<span><span class="co">## "d7a10a51f3faf3650b0db9d2831a74b6" "4c26fbbb934e245a18652a340bdc471a" </span></span>
+<span><span class="co">## "10e049aab56cc273aa97f97bb7b47fb6" "dc91080e2fe4702c16ab6fcf707d1727" </span></span>
 <span><span class="co">##                                 23                                 24 </span></span>
-<span><span class="co">## "71be9cacb16d45ec2818a4d3df626735" "a8a4b06595e31b99df0cc332c5256c2f" </span></span>
+<span><span class="co">## "5e54e1cf5614e7fe6ee6707d9708d330" "aea72d1d641fd7cfb06661c6b6fbc1cd" </span></span>
 <span><span class="co">##                                 25                                 16 </span></span>
-<span><span class="co">## "be95c5bb799c7feaedbe69f9959cb79f" "1f76ed7298650fcff7e9f306ad79ffb1" </span></span>
+<span><span class="co">## "d987b0aa9945c18d8f54a1164b5df55e" "21b557f9b36ee173e46c33ac6d91ad1f" </span></span>
 <span><span class="co">##                                 17                                 18 </span></span>
-<span><span class="co">## "3b8c24fd200ee508b80099b12e6968a9" "ec9af2f6dcaf58e2ac690a3a0b00f69d" </span></span>
+<span><span class="co">## "b353f63c53767c0703fbb4daeb92a62a" "1a365625a42ed4d858facc4173b148e7" </span></span>
 <span><span class="co">##                                 19                                 20 </span></span>
-<span><span class="co">## "a03899c32558cb6101c1b4c3c89c9dee" "16172adca33b9fd3de10190005d1faf5" </span></span>
+<span><span class="co">## "12d6bda0a9d9cdcb60c76a96e5b0c389" "90b177d037518b62927012b97000fe8e" </span></span>
 <span><span class="co">##                                 11                                 12 </span></span>
-<span><span class="co">## "d93814b8ecc63799b1ba46055e89e1d7" "1af79f60612a3d7e8cc160e33750c963" </span></span>
+<span><span class="co">## "edefbd97496d74b0d76cff9692dd3bc4" "1d114f7412c6437277e912e5bd49cc10" </span></span>
 <span><span class="co">##                                 13                                 14 </span></span>
-<span><span class="co">## "8bbf2ded680085dc3f2920142f7aa2f2" "20dab255b78236fcdb8b77e943fd49f7" </span></span>
+<span><span class="co">## "6ca0e03d5d51eb7d71681edc96941a52" "ed809ad41cf8ff7789c86624f20148b8" </span></span>
 <span><span class="co">##                                 15                                  6 </span></span>
-<span><span class="co">## "3686b4bfbf6c13f446b5d55463e8c652" "60bbe0e2a153fa34b1fcb0051076b535" </span></span>
+<span><span class="co">## "f7645bb85e642b8d1b91aaa30d21601d" "4ef43f95016a41a69d34ea7e77bb22a7" </span></span>
 <span><span class="co">##                                  7                                  8 </span></span>
-<span><span class="co">## "e1e81ed8688a08d111201ddb2cbce22d" "77ebb64cc48dc0cd85c77cd279dd9742" </span></span>
+<span><span class="co">## "b00ac1bd66f364c372421d5007be3e3a" "6dc22e54f54dc780cdbaf8b45aedf29f" </span></span>
 <span><span class="co">##                                  9                                 10 </span></span>
-<span><span class="co">## "897522ddad2df909e7736433baa19520" "7872f167e9edd589eb6307677d3bc722" </span></span>
+<span><span class="co">## "c5550f9fdeb79695f3232c7168d8d4e0" "8a5ac636b8c9258d360d35486a9eab86" </span></span>
 <span><span class="co">##                                  1                                  2 </span></span>
-<span><span class="co">## "e08e976646cac897b906b651db6d89c8" "1cb2f3dd3e6a0932eb7d698dc310a904" </span></span>
+<span><span class="co">## "8e24b5b9e72c815178fde0c6e710db8b" "6eb7f2902a4d7f19c43ecbebdd4302b7" </span></span>
 <span><span class="co">##                                  3                                  4 </span></span>
-<span><span class="co">## "99d9d04cc63f08578e9d74c3a5fd5d3c" "52b4cb374cfe9f52af64f4058d708ba3" </span></span>
+<span><span class="co">## "96e514acabb3bc83c6f10fd8ff44d626" "19f2ad927345982d86f03929a9f19283" </span></span>
 <span><span class="co">##                                  5 </span></span>
-<span><span class="co">## "bc3b1425fcaeba1327fb06b0a2624627"</span></span></code></pre>
+<span><span class="co">## "a87ee155b77c94c8273ee1a3d48c9f04"</span></span></code></pre>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Second approach (backtransforming this object to its original type, i.e., a dataframe obj)</span></span>
 <span><span class="va">df2_recovered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tf_backtransform.html">tf_backtransform</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp          x         y id</span></span>
-<span><span class="co">## 1 2026-06-09 08:54:03 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2 2026-06-09 08:54:04 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3 2026-06-09 08:54:05 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4 2026-06-09 08:54:06 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5 2026-06-09 08:54:07 0.07399441 6.8855600  5</span></span>
-<span><span class="co">## 6 2026-06-09 08:54:03 4.66393497 0.3123033  4</span></span></code></pre>
+<span><span class="co">## 1 2026-06-11 17:04:58 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2 2026-06-11 17:04:59 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3 2026-06-11 17:05:00 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4 2026-06-11 17:05:01 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5 2026-06-11 17:05:02 0.07399441 6.8855600  5</span></span>
+<span><span class="co">## 6 2026-06-11 17:04:58 4.66393497 0.3123033  4</span></span></code></pre>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df2_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -3598,12 +3598,12 @@ regardless of its history. The second approach can only be used on
 <code class="sourceCode R"><span><span class="co"># Compare to original df</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x         y id</span></span>
-<span><span class="co">## 1 2026-06-09 08:54:05 4.611865 0.2006522  1</span></span>
-<span><span class="co">## 2 2026-06-09 08:54:06 3.152418 3.7697093  1</span></span>
-<span><span class="co">## 3 2026-06-09 08:54:07 1.746759 5.5991284  1</span></span>
-<span><span class="co">## 4 2026-06-09 08:54:08 5.315735 8.5708359  1</span></span>
-<span><span class="co">## 5 2026-06-09 08:54:09 4.936370 3.8480971  1</span></span>
-<span><span class="co">## 6 2026-06-09 08:54:05 7.793086 5.2791704  2</span></span></code></pre>
+<span><span class="co">## 1 2026-06-11 17:05:01 4.611865 0.2006522  1</span></span>
+<span><span class="co">## 2 2026-06-11 17:05:02 3.152418 3.7697093  1</span></span>
+<span><span class="co">## 3 2026-06-11 17:05:03 1.746759 5.5991284  1</span></span>
+<span><span class="co">## 4 2026-06-11 17:05:04 5.315735 8.5708359  1</span></span>
+<span><span class="co">## 5 2026-06-11 17:05:05 4.936370 3.8480971  1</span></span>
+<span><span class="co">## 6 2026-06-11 17:05:01 7.793086 5.2791704  2</span></span></code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -3704,55 +3704,22 @@ pre-conversion-to-trackframe, <code>dataframe</code> object.</p>
 <span><span class="co">## Dimension:     XY</span></span>
 <span><span class="co">## Bounding box:  xmin: -8222099 ymin: 5280795 xmax: -8222059 ymax: 5280872</span></span>
 <span><span class="co">## Projected CRS: WGS 84 / Pseudo-Mercator</span></span>
-<span><span class="co">##    event-id visible           timestamp behavioural-classification</span></span>
-<span><span class="co">## 1 170635812    TRUE 2011-02-11 18:06:13                       &lt;NA&gt;</span></span>
-<span><span class="co">## 2 170635813    TRUE 2011-02-11 18:10:08                       &lt;NA&gt;</span></span>
-<span><span class="co">## 3 170635814    TRUE 2011-02-11 18:20:58                       &lt;NA&gt;</span></span>
-<span><span class="co">## 4 170635816    TRUE 2011-02-11 18:41:30                       &lt;NA&gt;</span></span>
-<span><span class="co">## 5 170635822    TRUE 2011-02-11 19:41:10                       &lt;NA&gt;</span></span>
-<span><span class="co">## 6 170635823    TRUE 2011-02-11 19:50:58                       &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:battery-voltage eobs:fix-battery-voltage</span></span>
-<span><span class="co">## 1              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 2              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 3              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 4              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 5              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 6              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">##   eobs:horizontal-accuracy-estimate eobs:key-bin-checksum</span></span>
-<span><span class="co">## 1                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 2                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 3                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 4                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 5                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 6                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:speed-accuracy-estimate eobs:start-timestamp eobs:status</span></span>
-<span><span class="co">## 1                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 2                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 3                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 4                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 5                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 6                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:temperature eobs:type-of-fix eobs:used-time-to-get-fix ground-speed</span></span>
-<span><span class="co">## 1          NA [°C]             &lt;NA&gt;                    80 [s]     NA [m/s]</span></span>
-<span><span class="co">## 2          NA [°C]             &lt;NA&gt;                     7 [s]     NA [m/s]</span></span>
-<span><span class="co">## 3          NA [°C]             &lt;NA&gt;                    58 [s]     NA [m/s]</span></span>
-<span><span class="co">## 4          NA [°C]             &lt;NA&gt;                    90 [s]     NA [m/s]</span></span>
-<span><span class="co">## 5          NA [°C]             &lt;NA&gt;                    71 [s]     NA [m/s]</span></span>
-<span><span class="co">## 6          NA [°C]             &lt;NA&gt;                    57 [s]     NA [m/s]</span></span>
-<span><span class="co">##   heading height-above-ellipsoid manually-marked-outlier sensor-type</span></span>
-<span><span class="co">## 1  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 2  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 3  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 4  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 5  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 6  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">##   individual-local-identifier                 geometry</span></span>
-<span><span class="co">## 1                          F1 POINT (-8222074 5280863)</span></span>
-<span><span class="co">## 2                          F1 POINT (-8222059 5280872)</span></span>
-<span><span class="co">## 3                          F1 POINT (-8222072 5280863)</span></span>
-<span><span class="co">## 4                          F1 POINT (-8222071 5280795)</span></span>
-<span><span class="co">## 5                          F1 POINT (-8222099 5280835)</span></span>
-<span><span class="co">## 6                          F1 POINT (-8222083 5280843)</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 21</span></span></span>
+<span><span class="co">##   `event-id` visible timestamp           `behavioural-classification`</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">*</span>    <span style="color: #949494; font-style: italic;">&lt;int64&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  170<span style="text-decoration: underline;">635</span>812 TRUE    2011-02-11 <span style="color: #949494;">18:06:13</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  170<span style="text-decoration: underline;">635</span>813 TRUE    2011-02-11 <span style="color: #949494;">18:10:08</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  170<span style="text-decoration: underline;">635</span>814 TRUE    2011-02-11 <span style="color: #949494;">18:20:58</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  170<span style="text-decoration: underline;">635</span>816 TRUE    2011-02-11 <span style="color: #949494;">18:41:30</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  170<span style="text-decoration: underline;">635</span>822 TRUE    2011-02-11 <span style="color: #949494;">19:41:10</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  170<span style="text-decoration: underline;">635</span>823 TRUE    2011-02-11 <span style="color: #949494;">19:50:58</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 17 more variables: `eobs:battery-voltage` [mV],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:fix-battery-voltage` [mV], `eobs:horizontal-accuracy-estimate` [m],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:key-bin-checksum` &lt;int64&gt;, `eobs:speed-accuracy-estimate` [m/s],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:start-timestamp` &lt;dttm&gt;, `eobs:status` &lt;ord&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:temperature` [°C], `eobs:type-of-fix` &lt;fct&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:used-time-to-get-fix` [s], `ground-speed` [m/s], heading [°],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `height-above-ellipsoid` [m], `manually-marked-outlier` &lt;lgl&gt;, …</span></span></span>
 <span><span class="co">## Track features:</span></span>
 <span><span class="co">##   individual-local-identifier</span></span>
 <span><span class="co">## 1                          F1</span></span></code></pre>
@@ -3927,55 +3894,22 @@ information on the design of the <code>trackframe</code> object.</p>
 <span><span class="co">## Dimension:     XY</span></span>
 <span><span class="co">## Bounding box:  xmin: -8222099 ymin: 5280795 xmax: -8222059 ymax: 5280872</span></span>
 <span><span class="co">## Projected CRS: WGS 84 / Pseudo-Mercator</span></span>
-<span><span class="co">##    event-id visible           timestamp behavioural-classification</span></span>
-<span><span class="co">## 1 170635812    TRUE 2011-02-11 18:06:13                       &lt;NA&gt;</span></span>
-<span><span class="co">## 2 170635813    TRUE 2011-02-11 18:10:08                       &lt;NA&gt;</span></span>
-<span><span class="co">## 3 170635814    TRUE 2011-02-11 18:20:58                       &lt;NA&gt;</span></span>
-<span><span class="co">## 4 170635816    TRUE 2011-02-11 18:41:30                       &lt;NA&gt;</span></span>
-<span><span class="co">## 5 170635822    TRUE 2011-02-11 19:41:10                       &lt;NA&gt;</span></span>
-<span><span class="co">## 6 170635823    TRUE 2011-02-11 19:50:58                       &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:battery-voltage eobs:fix-battery-voltage</span></span>
-<span><span class="co">## 1              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 2              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 3              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 4              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 5              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">## 6              NA [mV]                  NA [mV]</span></span>
-<span><span class="co">##   eobs:horizontal-accuracy-estimate eobs:key-bin-checksum</span></span>
-<span><span class="co">## 1                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 2                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 3                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 4                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 5                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">## 6                            NA [m]                  &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:speed-accuracy-estimate eobs:start-timestamp eobs:status</span></span>
-<span><span class="co">## 1                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 2                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 3                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 4                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 5                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">## 6                     NA [m/s]                 &lt;NA&gt;        &lt;NA&gt;</span></span>
-<span><span class="co">##   eobs:temperature eobs:type-of-fix eobs:used-time-to-get-fix ground-speed</span></span>
-<span><span class="co">## 1          NA [°C]             &lt;NA&gt;                    80 [s]     NA [m/s]</span></span>
-<span><span class="co">## 2          NA [°C]             &lt;NA&gt;                     7 [s]     NA [m/s]</span></span>
-<span><span class="co">## 3          NA [°C]             &lt;NA&gt;                    58 [s]     NA [m/s]</span></span>
-<span><span class="co">## 4          NA [°C]             &lt;NA&gt;                    90 [s]     NA [m/s]</span></span>
-<span><span class="co">## 5          NA [°C]             &lt;NA&gt;                    71 [s]     NA [m/s]</span></span>
-<span><span class="co">## 6          NA [°C]             &lt;NA&gt;                    57 [s]     NA [m/s]</span></span>
-<span><span class="co">##   heading height-above-ellipsoid manually-marked-outlier sensor-type</span></span>
-<span><span class="co">## 1  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 2  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 3  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 4  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 5  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">## 6  NA [°]                 NA [m]                      NA         gps</span></span>
-<span><span class="co">##   individual-local-identifier step_length                 geometry</span></span>
-<span><span class="co">## 1                          F1          NA POINT (-8222074 5280863)</span></span>
-<span><span class="co">## 2                          F1    18.05374 POINT (-8222059 5280872)</span></span>
-<span><span class="co">## 3                          F1    16.58359 POINT (-8222072 5280863)</span></span>
-<span><span class="co">## 4                          F1    68.21399 POINT (-8222071 5280795)</span></span>
-<span><span class="co">## 5                          F1    48.65216 POINT (-8222099 5280835)</span></span>
-<span><span class="co">## 6                          F1    18.66893 POINT (-8222083 5280843)</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 22</span></span></span>
+<span><span class="co">##   `event-id` visible timestamp           `behavioural-classification`</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">*</span>    <span style="color: #949494; font-style: italic;">&lt;int64&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  170<span style="text-decoration: underline;">635</span>812 TRUE    2011-02-11 <span style="color: #949494;">18:06:13</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  170<span style="text-decoration: underline;">635</span>813 TRUE    2011-02-11 <span style="color: #949494;">18:10:08</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  170<span style="text-decoration: underline;">635</span>814 TRUE    2011-02-11 <span style="color: #949494;">18:20:58</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  170<span style="text-decoration: underline;">635</span>816 TRUE    2011-02-11 <span style="color: #949494;">18:41:30</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  170<span style="text-decoration: underline;">635</span>822 TRUE    2011-02-11 <span style="color: #949494;">19:41:10</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  170<span style="text-decoration: underline;">635</span>823 TRUE    2011-02-11 <span style="color: #949494;">19:50:58</span> <span style="color: #BB0000;">NA</span>                          </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 18 more variables: `eobs:battery-voltage` [mV],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:fix-battery-voltage` [mV], `eobs:horizontal-accuracy-estimate` [m],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:key-bin-checksum` &lt;int64&gt;, `eobs:speed-accuracy-estimate` [m/s],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:start-timestamp` &lt;dttm&gt;, `eobs:status` &lt;ord&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:temperature` [°C], `eobs:type-of-fix` &lt;fct&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `eobs:used-time-to-get-fix` [s], `ground-speed` [m/s], heading [°],</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `height-above-ellipsoid` [m], `manually-marked-outlier` &lt;lgl&gt;, …</span></span></span>
 <span><span class="co">## Track features:</span></span>
 <span><span class="co">##   individual-local-identifier</span></span>
 <span><span class="co">## 1                          F1</span></span></code></pre>
@@ -4021,29 +3955,21 @@ information on the design of the <code>trackframe</code> object.</p>
 <span><span class="co">## Dimension:     XY</span></span>
 <span><span class="co">## Bounding box:  xmin: -8226510 ymin: 5273151 xmax: -8221542 ymax: 5280773</span></span>
 <span><span class="co">## Projected CRS: WGS 84 / Pseudo-Mercator</span></span>
-<span><span class="co">## First 10 features:</span></span>
-<span><span class="co">##                timestamp individual-local-identifier step_length</span></span>
-<span><span class="co">## 1345 2011-03-03 02:21:44                          F1    17.91970</span></span>
-<span><span class="co">## 1346 2011-03-03 02:30:24                          F1    90.40059</span></span>
-<span><span class="co">## 1347 2011-03-03 02:40:20                          F1   511.10898</span></span>
-<span><span class="co">## 1348 2011-03-03 02:50:18                          F1   698.15835</span></span>
-<span><span class="co">## 1349 2011-03-03 03:00:25                          F1   384.24607</span></span>
-<span><span class="co">## 1350 2010-12-16 16:45:30                          F2          NA</span></span>
-<span><span class="co">## 1351 2010-12-16 21:21:13                          F2   646.26043</span></span>
-<span><span class="co">## 1352 2010-12-16 21:28:25                          F2   846.88861</span></span>
-<span><span class="co">## 1353 2010-12-16 21:32:34                          F2   228.76592</span></span>
-<span><span class="co">## 1354 2010-12-17 08:57:00                          F2    39.31348</span></span>
-<span><span class="co">##                      geometry</span></span>
-<span><span class="co">## 1345 POINT (-8221542 5280580)</span></span>
-<span><span class="co">## 1346 POINT (-8221558 5280669)</span></span>
-<span><span class="co">## 1347 POINT (-8222068 5280637)</span></span>
-<span><span class="co">## 1348 POINT (-8222760 5280547)</span></span>
-<span><span class="co">## 1349 POINT (-8223071 5280773)</span></span>
-<span><span class="co">## 1350 POINT (-8226510 5273421)</span></span>
-<span><span class="co">## 1351 POINT (-8225885 5273585)</span></span>
-<span><span class="co">## 1352 POINT (-8225118 5273225)</span></span>
-<span><span class="co">## 1353 POINT (-8224892 5273190)</span></span>
-<span><span class="co">## 1354 POINT (-8224900 5273151)</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 11 × 4</span></span></span>
+<span><span class="co">##    timestamp           `individual-local-identifier` step_length</span></span>
+<span><span class="co">##  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 2011-03-03 <span style="color: #949494;">02:21:44</span> F1                                   17.9</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 2011-03-03 <span style="color: #949494;">02:30:24</span> F1                                   90.4</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 2011-03-03 <span style="color: #949494;">02:40:20</span> F1                                  511. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 2011-03-03 <span style="color: #949494;">02:50:18</span> F1                                  698. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 2011-03-03 <span style="color: #949494;">03:00:25</span> F1                                  384. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 2010-12-16 <span style="color: #949494;">16:45:30</span> F2                                   <span style="color: #BB0000;">NA</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 2010-12-16 <span style="color: #949494;">21:21:13</span> F2                                  646. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 2010-12-16 <span style="color: #949494;">21:28:25</span> F2                                  847. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 2010-12-16 <span style="color: #949494;">21:32:34</span> F2                                  229. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 2010-12-17 <span style="color: #949494;">08:57:00</span> F2                                   39.3</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more row</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;POINT [m]&gt;</span></span></span>
 <span><span class="co">## Track features:</span></span>
 <span><span class="co">##   individual-local-identifier</span></span>
 <span><span class="co">## 1                          F1</span></span>
