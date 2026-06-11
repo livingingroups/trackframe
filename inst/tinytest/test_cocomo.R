@@ -70,6 +70,21 @@ test_cocomo <- function(coerce_to = "base") {
   tf3 <- cocomo_as_tf(xs[order(id_code), ], ys[order(id_code), ], t = t)
   id_idx <- which(colnames(tf1) == "id")
   expect_equivalent(tf1[, -id_idx], tf3[, -id_idx])
+
+  # Check reordering:
+  # cocomo obj should *not* preserve time reordering
+  # should preserve ID reordering
+
+  tf3 <- tf1[sample(seq_len(nrow(tf1))), ]
+  cocomo3 <- cocomo2
+  ord <- match(unique(tf3$id), sort(unique(tf3$id)))
+  cocomo3$xs <- cocomo3$xs[rownames(cocomo3$xs)[ord], ]
+  cocomo3$ys <- cocomo3$ys[rownames(cocomo3$ys)[ord], ]
+  cocomo3$ids$id_code <- cocomo3$ids$id_code[ord]
+  expect_equivalent(
+    tf_as_cocomo(tf3),
+    cocomo3
+  )
 }
 
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
