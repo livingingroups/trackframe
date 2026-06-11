@@ -89,6 +89,9 @@ df <- df_mini
 tf <- as.trackframe(data = df, crs = NA)
 expect_equal(tf_backtransform(tf), df)
 
+attributes(tf_backtransform(tf))
+attributes(df)
+
 dt <- data.table::as.data.table(df_mini)
 expect_equal(tf_backtransform(as.trackframe(data = dt, crs = NA)), dt)
 expect_equal(

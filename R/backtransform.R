@@ -55,25 +55,46 @@ tf_backtransform <- function(tf) {
   class_old <- transformation_info$class
   if ("move2" %in% class_old) {
     tf_bt <- tf_as_move2(tf)
+    attr(tf_bt, "class") <- class_old
+    attributes(tf_bt)[!names(attributes(tf_bt)) %in% names(transformation_info)] <- NULL
   } else if ("sftrack" %in% class_old) {
     tf_bt <- tf_as_sftrack(tf)
-  } else if (class_old[1] %in% c("data.frame", "data.table", "tbl_df", "tbl")) {
-    if (attr(tf, "easting") != transformation_info$coord_names[1]) {
+    attr(tf_bt, "class") <- class_old
+    attributes(tf_bt)[!names(attributes(tf_bt)) %in% names(transformation_info)] <- NULL
+  } else if ("sf" %in% class_old) {
+    tf_bt <- tf_as_sf(tf)
+    attr(tf_bt, "class") <- class_old
+    attributes(tf_bt)[!names(attributes(tf_bt)) %in% names(transformation_info)] <- NULL
+  } else if (class_old[1] %in% c("trackframe", "data.frame", "data.table", "tbl_df", "tbl")) {
+    if (isTRUE(sort)) {
+      tf <- sort(tf)
+    }
+    if (isTRUE(attr(tf, "easting") != transformation_info$coord_names[1])) {
       tf[, attr(tf, "easting")] <- NULL
     }
-    if (attr(tf, "northing") != transformation_info$coord_names[2]) {
+    if (isTRUE(attr(tf, "northing") != transformation_info$coord_names[2])) {
       tf[, attr(tf, "northing")] <- NULL
     }
-    if (class_old[1] == "data.frame") {
+    if (
+      class_old[1] == "data.frame" ||
+        (class_old[1] == "trackframe" && class_old[2] == c("data.frame"))
+    ) {
       tf_bt <- as.data.frame(tf)
-    } else if (class_old[1] == "data.table") {
+    } else if (
+      class_old[1] == "data.table" ||
+        (class_old[1] == "trackframe" && class_old[2] == c("data.table"))
+    ) {
       tf_bt <- as.data.table(tf)
-    } else if (class_old[1] %in% c("tbl_df", "tbl")) {
+    } else if (
+      class_old[1] %in%
+        c("tbl_df", "tbl") ||
+        (class_old[1] == "trackframe" && class_old[2] %in% c("tbl_df", "tbl"))
+    ) {
       tf_bt <- as_tibble(tf)
     }
     transformation_info$attributes$row.names <- attr(tf_bt, "row.names")
     attributes(tf_bt) <- transformation_info$attributes
-  } else if (class_old == "matrix") {
+  } else if (class_old[1] == "matrix") {
     stop(
       "backtransformation not supported for class matrix. Use ?coredata instead."
     )
@@ -85,16 +106,14 @@ tf_backtransform <- function(tf) {
   }
   if (!is.null(transformation_info[["id_hash_orig"]])) {
     # check if tf was manipulated after first transformation
-    if (
-      length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])
-    ) {
+    if (length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])) {
       if (all(id_hash_tf == transformation_info[["id_hash_ordered"]])) {
         id_hash_tf <- id_hash(tf) # needed as as_sftrack might change the order
         idx <- match(transformation_info[["id_hash_orig"]], id_hash_tf)
         tf_bt <- tf_bt[idx, ]
       } else {
         warning(
-          "Rows of trackframe were reordered in between. Reordering is not possible."
+          "Rows of trackframe were deleted in between. Reordering is not possible."
         )
       }
     } else {
