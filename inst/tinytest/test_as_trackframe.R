@@ -350,18 +350,28 @@ test_as_trackframe <- function(
 }
 
 
-test_sort <- function(coerce_to) {
+test_sort <- function(coerce_to, reorder, sort) {
   if (is.na(coerce_to)) {
     coerce_to <- NULL
   }
+  tf <- trackframe::tf_mini
+  tf <- if (reorder) reorder_rows(tf) else tf
+
+  expect_equal(
+    tf_as_xyt(tf),
+    as.data.frame(tf[, c("easting", "northing", "time", "id")])
+  )
+
   df <- tf_as_xyt(trackframe::tf_mini)
   set.seed(2025)
-  df2 <- reorder_rows(df)
-  tf_df <- as.trackframe(df2, coerce_to = coerce_to, crs = NA)
-  df2_ordered <- df2[order(df2$id, df2$time), ]
+  df_sorted <- df
+  df <- if (reorder) reorder_rows(df) else df
+  df_ref <- if (sort) df_sorted else df
+
+  tf_df <- as.trackframe(df, coerce_to = coerce_to, crs = NA, sort = sort)
   expect_equal(
     as.data.frame(tf_df[, c("id", "time")]),
-    df2_ordered[, c("id", "time")],
+    df_ref[, c("id", "time")],
     check.attributes = FALSE
   )
 }
@@ -377,8 +387,6 @@ test_incompatible_sf <- function() {
   )
 }
 
-test_as_trackframe("base", TRUE, FALSE)
-
 
 # Run all tests
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
@@ -388,9 +396,9 @@ lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
         test_as_trackframe_data_frame(from, coerce_to, reorder, sort)
       })
       test_as_trackframe(coerce_to, reorder, sort)
+      test_sort(coerce_to, reorder, sort)
     })
   })
-  test_sort(coerce_to)
 })
 
 test_incompatible_sf()
