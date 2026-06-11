@@ -307,6 +307,18 @@ test_as_trackframe <- function(coerce_to = "base") {
       "northing"
     )
   )
+
+  #backtransformation
+  raccoon_vanilla_sf_bt <- tf_backtransform(raccoon_vanilla_sf_tf)
+  expect_equal(dim(raccoon_vanilla_sf), dim(raccoon_vanilla_sf_bt))
+  expect_equal(
+    sf::st_coordinates(raccoon_vanilla_sf),
+    sf::st_coordinates(raccoon_vanilla_sf_bt)
+  )
+  expect_equal(
+    raccoon_vanilla_sf,
+    raccoon_vanilla_sf_bt
+  )
 }
 
 
