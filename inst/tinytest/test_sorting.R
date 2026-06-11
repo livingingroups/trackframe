@@ -45,7 +45,7 @@ expect_warning(tf_backtransform(paths_tf_d))
 set.seed(2026)
 idr2 <- sample(seq_len(NROW(paths_data_frame)))
 paths_tf_r <- paths_tf[idr2, ]
-expect_warning(tf_backtransform(paths_tf_r))
+expect_silent(tf_backtransform(paths_tf_r))
 
 
 # sftrack
@@ -76,7 +76,7 @@ expect_warning(tf_backtransform(paths_tf_d))
 set.seed(2026)
 idr2 <- sample(seq_len(NROW(paths_sftrack)))
 paths_tf_r <- paths_tf[idr2, ]
-expect_warning(tf_backtransform(paths_tf_r))
+expect_silent(tf_backtransform(paths_tf_r))
 
 # move2
 set.seed(2025)

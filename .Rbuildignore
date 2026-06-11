@@ -18,6 +18,7 @@ CONTRIBUTING.md
 .pkgcheck
 .vscode
 .pkgcheck
+.github
 codemeta.json
 internal-release-checklist.md
 ^doc$
