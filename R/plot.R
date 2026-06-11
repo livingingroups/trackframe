@@ -40,7 +40,7 @@ qualitative_palette <- function(colors, ...) {
       shuffle <- rep(seq_len(n_base_cols) - 1, lenght.out = n_inc) *
         n_inc +
         rep(seq_len(n_inc), each = n_base_cols)
-      cols <- colorRampPalette(c(colors, colors[1]), ...)(
+      cols <- grDevices::colorRampPalette(c(colors, colors[1]), ...)(
         n_inc * n_base_cols + 1
       )[
         shuffle
@@ -320,9 +320,7 @@ plot.trackframe <- function(
   if (!isTRUE(facet)) {
     # Workaround tinyplot#553
     control[["facet.args"]] <- NULL
-  } else if (
-    isTRUE((control[["facet.args"]] %||% list())[["free"]]) && !is.na(asp)
-  ) {
+  } else if (isTRUE((control[["facet.args"]] %||% list())[["free"]]) && !is.na(asp)) {
     # Warning regarding tinyplot#555
     warning(paste(
       "facet.args[[\"free\"]] = TRUE is incompatible",
