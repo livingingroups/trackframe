@@ -1,6 +1,7 @@
 # backtransform
 projected_crs <- "EPSG:32632"
 
+
 # move2
 library(move2)
 m2 <- mt_as_move2(
@@ -20,9 +21,11 @@ sftrack_a <- as_sftrack(
   coords = c("easting", "northing"),
   crs = projected_crs
 )
-expect_error(as.trackframe(data = sftrack_a),
+expect_error(
+  as.trackframe(data = sftrack_a),
   info = "Column easting set as sf_easting_col, but exists also in data. No Overwriting.
-    Remove column easting in data, or change sf_easting_col in tf_options()")
+    Remove column easting in data, or change sf_easting_col in tf_options()"
+)
 
 tf_options("sf_easting_col", "e")
 tf_options("sf_northing_col", "n")
@@ -59,6 +62,25 @@ expect_equal(NROW(sftrack_tf_b), NROW(my_sftrack))
 expect_equal(colnames(sftrack_tf_b), colnames(my_sftrack))
 expect_equal(sftrack_tf_b$sft_group, my_sftrack$sft_group)
 expect_equal(sftrack_tf_b, my_sftrack)
+
+out_of_order_sftrack <- sftrack::as_sftrack(
+  data = data.frame(
+    x = c(1, 2, NA, 3),
+    y = c(1, 2, NA, 3),
+    t = 4:1,
+    id = c("b", "b", "a", "a")
+  ),
+  coords = c("x", "y"),
+  group = "id",
+  time = "t",
+  crs = projected_crs
+)[c(3, 2, 1, 4), ]
+
+expect_equal(
+  tf_backtransform(as.trackframe(out_of_order_sftrack, sort = FALSE)),
+  out_of_order_sftrack,
+  info = "check backtransform undoes as_sftrack sort"
+)
 
 # test coerce_to
 df <- df_mini

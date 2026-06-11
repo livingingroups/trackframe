@@ -49,9 +49,6 @@ tf_backtransform <- function(tf) {
   if (is.null(transformation_info)) {
     stop("no transformation info stored to trackframe")
   }
-  if (!is.null(transformation_info[["id_hash_orig"]])) {
-    id_hash_tf <- id_hash(tf)
-  }
   class_old <- transformation_info$class
   if ("move2" %in% class_old) {
     tf_bt <- tf_as_move2(tf)
@@ -83,25 +80,54 @@ tf_backtransform <- function(tf) {
       class_old
     ))
   }
-  if (!is.null(transformation_info[["id_hash_orig"]])) {
-    # check if tf was manipulated after first transformation
-    if (
-      length(id_hash_tf) == length(transformation_info[["id_hash_ordered"]])
-    ) {
-      if (all(id_hash_tf == transformation_info[["id_hash_ordered"]])) {
-        id_hash_tf <- id_hash(tf) # needed as as_sftrack might change the order
-        idx <- match(transformation_info[["id_hash_orig"]], id_hash_tf)
-        tf_bt <- tf_bt[idx, ]
+
+  reorder <- if (is.null(transformation_info[["id_hash_orig"]])) {
+    if ("sftrack" %in% class_old) {
+      # covers case where as.trackframe didn't sort, but as_sftrack did
+      orig_hash <- id_hash(tf)
+      if (attr(tf, "id") %in% colnames(tf_bt)) {
+        new_hash <- id_hash(
+          as.data.frame(
+            tf_bt
+          ),
+          time_col = attr(tf, "time"),
+          id_col = attr(tf, "id")
+        )
+        TRUE
+      } else if (inherits(tf_bt[[attr(tf_bt, "group_col")]], "c_grouping")) {
+        new_hash <- id_hash(
+          data.frame(
+            time = tf_bt[[attr(tf, "time")]],
+            id = make_unique_id(tf_bt[[attr(tf_bt, "group_col")]])
+          ),
+          time_col = "time",
+          id_col = "id"
+        )
+        TRUE
       } else {
         warning(
-          "Rows of trackframe were reordered in between. Reordering is not possible."
+          "Unable to identify original ordering.",
+          "sftrack object may be in a different order than originally provided."
         )
+        FALSE
       }
     } else {
-      warning(
-        "Rows of trackframe were deleted in between. Reordering is not possible."
-      )
+      FALSE
     }
+  } else {
+    orig_hash <- transformation_info[["id_hash_orig"]]
+    new_hash <- id_hash(tf)
+    TRUE
+  }
+  if (reorder && !all(sort(orig_hash) == sort(new_hash))) {
+    warning(
+      "ID and/or time cols of trackframe were modified",
+      "Not possible to undo sorting."
+    )
+    reorder <- FALSE
+  }
+  if (reorder) {
+    tf_bt <- tf_bt[match(orig_hash, new_hash), ]
   }
   return(tf_bt)
 }

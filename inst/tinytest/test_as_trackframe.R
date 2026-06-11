@@ -1,7 +1,9 @@
 library(tinytest)
 library(trackframe)
 
-source(system.file("tinytest/test_helpers.R", package = "trackframe"))
+source("helpers.R")
+
+reorder_rows <- function(df) df[sample(seq_len(nrow(df))), ]
 
 expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   tf_classes <- c("trackframe", "data.frame")
@@ -33,7 +35,15 @@ expect_tf_class <- function(actual_tf_class, from_class, coerce_to) {
   )
 }
 
-test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
+test_as_trackframe_data_frame <- function(
+  from = "base",
+  coerce_to = "base",
+  reorder = FALSE,
+  sort = TRUE
+) {
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
   # dataframe
   df <- list(
     "base" = data.frame,
@@ -45,6 +55,9 @@ test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
     northing_col = runif(5, 0, 10),
     id = 1:5
   ))
+  df_sorted <- df
+  df <- if (reorder) reorder_rows(df) else df
+  df_ref <- if (sort) df_sorted else df
   tf <- trackframe(
     data = df,
     time_col = "time_col",
@@ -52,9 +65,10 @@ test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
     northing_col = "northing_col",
     id_col = "id",
     coerce_to = coerce_to,
-    crs = NA
+    crs = NA,
+    sort = sort
   )
-  tf2 <- trackframe(data = df, coerce_to = coerce_to, crs = NA)
+  tf2 <- trackframe(data = df, coerce_to = coerce_to, crs = NA, sort = sort)
   expect_equal(tf, tf2)
   tf3 <- as.trackframe(
     data = df,
@@ -63,10 +77,11 @@ test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
     northing_col = "northing_col",
     id_col = "id",
     coerce_to = coerce_to,
-    crs = NA
+    crs = NA,
+    sort = sort
   )
   expect_equal(tf, tf3)
-  tf4 <- as.trackframe(data = df, coerce_to = coerce_to, crs = NA)
+  tf4 <- as.trackframe(data = df, coerce_to = coerce_to, crs = NA, sort = sort)
   expect_equal(tf, tf4)
 
   expect_tf_class(class(tf), class(df), coerce_to)
@@ -78,69 +93,90 @@ test_as_trackframe_data_frame <- function(from = "base", coerce_to = "base") {
     northing_col = "northing_col",
     id_col = "id",
     coerce_to = coerce_to,
-    crs = NA
+    crs = NA,
+    sort = sort
   ))
-  expect_equal(easting(tf), df$easting_col)
-  expect_equal(northing(tf), df$northing_col)
-  expect_equal(id(tf), df$id)
-  expect_equal(time(tf), df$time_col)
+  expect_equal(easting(tf), df_ref$easting_col)
+  expect_equal(northing(tf), df_ref$northing_col)
+  expect_equal(id(tf), df_ref$id)
+  expect_equal(time(tf), df_ref$time_col)
   expect_inherits(time(tf), "POSIXct")
 }
 
-test_as_trackframe <- function(coerce_to = "base") {
-  matrix_input <- as.matrix(data.frame(
+test_as_trackframe <- function(
+  coerce_to = "base",
+  reorder = FALSE,
+  sort = TRUE
+) {
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
+  mat <- as.matrix(data.frame(
     time_col = 1:5,
     easting_col = runif(5, 0, 10),
     northing_col = runif(5, 0, 10),
     id = 1:5
   ))
-  expect_inherits(matrix_input, "matrix")
+  mat_sorted <- mat
+  mat <- if (reorder) reorder_rows(mat) else mat
+  mat_ref <- if (sort) mat_sorted else mat
+
+  expect_inherits(mat, "matrix")
   tf <- trackframe(
-    matrix_input,
+    mat,
     time_col = "time_col",
     easting_col = "easting_col",
     northing_col = "northing_col",
     id_col = "id",
     coerce_to = coerce_to,
-    crs = NA
+    crs = NA,
+    sort = sort
   )
   expect_inherits(tf, "trackframe")
-  expect_equal(dim(matrix_input), dim(tf))
-  expect_equal(easting(tf), matrix_input[, "easting_col"])
-  expect_equal(northing(tf), matrix_input[, "northing_col"])
-  expect_equal(id(tf), matrix_input[, "id"])
-  expect_equal(time(tf), matrix_input[, "time_col"])
+  expect_equal(dim(mat), dim(tf))
+  expect_equal(easting(tf), mat_ref[, "easting_col"])
+  expect_equal(northing(tf), mat_ref[, "northing_col"])
+  expect_equal(id(tf), mat_ref[, "id"])
+  expect_equal(time(tf), mat_ref[, "time_col"])
 
   #move2
   library(move2)
   move2_ex <- mt_read(mt_example()) |>
     sf::st_transform(3857)
   move2_ex <- move2_ex[!sf::st_is_empty(move2_ex), ]
-  move2_ex_tf <- as.trackframe(move2_ex, coerce_to = coerce_to)
+
+  move2_ex <- if (reorder) reorder_rows(move2_ex) else move2_ex
+  move2_ex_ref <- if (sort) {
+    move2_ex[order(move2_ex$`individual-local-identifier`, move2_ex$timestamp), ]
+  } else {
+    move2_ex
+  }
+
+  move2_ex_tf <- as.trackframe(move2_ex, coerce_to = coerce_to, sort = sort)
 
   expect_inherits(move2_ex_tf, "trackframe")
   expect_equal(NROW(move2_ex), NROW(move2_ex_tf))
 
-  x_y <- sf::st_coordinates(move2_ex[[attr(
-    move2_ex,
+  x_y <- sf::st_coordinates(move2_ex_ref[[attr(
+    move2_ex_ref,
     "sf_column"
   )]])
   expect_equal(easting(move2_ex_tf), x_y[, 1])
   expect_equal(northing(move2_ex_tf), x_y[, 2])
   expect_equal(
     id(move2_ex_tf),
-    move2_ex[[attr(move2_ex, "track_id_column")]]
+    move2_ex_ref[[attr(move2_ex, "track_id_column")]]
   )
   expect_equal(
     time(move2_ex_tf),
-    move2_ex[[attr(move2_ex, "time_column")]]
+    move2_ex_ref[[attr(move2_ex, "time_column")]]
   )
   #backtransformation
-  move2_ex_bt <- tf_as_move2(move2_ex_tf[
+  move2_ex_bt <- tf_backtransform(move2_ex_tf[
     !is.na(northing(move2_ex_tf)),
   ])
   expect_equal(dim(move2_ex), dim(move2_ex_bt))
-  expect_equal(
+  !expect_equal(
     sf::st_coordinates(move2_ex),
     sf::st_coordinates(move2_ex_bt)
   )
@@ -157,7 +193,8 @@ test_as_trackframe <- function(coerce_to = "base") {
     move2_ex,
     time_col = tf_options("time_col"),
     id_col = c("id", "id2", "individual-local-identifier"),
-    coerce_to = coerce_to
+    coerce_to = coerce_to,
+    sort = sort
   ))
 
   #sftrack
@@ -175,7 +212,7 @@ test_as_trackframe <- function(coerce_to = "base") {
   error <- "fix"
   crs <- 4326
   # create a sftrack object
-  raccoon_sftrack <- as_sftrack(
+  sft <- as_sftrack(
     data = raccoon,
     coords = coords,
     group = group,
@@ -185,114 +222,117 @@ test_as_trackframe <- function(coerce_to = "base") {
   ) |>
     sf::st_transform(suggest_utm_zone_crs(raccoon$latitude, raccoon$longitude))
 
-  raccoon_tf <- as.trackframe(raccoon_sftrack, coerce_to = coerce_to)
-  expect_inherits(raccoon_tf, "trackframe")
-  expect_equal(NROW(raccoon_sftrack), NROW(raccoon_tf))
+  sft <- if (reorder) reorder_rows(sft) else sft
+  sft_ref <- if (sort) sft[order(sft$animal_id, sft$timestamp), ] else sft
 
-  raccoon_sftrack <- raccoon_sftrack[
-    order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp),
-  ]
-  x_y <- sf::st_coordinates(raccoon_sftrack[[attr(
-    raccoon_sftrack,
+  sft_tf <- as.trackframe(sft, coerce_to = coerce_to, sort = sort)
+  expect_inherits(sft_tf, "trackframe")
+  expect_equal(NROW(sft), NROW(sft_tf))
+
+  x_y <- sf::st_coordinates(sft_ref[[attr(
+    sft_ref,
     "sf_column"
   )]])
   x_y[is.nan(x_y)] <- NA
-  expect_equal(easting(raccoon_tf), x_y[, 1])
-  expect_equal(northing(raccoon_tf), x_y[, 2])
-  raccoon_sftrack <- raccoon_sftrack[
-    order(raccoon_sftrack$animal_id, raccoon_sftrack$timestamp),
-  ]
-
+  expect_equal(easting(sft_tf), x_y[, 1])
+  expect_equal(northing(sft_tf), x_y[, 2])
   expected_id <- do.call(
     rbind,
-    raccoon_sftrack[[attr(
-      raccoon_sftrack,
+    sft_ref[[attr(
+      sft,
       "group_col"
     )]]
   )
   expected_id <- paste(expected_id[, 1], expected_id[, 2], sep = "<;>")
 
   expect_equal(
-    id(raccoon_tf),
+    id(sft_tf),
     expected_id,
     check.attributes = FALSE
   )
   expect_equal(
-    id(raccoon_tf),
-    trackframe:::make_unique_id(raccoon_sftrack[[attr(
-      raccoon_sftrack,
+    id(sft_tf),
+    trackframe:::make_unique_id(sft_ref[[attr(
+      sft_ref,
       "group_col"
     )]]),
     check.attributes = FALSE
   )
   expect_equal(
-    time(raccoon_tf),
-    raccoon_sftrack[[attr(raccoon_sftrack, "time_col")]]
+    time(sft_tf),
+    sft_ref[[attr(sft, "time_col")]]
   )
 
   expect_silent(suppressWarnings(as.trackframe(
-    raccoon_sftrack,
+    sft,
     time_col = c("t", "timestamp", "time3"),
     id_col = tf_options("id_col"),
-    coerce_to = coerce_to
+    coerce_to = coerce_to,
+    sort = sort
   )))
   expect_warning(as.trackframe(
-    raccoon_sftrack,
+    sft,
     time_col = c("t", "timestamp", "time3"),
     id_col = tf_options("id_col"),
-    coerce_to = coerce_to
+    coerce_to = coerce_to,
+    sort = sort
   ))
   expect_silent(as.trackframe(
-    raccoon_sftrack,
+    sft,
     time_col = c("t", "time", "time3"),
     id_col = NULL,
-    coerce_to = coerce_to
+    coerce_to = coerce_to,
+    sort = sort
   ))
 
   #backtransformation
-  sftrack_bt <- tf_as_sftrack(raccoon_tf[!is.na(northing(raccoon_tf)), ])
-  sftrack_no_na <- raccoon_sftrack[!is.na(raccoon_sftrack$longitude), ]
-  expect_equal(NROW(sftrack_no_na), NROW(sftrack_bt))
+  sftrack_bt <- tf_backtransform(sft_tf)
+  expect_equal(NROW(sft), NROW(sftrack_bt))
+
   expect_equal(
-    sf::st_coordinates(sftrack_no_na),
+    sf::st_coordinates(sft),
     sf::st_coordinates(sftrack_bt)
   )
-  expect_equal(attr(sftrack_no_na, "group_col"), attr(sftrack_bt, "group_col"))
-  expect_equal(attr(sftrack_no_na, "time_col"), attr(sftrack_bt, "time_col"))
+  expect_equal(attr(sft, "group_col"), attr(sftrack_bt, "group_col"))
+  expect_equal(attr(sft, "time_col"), attr(sftrack_bt, "time_col"))
 
-  raccoon_vanilla_sf <- sf::st_as_sf(
+  # vsf : vanilla sf
+  vsf <- sf::st_as_sf(
     raccoon[!is.na(raccoon[[coords[1]]]) & !is.na(raccoon[[coords[2]]]), ],
     coords = coords,
     crs = crs
   )
-  raccoon_vanilla_sf <- sf::st_transform(
-    raccoon_vanilla_sf,
-    suggest_utm_zone_crs(raccoon_vanilla_sf)
+  vsf <- sf::st_transform(
+    vsf,
+    suggest_utm_zone_crs(vsf)
   )
 
+  vsf <- if (reorder) reorder_rows(vsf) else vsf
+  vsf_ref <- if (sort) vsf[order(vsf$animal_id, vsf$timestamp), ] else vsf
+
   expect_silent(as.trackframe(
-    raccoon_vanilla_sf,
+    vsf,
     time_col = "timestamp",
     id_col = "animal_id"
   ))
-  raccoon_vanilla_sf_tf <- as.trackframe(
-    raccoon_vanilla_sf,
+  vsf_tf <- as.trackframe(
+    vsf,
     time_col = "timestamp",
     id_col = "animal_id"
   )
-  expect_equal(as.trackframe(raccoon_vanilla_sf), raccoon_vanilla_sf_tf)
-  expect_inherits(raccoon_vanilla_sf_tf, "trackframe")
-  expect_equal(NROW(raccoon_vanilla_sf_tf), NROW(raccoon_vanilla_sf))
+  expect_equal(as.trackframe(vsf), vsf_tf)
+  expect_inherits(vsf_tf, "trackframe")
+  expect_equal(NROW(vsf_tf), NROW(vsf))
   expect_equal(
     cbind(
-      "X" = easting(raccoon_vanilla_sf_tf),
-      "Y" = northing(raccoon_vanilla_sf_tf)
+      "X" = easting(vsf_tf),
+      "Y" = northing(vsf_tf)
     ),
-    sf::st_coordinates(raccoon_vanilla_sf),
+    sf::st_coordinates(vsf_ref),
     tol = 1e-4
   )
   expect_equal(
-    colnames(raccoon_vanilla_sf_tf),
+    colnames(vsf_tf),
     c(
       "animal_id",
       "timestamp",
@@ -310,15 +350,28 @@ test_as_trackframe <- function(coerce_to = "base") {
 }
 
 
-test_sort <- function(coerce_to) {
+test_sort <- function(coerce_to, reorder, sort) {
+  if (is.na(coerce_to)) {
+    coerce_to <- NULL
+  }
+  tf <- trackframe::tf_mini
+  tf <- if (reorder) reorder_rows(tf) else tf
+
+  expect_equal(
+    tf_as_xyt(tf),
+    as.data.frame(tf[, c("easting", "northing", "time", "id")])
+  )
+
   df <- tf_as_xyt(trackframe::tf_mini)
   set.seed(2025)
-  df2 <- df[sample(6), ]
-  tf_df <- as.trackframe(df2, coerce_to = coerce_to, crs = NA)
-  df2_ordered <- df2[order(df2$id, df2$time), ]
+  df_sorted <- df
+  df <- if (reorder) reorder_rows(df) else df
+  df_ref <- if (sort) df_sorted else df
+
+  tf_df <- as.trackframe(df, coerce_to = coerce_to, crs = NA, sort = sort)
   expect_equal(
     as.data.frame(tf_df[, c("id", "time")]),
-    df2_ordered[, c("id", "time")],
+    df_ref[, c("id", "time")],
     check.attributes = FALSE
   )
 }
@@ -334,16 +387,18 @@ test_incompatible_sf <- function() {
   )
 }
 
+
 # Run all tests
 lapply(c("base", "data.table", "tibble", NA), function(coerce_to) {
-  if (is.na(coerce_to)) {
-    coerce_to <- NULL
-  }
-  lapply(c("base", "data.table", "tibble"), function(from) {
-    test_as_trackframe_data_frame(from = from, coerce_to = coerce_to)
+  lapply(c(TRUE, FALSE), \(reorder) {
+    lapply(c(TRUE, FALSE), \(sort) {
+      lapply(c("base", "data.table", "tibble"), function(from) {
+        test_as_trackframe_data_frame(from, coerce_to, reorder, sort)
+      })
+      test_as_trackframe(coerce_to, reorder, sort)
+      test_sort(coerce_to, reorder, sort)
+    })
   })
-  test_as_trackframe(coerce_to)
-  test_sort(coerce_to)
 })
 
 test_incompatible_sf()
