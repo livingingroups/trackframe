@@ -8,10 +8,32 @@ m2 <- mt_as_move2(
   coords = c("easting", "northing"),
   time_column = "time",
   track_id_column = "id",
-  crs = NA
+  crs = projected_crs
 )
 tf <- as.trackframe(data = m2)
 expect_equal(tf_backtransform(tf), m2)
+
+tf <- as.trackframe(data = m2, coerce_to = "tibble")
+expect_equal(tf_backtransform(tf), m2)
+
+tf <- as.trackframe(data = m2, coerce_to = "data.table")
+expect_equal(tf_backtransform(tf), m2)
+
+# sf
+library(sf)
+sf <- st_as_sf(
+  df_mini,
+  coords = c("easting", "northing"),
+  crs = projected_crs
+)
+tf <- as.trackframe(data = sf)
+expect_equal(tf_backtransform(tf), sf)
+
+tf <- as.trackframe(data = sf, coerce_to = "tibble")
+expect_equal(tf_backtransform(tf), sf)
+
+tf <- as.trackframe(data = sf, coerce_to = "data.table")
+expect_equal(tf_backtransform(tf), sf)
 
 # sftrack
 library(sftrack)
@@ -20,9 +42,11 @@ sftrack_a <- as_sftrack(
   coords = c("easting", "northing"),
   crs = projected_crs
 )
-expect_error(as.trackframe(data = sftrack_a),
+expect_error(
+  as.trackframe(data = sftrack_a),
   info = "Column easting set as sf_easting_col, but exists also in data. No Overwriting.
-    Remove column easting in data, or change sf_easting_col in tf_options()")
+    Remove column easting in data, or change sf_easting_col in tf_options()"
+)
 
 tf_options("sf_easting_col", "e")
 tf_options("sf_northing_col", "n")
