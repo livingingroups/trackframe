@@ -49,9 +49,6 @@ tf_backtransform <- function(tf) {
   if (is.null(transformation_info)) {
     stop("no transformation info stored to trackframe")
   }
-  if (!is.null(transformation_info[["id_hash_orig"]])) {
-    id_hash_tf <- id_hash(tf)
-  }
   class_old <- transformation_info$class
   if ("move2" %in% class_old) {
     tf_bt <- tf_as_move2(tf)
