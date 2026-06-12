@@ -4,16 +4,19 @@
 \alias{tf_backtransform}
 \title{Backtransform}
 \usage{
-tf_backtransform(tf)
+tf_backtransform(tf, all = FALSE)
 }
 \arguments{
 \item{tf}{an object of class \code{trackframe}}
+
+\item{all}{undo all as.trackframe calls, not just the most recent}
 }
 \value{
 an object which has been coerced to \code{trackframe}
 }
 \description{
-Backtransform
+Undoes as.trackframe, returning the dataframe to its previous class.
+Also attempts to undo sorting performed by as.trackframe.
 }
 \examples{
 library(trackframe)
