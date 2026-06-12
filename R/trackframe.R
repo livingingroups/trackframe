@@ -353,13 +353,16 @@ as.trackframe.data.frame <- function(
   log_debug("- %i set as crs", attr(data, "crs"))
   log_debug("- %i set as crs_type", attr(data, "crs_type"))
 
-  if (is.null(attr(data, "transformation_info"))) {
+  if (is.null(attr(data, "tmp_transformation_info"))) {
     transformation_info <- list()
     transformation_info$attributes <- attributes_input
     transformation_info$class <- attributes_input$class
     transformation_info$names <- cn_input
     transformation_info$coord_names <- c(easting_col, northing_col)
     attr(data, "transformation_info") <- transformation_info
+  } else {
+    attr(data, "transformation_info") <- attr(data, "tmp_transformation_info")
+    attr(data, "tmp_transformation_info") <- NULL
   }
 
   # sort data by id and time
@@ -641,7 +644,7 @@ as.trackframe.sf <- function(
   }
 
   attr(data, "row.names") <- data_attr[["row.names"]]
-  attr(data, "transformation_info") <- transformation_info
+  attr(data, "tmp_transformation_info") <- transformation_info
   as.trackframe(
     data,
     time_col = time_col,
