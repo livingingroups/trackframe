@@ -6,17 +6,11 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  # For now, only manually triggered for main.
-  # Still on infra branch, run automatically.
-  #
   # Manually trigger the Action under Actions/pkgcheck
   workflow_dispatch:
+
 jobs:
   pkgcheck:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      contents: write
     steps:
-      - name: run pkgcheck
-        run: docker run -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/ropensci-review-tools/pkgcheck-action:latest
+      - uses: ropensci-review-tools/pkgcheck-action@main
