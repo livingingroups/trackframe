@@ -54,6 +54,16 @@ tf <- as.trackframe(data = sftrack_a)
 sftrack_b <- tf_backtransform(tf)
 expect_equal(sftrack_b, sftrack_a)
 
+tf2 <- as.trackframe(tf, coerce_to = "data.table")
+expect_equal(tf_backtransform(tf2), tf)
+
+expect_equal(tf_backtransform(tf_backtransform(tf2)), sftrack_a)
+
+expect_equal(
+  tf_backtransform(tf_backtransform(tf2)),
+  tf_backtransform(tf2, all = TRUE)
+)
+
 # test with multiple ids
 data("raccoon", package = "sftrack")
 raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1

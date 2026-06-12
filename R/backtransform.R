@@ -19,7 +19,11 @@ backtransform_id <- function(unique_id, group_names) {
 
 #' Backtransform
 #'
+#' Undoes as.trackframe, returning the dataframe to its previous class.
+#' Also attempts to undo sorting performed by as.trackframe.
+#'
 #' @param tf an object of class `trackframe`
+#' @param all undo all as.trackframe calls, not just the most recent
 #'
 #' @return an object which has been coerced to `trackframe`
 #' @export
@@ -43,7 +47,7 @@ backtransform_id <- function(unique_id, group_names) {
 #' tfb <- tf_backtransform(tf)
 #' tfb
 #' df_mini
-tf_backtransform <- function(tf) {
+tf_backtransform <- function(tf, all = FALSE) {
   assert_class(tf, "trackframe")
   transformation_info <- attr(tf, "transformation_info")
   if (is.null(transformation_info)) {
@@ -66,9 +70,6 @@ tf_backtransform <- function(tf) {
     attr(tf_bt, "class") <- class_old
     attributes(tf_bt)[!names(attributes(tf_bt)) %in% names(transformation_info)] <- NULL
   } else if (class_old[1] %in% c("trackframe", "data.frame", "data.table", "tbl_df", "tbl")) {
-    if (isTRUE(sort)) {
-      tf <- sort(tf)
-    }
     if (isTRUE(attr(tf, "easting") != transformation_info$coord_names[1])) {
       tf[, attr(tf, "easting")] <- NULL
     }
@@ -121,6 +122,9 @@ tf_backtransform <- function(tf) {
         "Rows of trackframe were deleted in between. Reordering is not possible."
       )
     }
+  }
+  if (all && !is.null(transformation_info$attributes$transformation_info)) {
+    tf_bt <- tf_backtransform(tf_bt, all = TRUE)
   }
   return(tf_bt)
 }
