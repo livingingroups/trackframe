@@ -120,12 +120,12 @@ m <- microbenchmark(
 summary(m)
 ```
 
-    ##                                                expr      min        lq     mean
-    ## 1                      m2_step_length(fisher_move2) 2037.956 2102.2675 2660.140
-    ## 2 coords_mat_step_length(fisher_coords, fisher_ids)  930.336  944.0115 1250.856
-    ##     median        uq      max neval
-    ## 1 2167.244 2325.3095 5716.196   100
-    ## 2  953.060  965.0375 3837.678   100
+    ##                                                expr      min       lq     mean
+    ## 1                      m2_step_length(fisher_move2) 2.575851 2.652585 3.251686
+    ## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.173812 1.189379 1.515532
+    ##     median       uq      max neval
+    ## 1 2.699369 2.848886 6.731156   100
+    ## 2 1.198724 1.210631 4.231487   100
 
 ``` r
 
@@ -188,14 +188,14 @@ m <- microbenchmark(
 summary(m)
 ```
 
-    ##                                                expr      min        lq     mean
-    ## 1                      m2_step_length(fisher_move2) 2034.261 2181.0745 4125.025
-    ## 2 coords_mat_step_length(fisher_coords, fisher_ids)  934.813  956.9455 1626.568
-    ## 3                         tf_step_length(fisher_tf)  857.819  893.2355 1577.404
-    ##      median       uq        max neval
-    ## 1 2277.9840 2449.244 118768.178   100
-    ## 2  972.7795 1003.866   5530.891   100
-    ## 3  914.6730  978.403  12409.710   100
+    ##                                                expr      min       lq     mean
+    ## 1                      m2_step_length(fisher_move2) 2.622640 2.761226 4.699854
+    ## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.188343 1.208052 1.947229
+    ## 3                         tf_step_length(fisher_tf) 1.073262 1.110907 1.734565
+    ##     median       uq        max neval
+    ## 1 2.850910 3.016645 127.526099   100
+    ## 2 1.222564 1.257941   6.235030   100
+    ## 3 1.145884 1.183105   5.917619   100
 
 ``` r
 
