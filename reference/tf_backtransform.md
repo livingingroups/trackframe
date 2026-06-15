@@ -1,11 +1,12 @@
 # Backtransform
 
-Backtransform
+Undoes as.trackframe, returning the dataframe to its previous class.
+Also attempts to undo sorting performed by as.trackframe.
 
 ## Usage
 
 ``` r
-tf_backtransform(tf)
+tf_backtransform(tf, all = FALSE)
 ```
 
 ## Arguments
@@ -13,6 +14,10 @@ tf_backtransform(tf)
 - tf:
 
   an object of class `trackframe`
+
+- all:
+
+  undo all as.trackframe calls, not just the most recent
 
 ## Value
 

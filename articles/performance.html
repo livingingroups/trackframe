@@ -169,11 +169,11 @@ coordinates.</p>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                expr      min       lq     mean</span></span>
-<span><span class="co">## 1                      m2_step_length(fisher_move2) 2.575851 2.652585 3.251686</span></span>
-<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.173812 1.189379 1.515532</span></span>
+<span><span class="co">## 1                      m2_step_length(fisher_move2) 2.358949 2.478617 3.040760</span></span>
+<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.057692 1.078070 1.475467</span></span>
 <span><span class="co">##     median       uq      max neval</span></span>
-<span><span class="co">## 1 2.699369 2.848886 6.731156   100</span></span>
-<span><span class="co">## 2 1.198724 1.210631 4.231487   100</span></span></code></pre>
+<span><span class="co">## 1 2.511989 2.691498 5.997382   100</span></span>
+<span><span class="co">## 2 1.085509 1.111782 4.455748   100</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Limit plotting to 2*90th percentile so outliers don't dominate the plot</span></span>
 <span><span class="va">ymax</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fl">.90</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
@@ -223,13 +223,13 @@ much less costly:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                expr      min       lq     mean</span></span>
-<span><span class="co">## 1                      m2_step_length(fisher_move2) 2.622640 2.761226 4.699854</span></span>
-<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.188343 1.208052 1.947229</span></span>
-<span><span class="co">## 3                         tf_step_length(fisher_tf) 1.073262 1.110907 1.734565</span></span>
+<span><span class="co">## 1                      m2_step_length(fisher_move2) 2396.819 2566.711 4451.202</span></span>
+<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1065.576 1086.466 1856.728</span></span>
+<span><span class="co">## 3                         tf_step_length(fisher_tf)  972.464 1008.315 1690.519</span></span>
 <span><span class="co">##     median       uq        max neval</span></span>
-<span><span class="co">## 1 2.850910 3.016645 127.526099   100</span></span>
-<span><span class="co">## 2 1.222564 1.257941   6.235030   100</span></span>
-<span><span class="co">## 3 1.145884 1.183105   5.917619   100</span></span></code></pre>
+<span><span class="co">## 1 2624.122 2820.985 108638.859   100</span></span>
+<span><span class="co">## 2 1096.334 1188.671   7990.157   100</span></span>
+<span><span class="co">## 3 1040.360 1131.731  10997.124   100</span></span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu">ymax</span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="performance_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="700"></p>

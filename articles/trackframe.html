@@ -156,21 +156,21 @@ options:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp        x        y id</span></span>
-<span><span class="co">## 21 2026-06-15 09:39:18 2.898923 7.656002  1</span></span>
-<span><span class="co">## 22 2026-06-15 09:39:19 6.783804 7.696748  1</span></span>
-<span><span class="co">## 23 2026-06-15 09:39:20 7.353196 9.907123  1</span></span>
-<span><span class="co">## 24 2026-06-15 09:39:21 1.959567 9.705209  1</span></span>
-<span><span class="co">## 25 2026-06-15 09:39:22 9.805397 3.891828  1</span></span>
-<span><span class="co">## 16 2026-06-15 09:39:18 1.956698 6.801629  2</span></span></code></pre>
+<span><span class="co">## 21 2026-06-15 09:57:18 2.898923 7.656002  1</span></span>
+<span><span class="co">## 22 2026-06-15 09:57:19 6.783804 7.696748  1</span></span>
+<span><span class="co">## 23 2026-06-15 09:57:20 7.353196 9.907123  1</span></span>
+<span><span class="co">## 24 2026-06-15 09:57:21 1.959567 9.705209  1</span></span>
+<span><span class="co">## 25 2026-06-15 09:57:22 9.805397 3.891828  1</span></span>
+<span><span class="co">## 16 2026-06-15 09:57:18 1.956698 6.801629  2</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">tf_go</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp        x        y id</span></span>
-<span><span class="co">## 21 2026-06-15 09:39:18 2.898923 7.656002  1</span></span>
-<span><span class="co">## 22 2026-06-15 09:39:19 6.783804 7.696748  1</span></span>
-<span><span class="co">## 23 2026-06-15 09:39:20 7.353196 9.907123  1</span></span>
-<span><span class="co">## 24 2026-06-15 09:39:21 1.959567 9.705209  1</span></span>
-<span><span class="co">## 25 2026-06-15 09:39:22 9.805397 3.891828  1</span></span>
-<span><span class="co">## 16 2026-06-15 09:39:18 1.956698 6.801629  2</span></span></code></pre>
+<span><span class="co">## 21 2026-06-15 09:57:18 2.898923 7.656002  1</span></span>
+<span><span class="co">## 22 2026-06-15 09:57:19 6.783804 7.696748  1</span></span>
+<span><span class="co">## 23 2026-06-15 09:57:20 7.353196 9.907123  1</span></span>
+<span><span class="co">## 24 2026-06-15 09:57:21 1.959567 9.705209  1</span></span>
+<span><span class="co">## 25 2026-06-15 09:57:22 9.805397 3.891828  1</span></span>
+<span><span class="co">## 16 2026-06-15 09:57:18 1.956698 6.801629  2</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -236,59 +236,59 @@ options:</p>
 <span><span class="co"># Compare sorted vs unsorted</span></span>
 <span><span class="va">tf_args_sorted</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp          x         y id</span></span>
-<span><span class="co">## 21 2026-06-15 09:39:18 2.89892295 7.6560016  1</span></span>
-<span><span class="co">## 22 2026-06-15 09:39:19 6.78380427 7.6967480  1</span></span>
-<span><span class="co">## 23 2026-06-15 09:39:20 7.35319599 9.9071231  1</span></span>
-<span><span class="co">## 24 2026-06-15 09:39:21 1.95956733 9.7052090  1</span></span>
-<span><span class="co">## 25 2026-06-15 09:39:22 9.80539675 3.8918276  1</span></span>
-<span><span class="co">## 16 2026-06-15 09:39:18 1.95669835 6.8016292  2</span></span>
-<span><span class="co">## 17 2026-06-15 09:39:19 4.03538117 4.9884561  2</span></span>
-<span><span class="co">## 18 2026-06-15 09:39:20 0.63661457 6.4167935  2</span></span>
-<span><span class="co">## 19 2026-06-15 09:39:21 3.88701313 6.6028435  2</span></span>
-<span><span class="co">## 20 2026-06-15 09:39:22 9.75547835 0.9602416  2</span></span>
-<span><span class="co">## 11 2026-06-15 09:39:18 8.74600661 4.3217126  3</span></span>
-<span><span class="co">## 12 2026-06-15 09:39:19 1.74940627 7.0643384  3</span></span>
-<span><span class="co">## 13 2026-06-15 09:39:20 0.34241333 9.4857658  3</span></span>
-<span><span class="co">## 14 2026-06-15 09:39:21 3.20385731 1.8033877  3</span></span>
-<span><span class="co">## 15 2026-06-15 09:39:22 4.02328238 2.1689988  3</span></span>
-<span><span class="co">## 6  2026-06-15 09:39:18 4.66393497 0.3123033  4</span></span>
-<span><span class="co">## 7  2026-06-15 09:39:19 4.97777389 2.2556253  4</span></span>
-<span><span class="co">## 8  2026-06-15 09:39:20 2.89767245 3.0083081  4</span></span>
-<span><span class="co">## 9  2026-06-15 09:39:21 7.32881987 6.3646561  4</span></span>
-<span><span class="co">## 10 2026-06-15 09:39:22 7.72521511 4.7902455  4</span></span>
-<span><span class="co">## 1  2026-06-15 09:39:18 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2  2026-06-15 09:39:19 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3  2026-06-15 09:39:20 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4  2026-06-15 09:39:21 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5  2026-06-15 09:39:22 0.07399441 6.8855600  5</span></span></code></pre>
+<span><span class="co">## 21 2026-06-15 09:57:18 2.89892295 7.6560016  1</span></span>
+<span><span class="co">## 22 2026-06-15 09:57:19 6.78380427 7.6967480  1</span></span>
+<span><span class="co">## 23 2026-06-15 09:57:20 7.35319599 9.9071231  1</span></span>
+<span><span class="co">## 24 2026-06-15 09:57:21 1.95956733 9.7052090  1</span></span>
+<span><span class="co">## 25 2026-06-15 09:57:22 9.80539675 3.8918276  1</span></span>
+<span><span class="co">## 16 2026-06-15 09:57:18 1.95669835 6.8016292  2</span></span>
+<span><span class="co">## 17 2026-06-15 09:57:19 4.03538117 4.9884561  2</span></span>
+<span><span class="co">## 18 2026-06-15 09:57:20 0.63661457 6.4167935  2</span></span>
+<span><span class="co">## 19 2026-06-15 09:57:21 3.88701313 6.6028435  2</span></span>
+<span><span class="co">## 20 2026-06-15 09:57:22 9.75547835 0.9602416  2</span></span>
+<span><span class="co">## 11 2026-06-15 09:57:18 8.74600661 4.3217126  3</span></span>
+<span><span class="co">## 12 2026-06-15 09:57:19 1.74940627 7.0643384  3</span></span>
+<span><span class="co">## 13 2026-06-15 09:57:20 0.34241333 9.4857658  3</span></span>
+<span><span class="co">## 14 2026-06-15 09:57:21 3.20385731 1.8033877  3</span></span>
+<span><span class="co">## 15 2026-06-15 09:57:22 4.02328238 2.1689988  3</span></span>
+<span><span class="co">## 6  2026-06-15 09:57:18 4.66393497 0.3123033  4</span></span>
+<span><span class="co">## 7  2026-06-15 09:57:19 4.97777389 2.2556253  4</span></span>
+<span><span class="co">## 8  2026-06-15 09:57:20 2.89767245 3.0083081  4</span></span>
+<span><span class="co">## 9  2026-06-15 09:57:21 7.32881987 6.3646561  4</span></span>
+<span><span class="co">## 10 2026-06-15 09:57:22 7.72521511 4.7902455  4</span></span>
+<span><span class="co">## 1  2026-06-15 09:57:18 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2  2026-06-15 09:57:19 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3  2026-06-15 09:57:20 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4  2026-06-15 09:57:21 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5  2026-06-15 09:57:22 0.07399441 6.8855600  5</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_args_unsorted</span></span></code></pre></div>
 <pre><code><span><span class="co">##              timestamp          x         y id</span></span>
-<span><span class="co">## 1  2026-06-15 09:39:18 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2  2026-06-15 09:39:19 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3  2026-06-15 09:39:20 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4  2026-06-15 09:39:21 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5  2026-06-15 09:39:22 0.07399441 6.8855600  5</span></span>
-<span><span class="co">## 6  2026-06-15 09:39:18 4.66393497 0.3123033  4</span></span>
-<span><span class="co">## 7  2026-06-15 09:39:19 4.97777389 2.2556253  4</span></span>
-<span><span class="co">## 8  2026-06-15 09:39:20 2.89767245 3.0083081  4</span></span>
-<span><span class="co">## 9  2026-06-15 09:39:21 7.32881987 6.3646561  4</span></span>
-<span><span class="co">## 10 2026-06-15 09:39:22 7.72521511 4.7902455  4</span></span>
-<span><span class="co">## 11 2026-06-15 09:39:18 8.74600661 4.3217126  3</span></span>
-<span><span class="co">## 12 2026-06-15 09:39:19 1.74940627 7.0643384  3</span></span>
-<span><span class="co">## 13 2026-06-15 09:39:20 0.34241333 9.4857658  3</span></span>
-<span><span class="co">## 14 2026-06-15 09:39:21 3.20385731 1.8033877  3</span></span>
-<span><span class="co">## 15 2026-06-15 09:39:22 4.02328238 2.1689988  3</span></span>
-<span><span class="co">## 16 2026-06-15 09:39:18 1.95669835 6.8016292  2</span></span>
-<span><span class="co">## 17 2026-06-15 09:39:19 4.03538117 4.9884561  2</span></span>
-<span><span class="co">## 18 2026-06-15 09:39:20 0.63661457 6.4167935  2</span></span>
-<span><span class="co">## 19 2026-06-15 09:39:21 3.88701313 6.6028435  2</span></span>
-<span><span class="co">## 20 2026-06-15 09:39:22 9.75547835 0.9602416  2</span></span>
-<span><span class="co">## 21 2026-06-15 09:39:18 2.89892295 7.6560016  1</span></span>
-<span><span class="co">## 22 2026-06-15 09:39:19 6.78380427 7.6967480  1</span></span>
-<span><span class="co">## 23 2026-06-15 09:39:20 7.35319599 9.9071231  1</span></span>
-<span><span class="co">## 24 2026-06-15 09:39:21 1.95956733 9.7052090  1</span></span>
-<span><span class="co">## 25 2026-06-15 09:39:22 9.80539675 3.8918276  1</span></span></code></pre>
+<span><span class="co">## 1  2026-06-15 09:57:18 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2  2026-06-15 09:57:19 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3  2026-06-15 09:57:20 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4  2026-06-15 09:57:21 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5  2026-06-15 09:57:22 0.07399441 6.8855600  5</span></span>
+<span><span class="co">## 6  2026-06-15 09:57:18 4.66393497 0.3123033  4</span></span>
+<span><span class="co">## 7  2026-06-15 09:57:19 4.97777389 2.2556253  4</span></span>
+<span><span class="co">## 8  2026-06-15 09:57:20 2.89767245 3.0083081  4</span></span>
+<span><span class="co">## 9  2026-06-15 09:57:21 7.32881987 6.3646561  4</span></span>
+<span><span class="co">## 10 2026-06-15 09:57:22 7.72521511 4.7902455  4</span></span>
+<span><span class="co">## 11 2026-06-15 09:57:18 8.74600661 4.3217126  3</span></span>
+<span><span class="co">## 12 2026-06-15 09:57:19 1.74940627 7.0643384  3</span></span>
+<span><span class="co">## 13 2026-06-15 09:57:20 0.34241333 9.4857658  3</span></span>
+<span><span class="co">## 14 2026-06-15 09:57:21 3.20385731 1.8033877  3</span></span>
+<span><span class="co">## 15 2026-06-15 09:57:22 4.02328238 2.1689988  3</span></span>
+<span><span class="co">## 16 2026-06-15 09:57:18 1.95669835 6.8016292  2</span></span>
+<span><span class="co">## 17 2026-06-15 09:57:19 4.03538117 4.9884561  2</span></span>
+<span><span class="co">## 18 2026-06-15 09:57:20 0.63661457 6.4167935  2</span></span>
+<span><span class="co">## 19 2026-06-15 09:57:21 3.88701313 6.6028435  2</span></span>
+<span><span class="co">## 20 2026-06-15 09:57:22 9.75547835 0.9602416  2</span></span>
+<span><span class="co">## 21 2026-06-15 09:57:18 2.89892295 7.6560016  1</span></span>
+<span><span class="co">## 22 2026-06-15 09:57:19 6.78380427 7.6967480  1</span></span>
+<span><span class="co">## 23 2026-06-15 09:57:20 7.35319599 9.9071231  1</span></span>
+<span><span class="co">## 24 2026-06-15 09:57:21 1.95956733 9.7052090  1</span></span>
+<span><span class="co">## 25 2026-06-15 09:57:22 9.80539675 3.8918276  1</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="from-a-move2-object">…from a <code>move2</code> object<a class="anchor" aria-label="anchor" href="#from-a-move2-object"></a>
@@ -3145,6 +3145,12 @@ about compatible coordinate reference systems, see
 <span><span class="co">##   ..$ individual-taxon-canonical-name: Factor w/ 1 level "Martes pennanti": 1 1 1 1 1 1 1 1</span></span>
 <span><span class="co">##   ..$ study-name                     : Factor w/ 1 level "Martes pennanti LaPoint New York": 1 1 1 1 1 1 1 1</span></span>
 <span><span class="co">##   ..$ tag-local-identifier           : Factor w/ 8 levels "1072","1465",..: 1 2 3 4 5 6 7 8</span></span>
+<span><span class="co">##  - attr(*, "time")= chr "timestamp"</span></span>
+<span><span class="co">##  - attr(*, "easting")= chr "easting"</span></span>
+<span><span class="co">##  - attr(*, "northing")= chr "northing"</span></span>
+<span><span class="co">##  - attr(*, "id")= chr "individual-local-identifier"</span></span>
+<span><span class="co">##  - attr(*, "crs")= chr "EPSG:3857"</span></span>
+<span><span class="co">##  - attr(*, "crs_type")= chr "projected"</span></span>
 <span><span class="co">##  - attr(*, "transformation_info")=List of 13</span></span>
 <span><span class="co">##   ..$ names          : chr [1:21] "event-id" "visible" "timestamp" "behavioural-classification" ...</span></span>
 <span><span class="co">##   ..$ row.names      : int [1:32904] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
@@ -3182,7 +3188,7 @@ about compatible coordinate reference systems, see
 <span><span class="co">##   .. ..   `study-name` = <span style="color: #BB0000;">col_factor(levels = NULL, ordered = FALSE, include_na = FALSE)</span>,</span></span>
 <span><span class="co">##   .. ..   .delim = ","</span></span>
 <span><span class="co">##   .. .. )</span></span>
-<span><span class="co">##   ..$ problems       :&lt;pointer: 0x55bdb1095710&gt; </span></span>
+<span><span class="co">##   ..$ problems       :&lt;pointer: 0x5579670132a0&gt; </span></span>
 <span><span class="co">##   ..$ sf_column      : chr "geometry"</span></span>
 <span><span class="co">##   ..$ agr            : Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span><span class="co">##   .. ..- attr(*, "names")= chr [1:20] "event-id" "visible" "timestamp" "behavioural-classification" ...</span></span>
@@ -3198,13 +3204,7 @@ about compatible coordinate reference systems, see
 <span><span class="co">##   ..$ id_hash_orig   : Named chr [1:32904] "1f892d1d3c7d740ddc74fbf5db345232" "6734572576f099b6ac22619694b36061" "96b6adb4020c5a320fcb6a4336e073b0" "9896b72504937fff97784348a0181f55" ...</span></span>
 <span><span class="co">##   .. ..- attr(*, "names")= chr [1:32904] "1" "2" "3" "4" ...</span></span>
 <span><span class="co">##   ..$ id_hash_ordered: Named chr [1:32904] "1f892d1d3c7d740ddc74fbf5db345232" "6734572576f099b6ac22619694b36061" "96b6adb4020c5a320fcb6a4336e073b0" "9896b72504937fff97784348a0181f55" ...</span></span>
-<span><span class="co">##   .. ..- attr(*, "names")= chr [1:32904] "1" "2" "3" "4" ...</span></span>
-<span><span class="co">##  - attr(*, "time")= chr "timestamp"</span></span>
-<span><span class="co">##  - attr(*, "easting")= chr "easting"</span></span>
-<span><span class="co">##  - attr(*, "northing")= chr "northing"</span></span>
-<span><span class="co">##  - attr(*, "id")= chr "individual-local-identifier"</span></span>
-<span><span class="co">##  - attr(*, "crs")= chr "EPSG:3857"</span></span>
-<span><span class="co">##  - attr(*, "crs_type")= chr "projected"</span></span></code></pre>
+<span><span class="co">##   .. ..- attr(*, "names")= chr [1:32904] "1" "2" "3" "4" ...</span></span></code></pre>
 <!-- You can use the `suggest_utm_zone_crs` function to identify the EPSG code for the most likely UTM zone to which you should project your data.
 
 [ONCE THIS IS IMPLEMENTED, remove code block above, and activate code block below.]
@@ -3392,11 +3392,11 @@ in the track id column:</p>
 <code class="sourceCode R"><span><span class="va">tf_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_id.html">select_id</a></span><span class="op">(</span><span class="va">tf</span>, <span class="st">"Bob"</span><span class="op">)</span></span>
 <span><span class="va">tf_2</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-15 09:39:21 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-15 09:57:21 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-15 09:39:23 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-15 09:39:24 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-15 09:39:25 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-15 09:57:23 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-15 09:57:24 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-15 09:57:25 4.183614 5 Bob</span></span></code></pre>
 <p>To split the tracks of each individual, and store them as a list of
 <code>trackframe</code> objects, use the <code>split_by_id</code>
 function.</p>
@@ -3410,19 +3410,19 @@ function.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_split</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-15 09:39:21 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-15 09:57:21 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-15 09:39:23 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-15 09:39:24 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-15 09:39:25 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-15 09:57:23 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-15 09:57:24 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-15 09:57:25 4.183614 5 Bob</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf_split</span><span class="op">[[</span><span class="st">"Bob"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x y  id</span></span>
-<span><span class="co">## 1 2026-06-15 09:39:21 8.056800 5 Bob</span></span>
+<span><span class="co">## 1 2026-06-15 09:57:21 8.056800 5 Bob</span></span>
 <span><span class="co">## 2 2025-11-17 14:08:00 8.140513 5 Bob</span></span>
-<span><span class="co">## 3 2026-06-15 09:39:23 4.039110 5 Bob</span></span>
-<span><span class="co">## 4 2026-06-15 09:39:24 2.184310 5 Bob</span></span>
-<span><span class="co">## 5 2026-06-15 09:39:25 4.183614 5 Bob</span></span></code></pre>
+<span><span class="co">## 3 2026-06-15 09:57:23 4.039110 5 Bob</span></span>
+<span><span class="co">## 4 2026-06-15 09:57:24 2.184310 5 Bob</span></span>
+<span><span class="co">## 5 2026-06-15 09:57:25 4.183614 5 Bob</span></span></code></pre>
 <ul>
 <li>*_col (e.g. “easting_col”) gets / sets the key column’s column name.
 In the “set” case, it updates the designated column’s name. It does not
@@ -3462,12 +3462,12 @@ regardless of its history. The second approach can only be used on
 <span><span class="va">df1_recovered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tf_as_xyt.html">tf_as_xyt</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df1_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           x        y           timestamp id</span></span>
-<span><span class="co">## 21 2.898923 7.656002 2026-06-15 09:39:18  1</span></span>
-<span><span class="co">## 22 6.783804 7.696748 2026-06-15 09:39:19  1</span></span>
-<span><span class="co">## 23 7.353196 9.907123 2026-06-15 09:39:20  1</span></span>
-<span><span class="co">## 24 1.959567 9.705209 2026-06-15 09:39:21  1</span></span>
-<span><span class="co">## 25 9.805397 3.891828 2026-06-15 09:39:22  1</span></span>
-<span><span class="co">## 16 1.956698 6.801629 2026-06-15 09:39:18  2</span></span></code></pre>
+<span><span class="co">## 21 2.898923 7.656002 2026-06-15 09:57:18  1</span></span>
+<span><span class="co">## 22 6.783804 7.696748 2026-06-15 09:57:19  1</span></span>
+<span><span class="co">## 23 7.353196 9.907123 2026-06-15 09:57:20  1</span></span>
+<span><span class="co">## 24 1.959567 9.705209 2026-06-15 09:57:21  1</span></span>
+<span><span class="co">## 25 9.805397 3.891828 2026-06-15 09:57:22  1</span></span>
+<span><span class="co">## 16 1.956698 6.801629 2026-06-15 09:57:18  2</span></span></code></pre>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df1_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -3520,70 +3520,70 @@ regardless of its history. The second approach can only be used on
 <span><span class="co">## </span></span>
 <span><span class="co">## $transformation_info$id_hash_orig</span></span>
 <span><span class="co">##                                  1                                  2 </span></span>
-<span><span class="co">## "cd9bae7dd899e2c28e7948c512f5bbbe" "384d32ece98d2276c3e26ddddb0ca478" </span></span>
+<span><span class="co">## "47a3a8735be519d1599b2e546a027b2c" "9692bde933fce744b05e9f53c41fbff9" </span></span>
 <span><span class="co">##                                  3                                  4 </span></span>
-<span><span class="co">## "b1a721766978ab819046c648b507594b" "ff8b851a1cb97ee9f1ecdf696192e729" </span></span>
+<span><span class="co">## "3cdc5197f1dcbcae15aa706514448709" "90fe4d528c54f2731e304730ac5ecd77" </span></span>
 <span><span class="co">##                                  5                                  6 </span></span>
-<span><span class="co">## "07a93ce7e11b380278507cb07f977d85" "e7d85798efced5af2538533687ad41da" </span></span>
+<span><span class="co">## "c879d9f04b7e34540dd5de6b7477fec5" "5e2bcf28da8cf2b92470df2a26675b73" </span></span>
 <span><span class="co">##                                  7                                  8 </span></span>
-<span><span class="co">## "905def5f15cbe6f84f8112e49d97800f" "ff2e8db1d7b6eba724c9ad498b8e9a8f" </span></span>
+<span><span class="co">## "207609ab50e2e7a2923eee9384f5cdce" "3866942ccc162e350bd9cd037b8ad8c7" </span></span>
 <span><span class="co">##                                  9                                 10 </span></span>
-<span><span class="co">## "94cdc2fabd765aa61f9c1423c81c817d" "ce8174f59585ab2c03a24387dc3aa993" </span></span>
+<span><span class="co">## "e4d1931ae54e2dca131aed87396b2205" "5a98f8be304d184cc4b5120e8ffbd855" </span></span>
 <span><span class="co">##                                 11                                 12 </span></span>
-<span><span class="co">## "216115b9009093f67697d92cb6c2d65d" "e8b0644a6ee5e32194cdf6ca79f1e6d2" </span></span>
+<span><span class="co">## "96e8c1f8677282565aac3f5983621298" "a710b7d5b5c37478e8bf655c51b18f93" </span></span>
 <span><span class="co">##                                 13                                 14 </span></span>
-<span><span class="co">## "28cd13c71ce155d124c916d0713c7279" "39514d0dc7faad6ff509488730e3b7f2" </span></span>
+<span><span class="co">## "45a12142909e4dabf8e99dbd06e06d13" "b824590fec87551961458173a46b4fb0" </span></span>
 <span><span class="co">##                                 15                                 16 </span></span>
-<span><span class="co">## "5fefe8368adecf93a6fcd5b5c385b0c3" "0caee1075ab91eabdb10a3133880f34f" </span></span>
+<span><span class="co">## "101da85535ab8500098ddabf75567997" "5d8e4dedc236c18cc6e779a214b5fdf2" </span></span>
 <span><span class="co">##                                 17                                 18 </span></span>
-<span><span class="co">## "4113c512e4060f2013d5822316f8e232" "81c687d48c7ac965bb8e8822cd4a7921" </span></span>
+<span><span class="co">## "d1ccb6d46cd55209653a0d47888dce6b" "b9e6fc33d6f1e8210381f27de7b129bd" </span></span>
 <span><span class="co">##                                 19                                 20 </span></span>
-<span><span class="co">## "adff307bb551df83aa29fd7df54177d7" "ad17e672855754e1bb37acd84674626b" </span></span>
+<span><span class="co">## "a8d5c80c01bab20cefa425566dbc85e7" "2be0a9821015175d67574e889e2ef6c0" </span></span>
 <span><span class="co">##                                 21                                 22 </span></span>
-<span><span class="co">## "00e3671956ffb549bedf1bae745e29ea" "491c82d3aab8309870e44f4a37787a12" </span></span>
+<span><span class="co">## "99e9ed2185247606e48ec83a0a23fb7d" "2eec9919383d385c433d7583dad7b47f" </span></span>
 <span><span class="co">##                                 23                                 24 </span></span>
-<span><span class="co">## "2549cf417921d68e9346c41d85ae7e96" "e5831b27f3eaa2930e8d301ce92b9b0b" </span></span>
+<span><span class="co">## "f2509c69389741b606b4485984595d73" "c46800cd4997150b3b809e7c982823e7" </span></span>
 <span><span class="co">##                                 25 </span></span>
-<span><span class="co">## "02532a54b448717edffb9eb35a97b420" </span></span>
+<span><span class="co">## "26eb97d3919db51cbfbed0920436b9de" </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $transformation_info$id_hash_ordered</span></span>
 <span><span class="co">##                                 21                                 22 </span></span>
-<span><span class="co">## "00e3671956ffb549bedf1bae745e29ea" "491c82d3aab8309870e44f4a37787a12" </span></span>
+<span><span class="co">## "99e9ed2185247606e48ec83a0a23fb7d" "2eec9919383d385c433d7583dad7b47f" </span></span>
 <span><span class="co">##                                 23                                 24 </span></span>
-<span><span class="co">## "2549cf417921d68e9346c41d85ae7e96" "e5831b27f3eaa2930e8d301ce92b9b0b" </span></span>
+<span><span class="co">## "f2509c69389741b606b4485984595d73" "c46800cd4997150b3b809e7c982823e7" </span></span>
 <span><span class="co">##                                 25                                 16 </span></span>
-<span><span class="co">## "02532a54b448717edffb9eb35a97b420" "0caee1075ab91eabdb10a3133880f34f" </span></span>
+<span><span class="co">## "26eb97d3919db51cbfbed0920436b9de" "5d8e4dedc236c18cc6e779a214b5fdf2" </span></span>
 <span><span class="co">##                                 17                                 18 </span></span>
-<span><span class="co">## "4113c512e4060f2013d5822316f8e232" "81c687d48c7ac965bb8e8822cd4a7921" </span></span>
+<span><span class="co">## "d1ccb6d46cd55209653a0d47888dce6b" "b9e6fc33d6f1e8210381f27de7b129bd" </span></span>
 <span><span class="co">##                                 19                                 20 </span></span>
-<span><span class="co">## "adff307bb551df83aa29fd7df54177d7" "ad17e672855754e1bb37acd84674626b" </span></span>
+<span><span class="co">## "a8d5c80c01bab20cefa425566dbc85e7" "2be0a9821015175d67574e889e2ef6c0" </span></span>
 <span><span class="co">##                                 11                                 12 </span></span>
-<span><span class="co">## "216115b9009093f67697d92cb6c2d65d" "e8b0644a6ee5e32194cdf6ca79f1e6d2" </span></span>
+<span><span class="co">## "96e8c1f8677282565aac3f5983621298" "a710b7d5b5c37478e8bf655c51b18f93" </span></span>
 <span><span class="co">##                                 13                                 14 </span></span>
-<span><span class="co">## "28cd13c71ce155d124c916d0713c7279" "39514d0dc7faad6ff509488730e3b7f2" </span></span>
+<span><span class="co">## "45a12142909e4dabf8e99dbd06e06d13" "b824590fec87551961458173a46b4fb0" </span></span>
 <span><span class="co">##                                 15                                  6 </span></span>
-<span><span class="co">## "5fefe8368adecf93a6fcd5b5c385b0c3" "e7d85798efced5af2538533687ad41da" </span></span>
+<span><span class="co">## "101da85535ab8500098ddabf75567997" "5e2bcf28da8cf2b92470df2a26675b73" </span></span>
 <span><span class="co">##                                  7                                  8 </span></span>
-<span><span class="co">## "905def5f15cbe6f84f8112e49d97800f" "ff2e8db1d7b6eba724c9ad498b8e9a8f" </span></span>
+<span><span class="co">## "207609ab50e2e7a2923eee9384f5cdce" "3866942ccc162e350bd9cd037b8ad8c7" </span></span>
 <span><span class="co">##                                  9                                 10 </span></span>
-<span><span class="co">## "94cdc2fabd765aa61f9c1423c81c817d" "ce8174f59585ab2c03a24387dc3aa993" </span></span>
+<span><span class="co">## "e4d1931ae54e2dca131aed87396b2205" "5a98f8be304d184cc4b5120e8ffbd855" </span></span>
 <span><span class="co">##                                  1                                  2 </span></span>
-<span><span class="co">## "cd9bae7dd899e2c28e7948c512f5bbbe" "384d32ece98d2276c3e26ddddb0ca478" </span></span>
+<span><span class="co">## "47a3a8735be519d1599b2e546a027b2c" "9692bde933fce744b05e9f53c41fbff9" </span></span>
 <span><span class="co">##                                  3                                  4 </span></span>
-<span><span class="co">## "b1a721766978ab819046c648b507594b" "ff8b851a1cb97ee9f1ecdf696192e729" </span></span>
+<span><span class="co">## "3cdc5197f1dcbcae15aa706514448709" "90fe4d528c54f2731e304730ac5ecd77" </span></span>
 <span><span class="co">##                                  5 </span></span>
-<span><span class="co">## "07a93ce7e11b380278507cb07f977d85"</span></span></code></pre>
+<span><span class="co">## "c879d9f04b7e34540dd5de6b7477fec5"</span></span></code></pre>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Second approach (backtransforming this object to its original type, i.e., a dataframe obj)</span></span>
 <span><span class="va">df2_recovered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tf_backtransform.html">tf_backtransform</a></span><span class="op">(</span><span class="va">tf_args</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df2_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp          x         y id</span></span>
-<span><span class="co">## 1 2026-06-15 09:39:18 0.80750138 7.4152153  5</span></span>
-<span><span class="co">## 2 2026-06-15 09:39:19 8.34333037 0.5144628  5</span></span>
-<span><span class="co">## 3 2026-06-15 09:39:20 6.00760886 5.3021246  5</span></span>
-<span><span class="co">## 4 2026-06-15 09:39:21 1.57208442 6.9582388  5</span></span>
-<span><span class="co">## 5 2026-06-15 09:39:22 0.07399441 6.8855600  5</span></span>
-<span><span class="co">## 6 2026-06-15 09:39:18 4.66393497 0.3123033  4</span></span></code></pre>
+<span><span class="co">## 1 2026-06-15 09:57:18 0.80750138 7.4152153  5</span></span>
+<span><span class="co">## 2 2026-06-15 09:57:19 8.34333037 0.5144628  5</span></span>
+<span><span class="co">## 3 2026-06-15 09:57:20 6.00760886 5.3021246  5</span></span>
+<span><span class="co">## 4 2026-06-15 09:57:21 1.57208442 6.9582388  5</span></span>
+<span><span class="co">## 5 2026-06-15 09:57:22 0.07399441 6.8855600  5</span></span>
+<span><span class="co">## 6 2026-06-15 09:57:18 4.66393497 0.3123033  4</span></span></code></pre>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df2_recovered</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
@@ -3598,12 +3598,12 @@ regardless of its history. The second approach can only be used on
 <code class="sourceCode R"><span><span class="co"># Compare to original df</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             timestamp        x         y id</span></span>
-<span><span class="co">## 1 2026-06-15 09:39:21 4.611865 0.2006522  1</span></span>
-<span><span class="co">## 2 2026-06-15 09:39:22 3.152418 3.7697093  1</span></span>
-<span><span class="co">## 3 2026-06-15 09:39:23 1.746759 5.5991284  1</span></span>
-<span><span class="co">## 4 2026-06-15 09:39:24 5.315735 8.5708359  1</span></span>
-<span><span class="co">## 5 2026-06-15 09:39:25 4.936370 3.8480971  1</span></span>
-<span><span class="co">## 6 2026-06-15 09:39:21 7.793086 5.2791704  2</span></span></code></pre>
+<span><span class="co">## 1 2026-06-15 09:57:21 4.611865 0.2006522  1</span></span>
+<span><span class="co">## 2 2026-06-15 09:57:22 3.152418 3.7697093  1</span></span>
+<span><span class="co">## 3 2026-06-15 09:57:23 1.746759 5.5991284  1</span></span>
+<span><span class="co">## 4 2026-06-15 09:57:24 5.315735 8.5708359  1</span></span>
+<span><span class="co">## 5 2026-06-15 09:57:25 4.936370 3.8480971  1</span></span>
+<span><span class="co">## 6 2026-06-15 09:57:21 7.793086 5.2791704  2</span></span></code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
