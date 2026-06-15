@@ -168,12 +168,12 @@ coordinates.</p>
 <span>  check <span class="op">=</span> <span class="st">"equal"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                expr      min       lq     mean</span></span>
-<span><span class="co">## 1                      m2_step_length(fisher_move2) 2.413486 2.534107 3.257586</span></span>
-<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.089505 1.116409 1.574627</span></span>
-<span><span class="co">##     median       uq      max neval</span></span>
-<span><span class="co">## 1 2.651992 2.880799 6.944957   100</span></span>
-<span><span class="co">## 2 1.133802 1.173501 5.089382   100</span></span></code></pre>
+<pre><code><span><span class="co">##                                                expr      min        lq     mean</span></span>
+<span><span class="co">## 1                      m2_step_length(fisher_move2) 2037.956 2102.2675 2660.140</span></span>
+<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids)  930.336  944.0115 1250.856</span></span>
+<span><span class="co">##     median        uq      max neval</span></span>
+<span><span class="co">## 1 2167.244 2325.3095 5716.196   100</span></span>
+<span><span class="co">## 2  953.060  965.0375 3837.678   100</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Limit plotting to 2*90th percentile so outliers don't dominate the plot</span></span>
 <span><span class="va">ymax</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fl">.90</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
@@ -222,14 +222,14 @@ much less costly:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                expr      min       lq     mean</span></span>
-<span><span class="co">## 1                      m2_step_length(fisher_move2) 2.511058 2.658825 4.481762</span></span>
-<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids) 1.087991 1.112983 1.903755</span></span>
-<span><span class="co">## 3                         tf_step_length(fisher_tf) 1.001660 1.037853 1.705067</span></span>
-<span><span class="co">##     median       uq        max neval</span></span>
-<span><span class="co">## 1 2.734185 2.867503 111.486123   100</span></span>
-<span><span class="co">## 2 1.137769 1.189075   6.692215   100</span></span>
-<span><span class="co">## 3 1.069156 1.132580   5.760134   100</span></span></code></pre>
+<pre><code><span><span class="co">##                                                expr      min        lq     mean</span></span>
+<span><span class="co">## 1                      m2_step_length(fisher_move2) 2034.261 2181.0745 4125.025</span></span>
+<span><span class="co">## 2 coords_mat_step_length(fisher_coords, fisher_ids)  934.813  956.9455 1626.568</span></span>
+<span><span class="co">## 3                         tf_step_length(fisher_tf)  857.819  893.2355 1577.404</span></span>
+<span><span class="co">##      median       uq        max neval</span></span>
+<span><span class="co">## 1 2277.9840 2449.244 118768.178   100</span></span>
+<span><span class="co">## 2  972.7795 1003.866   5530.891   100</span></span>
+<span><span class="co">## 3  914.6730  978.403  12409.710   100</span></span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu">ymax</span><span class="op">(</span><span class="va">m</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="performance_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="700"></p>
