@@ -17,11 +17,7 @@ expect_snapshot_plot <- function(
   label,
   ...
 ) {
-  if (covr::in_covr()) {
-    current()
-  } else {
     tinysnapshot::expect_snapshot_plot(current, label, ...)
-  }
 }
 
 # Append sequential numbers to
