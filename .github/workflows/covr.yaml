@@ -43,6 +43,7 @@ jobs:
             any::lintr
             local::.
             dragosmg/covr2gh
+            katrinabrock/tinysnapshot
           needs: coverage
 
       - name: Head coverage & badge 🎩🎖️
